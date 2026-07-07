@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--suppress XmlDefaultAttributeValue -->
+<xs:schema elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="AppWindowConfig" type="AppWindowConfigType"/>
+  <xs:complexType name="AppType">
+    <xs:sequence>
+      <xs:element name="StartUp" maxOccurs="1" minOccurs="0">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="fullscreen"/>
+            <xs:enumeration value="portrait"/>
+            <xs:enumeration value="landscape"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="Unsupported" maxOccurs="unbounded" minOccurs="0">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="toggleIcon"/>
+            <xs:enumeration value="resize"/>
+            <xs:enumeration value="move"/>
+            <xs:enumeration value="relaunch"/>
+            <xs:enumeration value="kill"/>
+            <xs:enumeration value="fullrelaunch"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute type="xs:string" name="name" use="optional"/>
+    <xs:attribute type="xs:string" name="packageName" use="required"/>
+  </xs:complexType>
+  <xs:complexType name="AppListType">
+    <xs:sequence>
+      <xs:element type="AppType" name="App" maxOccurs="unbounded" minOccurs="0" />
+    </xs:sequence>
+    <xs:attribute type="xs:positiveInteger" name="targetSdkVersion" use="optional"/>
+  </xs:complexType>
+  <xs:complexType name="AppWindowConfigType">
+    <xs:sequence>
+      <xs:element type="AppListType" name="AppList" minOccurs="1" maxOccurs="unbounded"/>
+    </xs:sequence>
+    <xs:attribute type="xs:string" name="versionName" use="required"/>
+    <xs:attribute type="xs:positiveInteger" name="versionCode" use="required"/>
+    <xs:attribute type="xs:string" name="date" use="optional"/>
+  </xs:complexType>
+</xs:schema>

@@ -1,0 +1,20 @@
+!!brut.androlib.meta.MetaInfo
+apkFileName: Dashboard.apk
+compressionType: false
+isSharedLibrary: false
+doNotCompress:
+- resources.arsc
+- png
+- jpg
+- webp
+- assets
+sdkInfo:
+  minSdkVersion: 21
+  targetSdkVersion: 33
+packageInfo:
+  forcedPackageId: 127
+  renameManifestPackage: null
+versionInfo:
+  versionCode: 1
+  versionName: "1.0"
+unknownFiles: {}

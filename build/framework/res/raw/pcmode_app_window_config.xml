@@ -1,0 +1,1463 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+1. Data Source: https://docs.google.com/spreadsheets/d/1kz3mT0cLqexIsc-0bB8-fFaSHwpMRHZ1k1m3zWAYDt0/edit#gid=0
+
+2. <App/> element full example:
+        <App name="ABC Reading" packageName="com.tal.abctimelibrary">
+            <StartUp>fullscreen</StartUp> // default value (when it's not present in <App/> element): undefined
+            <Unsupported>toggleIcon</Unsupported> // default (when it's not present in <App/>): can maximize & restore
+            <Unsupported>resize</Unsupported> // default (when it's not present in <App/>): can resize
+            <Unsupported>move</Unsupported> // default (when it's not present in <App/>): can move
+            <Unsupported>relunch</Unsupported> // when set, it don't relaunh because of SCREEN_LAYOUT.
+            <Unsupported>fullrelaunch</Unsupported> // When set , it can't relaunch any time when pcmode.
+            <Unsupported>kill</Unsupported> // When set, it can't be killed when close by X-icon or Nav-Bar-icon.
+        </App>
+See enumerations for every element in the corresponding Xml Schema Definition file,
+pcmode_app_window_config_schema.xsd
+
+3. Validate this file:
+$ sudo apt install libxml2-utils
+$ xmllint &#45;&#45;noout &#45;&#45;schema pcmode_app_window_config_schema.xsd pcmode_app_window_config.xml
+(&#45; is ASCII 45, a hyphen `-`. Double hyphens are not allowed in XML comments.)
+-->
+<AppWindowConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="./pcmode_app_window_config_schema.xsd"
+    versionName="1.3.11" versionCode="18" date="20210517">
+    <AppList>
+        <!-- F2 fullscreen-最大化button 不可伸缩 -->
+        <App name="SystemUI" packageName="com.android.systemui">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+            <Unsupported>kill</Unsupported>
+        </App>
+        <App name="ABC Reading" packageName="com.tal.abctimelibrary">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="Bamboo paper" packageName="com.wacom.bamboopapertab">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="UC浏览器" packageName="com.UCMobile">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+            <Unsupported>relaunch</Unsupported>
+        </App>
+        <App name="Sketch book" packageName="com.adsk.sketchbook">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="轻颜相机" packageName="com.gorgeous.lite">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="B612（相机）" packageName="com.campmobile.snowcamera">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="Faceu激萌" packageName="com.lemon.faceu">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="美图秀秀" packageName="com.mt.mtxx.mtxx">
+            <StartUp>portrait</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="赶考状元" packageName="com.gankao.gkwxhd">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="百度输入法" packageName="com.baidu.input">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+            <Unsupported>fullrelaunch</Unsupported>
+        </App>
+        <App name="百搜视频" packageName="com.baidu.video"><!--LSSIB-14010-->
+            <StartUp>portrait</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="Hill Climb Racing 2" packageName="com.fingersoft.hcr2">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <!-- F1：full screen+最大化button 可伸缩（暂时无法实现，按F2处理） -->
+        <!-- Actually should be:
+        <App name="实况足球" packageName="com.netease.pes.lenovo">
+            <StartUp>fullscreen</StartUp>
+        </App>
+        Currently we can't make it, so they are the same as F1 for now.
+        -->
+        <App name="实况足球" packageName="com.netease.pes.lenovo">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="QQ飞车" packageName="com.tencent.tmgp.speedmobile">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="王者荣耀" packageName="com.tencent.tmgp.sgame">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="高能英雄" packageName="com.tencent.tmgp.gnyx">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="和平精英" packageName="com.tencent.tmgp.pubgmhd">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="穿越火线" packageName="com.tencent.tmgp.cf">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="决战！平安京" packageName="com.netease.moba.lenovo">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="崩坏3" packageName="com.miHoYo.bh3.lenovo">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="小猴AI课（预装）" packageName="com.tal.imonkey.chinese">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="Skype for business" packageName="com.microsoft.office.lync15">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="迷你世界" packageName="com.minitech.miniworld.TMobile.Lenovo">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="刀塔传奇" packageName="sh.lilith.dgame.lenovo">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="轩辕剑：剑之源" packageName="com.cmge.xyjjzy.lenovo">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="梦幻花园" packageName="com.ledou.mhhy.lenovo">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="三国志幻想大陆" packageName="com.aligames.star.sgzhxdl.lenovo">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="放开那三国" packageName="com.babeltime.fknsango.lenovo">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="问道" packageName="com.gbits.atm.lenovo">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="节奏大师" packageName="com.tencent.game.rhythmmaster">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="阴阳师" packageName="com.netease.onmyoji.lenovo">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="墨迹天气HD" packageName="com.moji.pad">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="QQ音乐HD" packageName="com.tencent.qqmusicpad">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="我的安吉拉" packageName="com.outfit7.mytalkingangelafree.lenovo">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="第五人格" packageName="com.netease.dwrg.lenovo">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="部落冲突" packageName="com.supercell.clashofclans.lenovo">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="梦幻西游" packageName="com.netease.my.lenovo">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="小学口算（预装)" packageName="com.tal.monkey">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="题拍拍（预装）" packageName="com.tal.tiku">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="汤姆猫跑酷" packageName="com.outfit7.talkingtomgoldrun.lenovo">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App packageName="com.meitu.meiyancamera">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="掌门1对1辅导" packageName="com.zmlearn.course.am">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="网易公开课" packageName="com.netease.vopen">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+
+        <App name="地铁跑酷" packageName="com.kiloo.subwaysurf">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+
+        <App name="Geometry Dash Lite" packageName="com.robtopx.geometryjumplite">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+
+        <App name="Soccer Super Star" packageName="com.soccer.score.star">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+
+        <App name="Block Crazy Robo World" packageName="com.crazy.block.robo.monster.cliffs.craft">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+
+        <App name="Snakers Ladders King" packageName="com.gametion.snakesladders">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+
+        <!-- [LGSIT-9532]: modify fullscreen for snake.io app in PC mode -->
+        <App name="Snake.io" packageName="com.amelosinteractive.snake">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+
+        <App name="Stumble Guys" packageName="com.kitkagames.fallbuddies">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+
+        <App name="Magic Cleaner" packageName="com.oupeng.master">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+
+        <App name="Amazon Music" packageName="com.amazon.ziggy.android">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+
+        <App name="Yandex Start" packageName="ru.yandex.searchplugin">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+
+        <App name="Among us" packageName="com.innersloth.spacemafia">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+
+        <App name="Talking Tom Hero Dash" packageName="com.outfit7.talkingtom">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+
+        <!-- LGSIU-12130: modify startup mode to fullscreen -->
+        <App name="Talking Tom Hero Dash" packageName="com.outfit7.herodash">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+
+        <!-- [LGSIU-9399]: modify fullscreen for Mini Metro app in PC mode -->
+        <App name="Mini Metro" packageName="nz.co.codepoint.minimetro">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+
+        <!-- LGSIU-11870,LGSIU-11875: modify startup mode to fullscreen -->
+        <App name="Phone Case DIY" packageName="com.newnormalgames.phonecasediy">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+
+        <App name="使命召唤手游" packageName="com.tencent.tmgp.cod">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+
+        <App name="PUBG" packageName="com.tencent.ig">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+            <Unsupported>relaunch</Unsupported>
+        </App>
+        <App name="哔哩哔哩HD" packageName="tv.danmaku.bilibilihd">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+
+        <App name="英雄联盟手游" packageName="com.tencent.lolm">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+
+        <App name="Minecraft" packageName="com.mojang.minecraftpe">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+
+        <App name="PK XD" packageName="com.movile.playkids.pkxd">
+            <StartUp>landscape</StartUp>
+        </App>
+
+        <App name="netflix" packageName="com.netflix.mediaclient">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+
+        <App name="Kids Space" packageName="com.google.android.apps.kids.home">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <!-- // [LGSIT-14773]: 植物大战僵尸2    com.popcap.pvz2cthdlx -->
+        <App name="植物大战僵尸2" packageName="com.popcap.pvz2cthdlx">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+            <Unsupported>relaunch</Unsupported>
+        </App>
+        <!-- // [LGSIT-14816] 潮汐    io.moreless.tide -->
+        <App name="潮汐" packageName="io.moreless.tide">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <!-- // [LGSIT-14769] kada阅读HD    com.hhdd.kada -->
+        <App name="kada阅读HD" packageName="com.hhdd.kada">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <!-- // [LGSIT-14769] kada阅读HD    com.hhdd.kadahd -->
+        <App name="kada阅读HD" packageName="com.hhdd.kadahd">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <!-- // [LGSIT-14768] 喜马拉雅儿童HD    com.ximalayaos.pad.tingkid -->
+        <App name="喜马拉雅儿童HD" packageName="com.ximalayaos.pad.tingkid">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+
+        <App name="YT Kids" packageName="com.google.android.apps.youtube.kids">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="ROBLOX" packageName="com.roblox.client">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="蛋仔派对" packageName="com.netease.party.lenovo">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <!-- LGSIU-11927: modify startup mode to fullscreen, don't support resize -->
+        <App name="蛋仔派对" packageName="com.netease.party">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="暗区突围" packageName="com.tencent.mf.uam">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="植物大战僵尸2" packageName="com.popcap.pvz2cthdlx">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="Legion Zone" packageName="com.lenovo.legionzone">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <!--DEPLOYV-7887-->
+        <App name="想帮帮" packageName="com.lenovo.xbb">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <!--KIRBYU-17701-->
+        <App name="胖达云游" packageName="com.tlhcxm.gamereva">
+            <StartUp>portrait</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+        </App>
+        <!--LGSIV-11800-->
+        <App name="番茄视听" packageName="com.xs.fm">
+            <StartUp>portrait</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+        </App>
+        <App name="My Talking Tom" packageName="com.outfit7.mytalkingtomfree">
+            <StartUp>portrait</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="JioHotstar" packageName="in.startv.hotstar"><!--LSSIB-14118-->
+            <StartUp>portrait</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="HappyColor" packageName="com.pixel.art.coloring.color.number">
+            <StartUp>portrait</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+        </App>
+        <App name="高德地图" packageName="com.autonavi.minimap">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="Meet" packageName="com.google.android.apps.tachyon">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="查找平板" packageName="com.zui.antitheft">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+
+        <!-- INCEPU-3318: modify startup mode to fullscreen, don't support resize -->
+        <App name="遨游浏览器" packageName="com.mx.browser">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+
+        <!-- LGSIU-10745: modify startup mode to fullscreen, don't support resize -->
+        <App name="叫叫" packageName="com.shusheng.JoJoRead">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+
+        <!-- [LGSIU-12675] Tile Triple Master:Block Match  com.matchgame.tiletriple -->
+        <App name="Tile Triple Master:Block Match" packageName="com.matchgame.tiletriple">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <!-- [LSSIB-5405] fix the issue that ifly is too big in fullscreen -->
+        <App name="迅飞输入法" packageName="com.iflytek.inputmethod">
+            <StartUp>portrait</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <!-- [LSSIB-9440] fix the issue of head ball black screen -->
+        <App name="Head Ball 2" packageName="com.masomo.headball2">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <!-- LGSIU-9737:modify startup mode from fullscreen to portrait -->
+        <App name="Race Master" packageName="com.easygames.race">
+            <StartUp>portrait</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <!-- INCEPU-2106: modify startup mode to fullscreen -->
+        <App name="8 Ball Pool" packageName="com.miniclip.eightballpool">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+
+        <!-- LGSIU-10660:fix show abnormal in PC mode -->
+        <App name="云记" packageName="com.jideos.jnotes">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+
+        <!-- LGSIU-7055:fix com.chaoxing.mobile abnormal show in PC mode -->
+        <App name="学习通" packageName="com.chaoxing.mobile">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+
+        <!-- INCEPU-3380:fix Browser abnormal show in PC mode -->
+        <!-- LGSIU-14690. annotated full screen configuration.
+        <App name="浏览器" packageName="com.zui.browser">
+            <StartUp>fullscreen</StartUp>
+        </App>
+        -->
+
+        <!-- F1 END -->
+        <App name="洪恩拼音" packageName="com.ihuman.pinyin">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+
+        <App name="craftsman building craft" packageName="com.craftsman.go">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+
+        <App name="School Party Craft" packageName="com.candyroom.clubcraft">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="TruCaller" packageName="com.truecaller">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="Solor Smash" packageName="com.paradyme.solarsmash">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+
+        <App name="爱奇艺奇巴布" packageName="com.qiyi.video.child">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+            <Unsupported>relaunch</Unsupported>
+        </App>
+        <App name="Yandex Disk" packageName="ru.yandex.disk">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="宝宝巴士世界" packageName="com.sinyee.babybus.world">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="不背单词" packageName="cn.com.langeasy.LangEasyLexis">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <!-- [INCEPU-4907] 联想乐云 com.lenovo.leos.cloud.sync -->
+        <App name="联想乐云" packageName="com.lenovo.leos.cloud.sync">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <!-- [INCEPU-4070] modify startup mode to fullscreen -->
+        <App name="联想换机" packageName="com.zui.clone">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <!-- [LGSIU-13158] [LGSIU-13157] [LGSIU-13160]: modify startup mode to fullscreen -->
+        <App name="宝宝巴士奇妙屋" packageName="com.sinyee.babybus.talk2kiki">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="宝宝巴士HD" packageName="com.bb.happykids">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="uber eats for restaurants" packageName="com.uber.restaurants"><!-- DEPLOYU-1788-->
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <!-- LGSIU-9991:fix only show part contents in PC mode -->
+        <!-- LGSIU-14864:modify app to resizeable -->
+        <App name="快手" packageName="com.smile.gifmaker">
+            <StartUp>portrait</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+        </App>
+        <App name="泰拉贝尔" packageName="com.im30.ROE.cn">
+            <StartUp>portrait</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <!-- W5：固定竖屏小窗 无最大化 不可收缩 -->
+        <!-- [LGSIU-12671] QQ com.tencent.mobileqq -->
+        <App name="QQ" packageName="com.tencent.mobileqq">
+            <StartUp>portrait</StartUp>
+            <Unsupported>kill</Unsupported>
+        </App>
+        <App name="喜马拉雅" packageName="com.ximalaya.ting.android">
+            <StartUp>portrait</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <!-- [DEPLOYU-2366] add taptap to this list to fix page refresh issue. -->
+        <App name="taptap" packageName="com.taptap">
+            <StartUp>portrait</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+        </App>
+        <App name="WhatsApp Business" packageName="com.whatsapp.w4b"><!--fix DEPLOYV-3552)-->
+            <StartUp>portrait</StartUp>
+        </App>
+        <!-- [LGSIU-11714] 网易云音乐  com.netease.cloudmusic -->
+        <App name="网易云音乐" packageName="com.netease.cloudmusic">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <!-- [LGSIV-9956]  com.zui.keyboardupdate.olympia -->
+        <App name="keyboard" packageName="com.zui.keyboardupdate.olympia">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="PC app" packageName="com.lenovo.continuity">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="pizza" packageName="com.tapblaze.pizzabusiness">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <!-- [LGSIU-12591] Piano Fire应用 beatmaker.edm.musicgames.PianoGames -->
+        <App name="Piano Fire" packageName="beatmaker.edm.musicgames.PianoGames">
+            <StartUp>portrait</StartUp>
+            <!-- [LGSIU-13474] Don't should support toggle icon-->
+            <Unsupported>toggleIcon</Unsupported>
+        </App>
+        <App name="酷狗音乐" packageName="com.kugou.android">
+            <StartUp>portrait</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+        </App>
+        <App name="一起小学学生" packageName="com.A17zuoye.mobile.homework">
+            <StartUp>portrait</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="小红书" packageName="com.xingin.xhs">
+            <StartUp>portrait</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+        </App>
+        <App name="王者营地" packageName="com.tencent.gamehelper.smoba">
+            <StartUp>portrait</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+        </App>
+        <App name="网易新闻" packageName="com.netease.newsreader.activity">
+            <StartUp>portrait</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="开心消消乐" packageName="com.happyelements.AndroidAnimal">
+            <StartUp>portrait</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+        </App>
+        <App name="斑马AI课" packageName="com.fenbi.android.zenglish">
+            <StartUp>portrait</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="手机天猫" packageName="com.tmall.wireless">
+            <StartUp>portrait</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="NewTV 怡伴" packageName="ybtv.icntv.ott">
+            <StartUp>portrait</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <!-- [LGSIU-11652] make pinduoduo app resizeable in pc mode. -->
+        <App packageName="com.xunmeng.pinduoduo">
+            <StartUp>portrait</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+        </App>
+        <App name="乐聊" packageName="com.samsundot.talking">
+            <StartUp>portrait</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+
+        <App name="Block Puzzle Guardian" packageName="com.block.puzzle.game.hippo.uc">
+            <StartUp>portrait</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+
+        <App name="Facebook Lite" packageName="com.facebook.lite">
+            <StartUp>portrait</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <!-- // [LGSIT-14772] 醒图 DEPLOYU-4397   com.xt.retouch -->
+        <App name="醒图" packageName="com.xt.retouch">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+
+        <App name="My Talking Tom 2" packageName="com.outfit7.mytalkingtom2">
+            <StartUp>portrait</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <!-- // [DEPLOYT-5430] My Talking Angela 2 com.outfit7.mytalkingangela2 -->
+        <App name="My Talking Angela 2" packageName="com.outfit7.mytalkingangela2">
+            <StartUp>portrait</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <!--LGSIU-10622 fix display overlap for AIPlay item in pc mode -->
+        <App name="快影" packageName="com.kwai.videoeditor">
+            <StartUp>portrait</StartUp>
+            <Unsupported>relaunch</Unsupported>
+        </App>
+        <!-- [LGSIU-12653] yahoo!  jp.co.yahoo.android.yjtop -->
+        <App name="yahoo!" packageName="jp.co.yahoo.android.yjtop">
+            <StartUp>portrait</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <!-- [LGSIU-10645] JJ斗地主  cn.jj -->
+        <App name="JJ斗地主" packageName="cn.jj">
+            <StartUp>portrait</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <!-- [LGSIU-12636] 2 Player games    com.JindoBlu.TwoPlayerGamesChallenge -->
+        <App name="2 Player games" packageName="com.JindoBlu.TwoPlayerGamesChallenge">
+            <StartUp>portrait</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <!-- [INCEPU-2095] Suivivor.io  com.dxx.firenow -->
+        <App name="Suivivor.io" packageName="com.dxx.firenow">
+            <StartUp>portrait</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <!-- [LGSIU-12243] 我的世界  com.netease.mc.lenovo -->
+        <App name="我的世界" packageName="com.netease.mc.lenovo">
+            <StartUp>portrait</StartUp>
+        </App>
+        <App name="SnapChat" packageName="com.snapchat.android">
+            <StartUp>portrait</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <!-- [LGSIU-14837] QQ音乐  com.tencent.qqmusic -->
+        <App name="QQ音乐" packageName="com.tencent.qqmusic">
+            <StartUp>portrait</StartUp>
+        </App>
+        <!-- [DEPLOYU-3260] 洋葱学院  modify app to portrait -->
+        <App name="洋葱学院" packageName="com.yangcong345.android.phone">
+            <StartUp>portrait</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="Antistress-relaxation toys" packageName="com.JindoBlu.Antistress">
+            <StartUp>portrait</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="Magic Tiles 3" packageName="com.youmusic.magictiles">
+            <StartUp>portrait</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="联想账号设置" packageName="com.lenovo.lsf">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="荒野乱斗" packageName="com.tencent.tmgp.supercell.brawlstars">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="米哈游" packageName="com.mihoyo.hyperion">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="Instagram" packageName="com.instagram.android">
+            <StartUp>portrait</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+        </App>
+        <App name="好爸爸人教译林外研" packageName="com.yixinjiang.goodbaba.app.presentation.pep">
+            <StartUp>portrait</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="手迹造字" packageName="com.handwriting.makefont">
+            <StartUp>portrait</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="百度翻译" packageName="com.baidu.baidutranslate">
+            <StartUp>portrait</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="皇室战争" packageName="com.tencent.tmgp.supercell.clashroyale">
+            <StartUp>portrait</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+        </App>
+        <App name="影视大全" packageName="com.le123.ysdq">
+            <StartUp>portrait</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="头条搜索极速版" packageName="com.ss.android.article.lite">
+            <StartUp>portrait</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="words of wonders" packageName="com.fugo.wow">
+            <StartUp>portrait</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="kwai" packageName="com.kwai.video">
+            <StartUp>portrait</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="小伴龙" packageName="com.xiaobanlong.main">
+            <StartUp>portrait</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="Piano Star Tap Music Tiles" packageName="com.piano.tiles.music.game.circles.dancing.beat.magictiles">
+            <StartUp>portrait</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <!-- [INCEPU-2110] modify perfect365 to portrait to fix show abnormal issue -->
+        <App name="完美365" packageName="com.arcsoft.perfect365">
+            <StartUp>portrait</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="Tiles Hop" packageName="com.amanotes.beathopper">
+            <StartUp>portrait</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <!-- [DEPLOYU-8892] in pcmode flickers black. and LGSIU-12349 is fixed by Google Play itself. -->
+        <!-- [LGSIU-12349] modify Google Play Store app startup mode to fullscreen to fix show abnormal -->
+        <!--
+        <App name="Google Play Store" packageName="com.android.vending">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        -->
+        <!-- [DEPLOYU-2379] modify app to portrait -->
+        <App name="水印相机" packageName="com.tencent.zebra">
+            <StartUp>portrait</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <!-- [LGSIU-12667] Pou  me.pou.app -->
+        <App name="Pou" packageName="me.pou.app">
+            <StartUp>portrait</StartUp>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <!-- [LGSIU-14812] 酷我音乐  cn.kuwo.player -->
+        <!-- [LGSIU-14997] modify app to support resizeable -->
+        <App name="酷我音乐" packageName="cn.kuwo.player">
+            <StartUp>portrait</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+        </App>
+        <App name="WIFI万能钥匙" packageName="com.snda.wifilocating"><!--LGSIV-6236-->
+            <StartUp>portrait</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <!-- W5 END -->
+
+        <!-- W2: 固定横屏小窗 无最大化 不可收缩 -->
+        <App packageName="com.zui.feedback">
+            <StartUp>landscape</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <!-- // [LGSIT-14729] 洪恩识字    com.hongen.app.word -->
+        <App name="洪恩识字" packageName="com.hongen.app.word">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+
+        <App name="洪恩成语" packageName="com.ihuman.guoxue">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+
+        <!-- // [LGSIT-14718] INCEPU-5591 金铲铲之战    com.tencent.jkchess -->
+        <App name="金铲铲之战" packageName="com.tencent.jkchess">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+
+        <!-- W1：横小窗调起 有最大化 不可收缩 -->
+        <App name="腾讯视频" packageName="com.tencent.qqlive">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="搜狗" packageName="com.sohu.inputmethod.sogou">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="muzei" packageName="net.nurik.roman.muzei">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <!-- [LGSIU-9574] modify facebook app to fullscreen to fix abnormal show -->
+        <App name="facebook" packageName="com.facebook.katana">
+            <StartUp>portrait</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+        </App>
+        <!-- [DEPLOYU-2208] modify app to fullscreen to fix show abnormal issue -->
+        <App name="淘宝" packageName="com.taobao.taobao">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="AI lens" packageName="com.zui.ai.lens">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="哔哩哔哩" packageName="tv.danmaku.bili">
+            <StartUp>landscape</StartUp>
+        </App>
+        <App name="搜狐视频" packageName="com.sohu.sohuvideo">
+            <StartUp>landscape</StartUp>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="陌陌" packageName="com.immomo.momo">
+            <StartUp>landscape</StartUp>
+            <Unsupported>resize</Unsupported>
+            <Unsupported>relaunch</Unsupported>
+        </App>
+        <App name="境外上网" packageName="com.zui.zroaming">
+            <StartUp>landscape</StartUp>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="爱奇艺小说" packageName="com.qiyi.video.reader">
+            <StartUp>landscape</StartUp>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="Brawl Stars" packageName="com.supercell.brawlstars"> <!--LGSIV-6542 LGSIV-6578-->
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <!--[LGSIU-12124] DEPLOYU-2725 modify Toca World app startup mode to landscape in pc mode-->
+        <App name="Toca World" packageName="com.tocaboca.tocalifeworld">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <!-- Others -->
+        <App name="ZUI Launcher" packageName="com.zui.launcher">
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App packageName="com.zui.resolver">
+            <StartUp>fullscreen</StartUp>
+        </App>
+        <App name="紧急拨号盘" packageName="com.android.phone">
+            <StartUp>portrait</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>kill</Unsupported>
+        </App>
+        <App name="电话" packageName="com.android.dialer">
+            <StartUp>portrait</StartUp>
+        </App>
+        <App name="Chromecast 电视投屏助手" packageName="com.boost.chromecast">
+            <StartUp>portrait</StartUp>
+        </App>
+        <App name="电话" packageName="com.google.android.dialer">
+            <StartUp>portrait</StartUp>
+        </App>
+        <App name="宝宝巴士游戏" packageName="com.sinyee.babybus.recommendapp">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <!-- ===== Do not relaunch list ===== via. wangjc20 -->
+        <App packageName="com.zui.position.travel">
+            <Unsupported>relaunch</Unsupported>
+        </App>
+        <App packageName="com.lenovo.browser">
+            <Unsupported>relaunch</Unsupported>
+        </App>
+        <App name="DocumentsUI" packageName="com.android.documentsui">
+            <Unsupported>relaunch</Unsupported>
+        </App>
+
+        <App name="Google" packageName="com.google.android.googlequicksearchbox">
+            <Unsupported>relaunch</Unsupported>
+        </App>
+        <!-- [LGSIU-14786][LGSIU-14788] modify app to fullscreen to fix show abnormal and topbar content being obstructed issues.-->
+        <App name="咪咕快游(联想版)" packageName="com.migu.miguplay.lenovo">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+            <Unsupported>relaunch</Unsupported>
+        </App>
+        <App name="微博" packageName="com.sina.weibo">
+            <Unsupported>fullrelaunch</Unsupported>
+        </App>
+        <App name="应用商店" packageName="com.lenovo.leos.appstore">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <!-- [LGSIU-12022] modify app to portrait and not support resize to fix app bottom show abnormal -->
+        <App name="keep应用" packageName="com.gotokeep.keep">
+            <StartUp>portrait</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <!-- [LGSIU-12022] modify app to portrait and not support resize to fix app bottom show abnormal -->
+        <App name="央视频" packageName="com.cctv.yangshipin.app.androidp">
+            <StartUp>portrait</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <!-- [LGSIV-6774]  -->
+        <App name="xianyu" packageName="com.taobao.idlefish">
+            <StartUp>portrait</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+        </App>
+        <App name="FIFA Mobile" packageName="com.ea.gp.fifamobile">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>relaunch</Unsupported>
+        </App>
+
+        <App name="QQ浏览器" packageName="com.tencent.mtt">
+            <Unsupported>relaunch</Unsupported>
+        </App>
+
+        <App name="相机" packageName="com.zui.camera">
+            <Unsupported>relaunch</Unsupported>
+        </App>
+
+        <App name="不咕剪辑" packageName="com.versa.vanilla">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+
+        <!-- [LGSIU-13451] 不咕剪辑  com.versa.magicut -->
+        <App name="magicut" packageName="com.versa.magicut">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <!-- [DEPLOYU-4962] whatsApp Messenger com.whatsapp -->
+        <App name="whatsApp Messenger" packageName="com.whatsapp">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <!-- [INCEPU-3697] 美团app com.sankuai.meituan -->
+        <App name="美团" packageName="com.sankuai.meituan">
+            <StartUp>portrait</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+        </App>
+        <App name="Pixel Art" packageName="com.europosit.pixelcoloring">
+            <StartUp>portrait</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="联想智选" packageName="com.lenovo.club.app"><!--DEPLOYU-515-->
+            <StartUp>portrait</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+        </App>
+        <!-- [DEPLOYU-7859] 小站雅思 com.zhan.ieltstiku -->
+        <App name="小站雅思" packageName="com.zhan.ieltstiku">
+            <Unsupported>relaunch</Unsupported>
+        </App>
+        <App name="Soul" packageName="cn.soulapp.android"><!--DEPLOYU-2361-->
+            <StartUp>portrait</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="Candy Crush Saga" packageName="com.king.candycrushsaga"><!--DEPLOYU-3713-->
+            <StartUp>portrait</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="保卫萝卜4" packageName="com.tencent.tmgp.luobo4"><!--DEPLOYU-4081-->
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="保卫萝卜4" packageName="com.feiyu.luobo4.aligames"><!--DEPLOYU-4081-->
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="熊猫绘画" packageName="com.lloo.w.painting"><!--DEPLOYU-6121-->
+            <StartUp>portrait</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="分期乐" packageName="com.fenqile.fenqile"><!--DEPLOYU-6896-->
+            <StartUp>portrait</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="开心乐园" packageName="com.zd.windinfo.lets.palyclient"><!--DEPLOYU-6900-->
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="LOFTER" packageName="com.lofter.android"><!--DEPLOYU-6909-->
+            <StartUp>portrait</StartUp>
+        </App>
+        <App name="转转" packageName="com.wuba.zhuanzhuan"><!--DEPLOYU-6910-->
+            <StartUp>portrait</StartUp>
+        </App>
+        <App name="MOMO陌陌" packageName="com.immomo.momo"><!--DEPLOYU-6912-->
+            <StartUp>portrait</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="Google Camera Go" packageName="com.google.android.apps.cameralite"><!--DEPLOYU-7187-->
+            <StartUp>portrait</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="Find Device" packageName="com.google.android.apps.adm"><!--KIRBYU-13920-->
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="画世界" packageName="net.huanci.hsj"><!--DEPLOYU-6899-->
+            <StartUp>portrait</StartUp>
+        </App>
+        <App name="汽水音乐" packageName="com.luna.music"><!--DEPLOYU-7038-->
+            <StartUp>portrait</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+        </App>
+        <App name="考试蚁" packageName="com.uuedu.examant"><!--DEPLOYU-7189-->
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="有道少儿词典" packageName="com.youdao.kiddict"><!--DEPLOYU-7584-->
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="神庙逃亡2" packageName="com.imangi.templerun2"><!--DEPLOYU-5927-->
+            <StartUp>portrait</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="贪吃蛇大作战" packageName="com.osramgame.tcsmsdzz"><!--DEPLOYU-7694-->
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="天骄学堂家长" packageName="com.lenovo.lfh.tianjiao"><!-- DEPLOYU-1622-->
+            <StartUp>portrait</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="我的汤姆猫" packageName="com.outfit7.mytalkingtomfree.lenovo">
+            <StartUp>portrait</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="微店" packageName="com.koudai.weidian.buyer">
+            <StartUp>portrait</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="我的世界" packageName="com.netease.mc.lenovo">
+            <StartUp>portrait</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="FC足球世界" packageName="com.tencent.fifamobile">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="天天象棋" packageName="com.tencent.qqgame.xq">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="飞猪旅行" packageName="com.taobao.trip">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="世界之外" packageName="com.netease.sjzw">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="欧拉数理化" packageName="com.ola100.app">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="崩坏：星穹铁道" packageName="com.miHoYo.hkrpg">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="晋江小说阅读" packageName="com.jjwxc.reader">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="腾讯地图" packageName="com.tencent.map">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="Monsters" packageName="es.socialpoint.MonsterLegends"><!-- DEPLOYU-7220 -->
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="ocpl" packageName="com.lenovo.ocpl"><!-- DEPLOYU-10403 -->
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="小猿搜题" packageName="com.fenbi.android.solar"><!-- LGSIV-7140 -->
+            <StartUp>landscape</StartUp>
+        </App>
+        <App name="爱奇艺" packageName="com.qiyi.video"><!-- LGSIV-11031 -->
+            <StartUp>portrait</StartUp>
+        </App>
+
+        <!-- ===== Do not kill list ===== -->
+        <App name="录音机" packageName="com.zui.recorder">
+            <Unsupported>kill</Unsupported>
+        </App>
+        <!-- [LGSIU-10768] WPS office  cn.wps.moffice_eng -->
+        <App name="WPS Office" packageName="cn.wps.moffice_eng">
+            <Unsupported>kill</Unsupported>
+        </App>
+        <!-- [LGSIU-11456] Play Games  com.google.android.play.games -->
+        <App name="Play Games" packageName="com.google.android.play.games">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+            <Unsupported>kill</Unsupported>
+        </App>
+        <!-- [LGSIU-12638] Gmail  com.google.android.gm -->
+        <App name="Gmail" packageName="com.google.android.gm">
+            <Unsupported>kill</Unsupported>
+        </App>
+        <!-- [LGSIU-12618] Google Docs  com.google.android.apps.docs.editors.docs -->
+        <App name="Google Docs" packageName="com.google.android.apps.docs.editors.docs">
+            <Unsupported>kill</Unsupported>
+        </App>
+        <!-- [LGSIU-11896] 百度网盘  com.baidu.netdisk -->
+        <App name="百度网盘" packageName="com.baidu.netdisk">
+            <StartUp>portrait</StartUp>
+            <Unsupported>kill</Unsupported>
+        </App>
+        <!-- DEPLOYV-345-->
+        <App name="lazada" packageName="com.lazada.android">
+            <StartUp>portrait</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+        </App>
+        <!-- [LGSIU-12269] 百度  com.baidu.searchbox -->
+        <App name="百度" packageName="com.baidu.searchbox">
+            <Unsupported>kill</Unsupported>
+        </App>
+        <!-- [LGSIU-12909] 微信  com.tencent.mm -->
+        <App name="微信" packageName="com.tencent.mm">
+            <Unsupported>kill</Unsupported>
+        </App>
+        <!-- [LGSIU-13219] Microsoft 365  com.microsoft.office.officehub -->
+        <App name="Microsoft 365" packageName="com.microsoft.office.officehub">
+            <Unsupported>kill</Unsupported>
+        </App>
+        <!-- [LGSIU-13219] Microsoft 365  com.microsoft.office.officehubrow -->
+        <App name="Microsoft 365" packageName="com.microsoft.office.officehubrow">
+            <Unsupported>kill</Unsupported>
+        </App>
+        <!-- [LGSIU-12028] fix close all the open windows issue -->
+        <App name="Google Slides" packageName="com.google.android.apps.docs.editors.slides">
+            <Unsupported>kill</Unsupported>
+        </App>
+        <!-- [DEPLOYU-5521] fix close all the open windows issue -->
+        <App name="Adobe Acrobat Reader" packageName="com.adobe.reader">
+            <Unsupported>kill</Unsupported>
+        </App>
+        <App name="乐语音" packageName="com.lenovo.levoice.caption"><!--DEPLOYU-1733-->
+            <Unsupported>kill</Unsupported>
+        </App>
+        <App name="时钟" packageName="com.zui.deskclock"><!--DEPLOYU-7642-->
+            <Unsupported>kill</Unsupported>
+        </App>
+
+        <!-- [INCEPU-2079] set unsupport toggleIcon -->
+        <App name="异乡好居" packageName="com.yxhjandroid1.uhouzzdis">
+            <Unsupported>toggleIcon</Unsupported>
+        </App>
+        <!-- [LGSIU-9323] set unsupport toggleIcon -->
+        <App name="Maps and Navigation" packageName="com.maps.voice.navigation.traffic.gps.location.route.driving.directions">
+            <Unsupported>toggleIcon</Unsupported>
+        </App>
+        <!-- [DEPLOYU-4976][OCITRUS-10917] set unsupport toggleIcon -->
+        <App name="TIM" packageName="com.tencent.tim">
+            <Unsupported>toggleIcon</Unsupported>
+        </App>
+        <App name="英雄联盟" packageName=" com.riotgames.league.wildrift"> <!-- DEPLOYV-1696 -->
+            <Unsupported>relaunch</Unsupported>
+        </App>
+        <App name="Geometry Dash World" packageName="com.robtopx.geometrydashworld"><!--[DEPLOYV-3222]-->
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="OurPlay" packageName="com.excean.gspace"><!-- DEPLOYV-8436 -->
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="Google服务" packageName="com.google.android.gms"><!-- DEPLOYV-10504--><!-- DEPLOYV-75, DEPLOYV-105-->
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="+Message" packageName="jp.softbank.mb.plusmessage"><!-- DEPLOYV-10660 -->
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="三角洲行动" packageName="com.tencent.tmgp.dfm"><!-- DEPLOYV-10487 -->
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="TikTok" packageName="com.zhiliaoapp.musically"><!-- DEPLOYW-1236 -->
+            <StartUp>portrait</StartUp>
+        </App>
+        <App name="Asphalt 8" packageName="com.gameloft.android.ANMP.GloftA8HM"> <!-- DEPLOYW-3488 -->
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="亦心AI闪绘" packageName="com.photosir.flashpaint"><!-- DEPLOYV-11877 -->
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="Block Puzzle Adventure HD" packageName="com.block.puzzle.jewel.adventure.blast"><!-- SYCAMOREW-1177,SYCAMOREW-1178 -->
+            <StartUp>portrait</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+        <App name="Geometry Dash SubZero" packageName="com.robtopx.geometrydashsubzero"><!--[DEPLOYW-3288]-->
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+        </App>
+    </AppList>
+</AppWindowConfig>

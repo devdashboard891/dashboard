@@ -987,15 +987,14 @@
             (function(el) {
               var msg = el.dataset.msg;
               if (msg.length < 3) return;
-              // Use MyMemory API for translation
               var url = 'https://api.mymemory.translated.net/get?q=' + encodeURIComponent(msg) + '&langpair=en|ru';
               fetch(url)
                 .then(function(r) { return r.json(); })
                 .then(function(td) {
                   if (td && td.responseData && td.responseData.translatedText) {
                     var translated = td.responseData.translatedText;
-                    if (translated && translated !== msg) {
-                      el.innerHTML = '<span class="text-white/40">⟳</span> ' + esc(translated);
+                    if (translated && translated !== msg && translated.indexOf('MYMEMORY') === -1) {
+                      el.innerHTML = esc(translated);
                     }
                   }
                 })

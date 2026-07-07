@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+1. Data Source: https://docs.google.com/spreadsheets/d/1kz3mT0cLqexIsc-0bB8-fFaSHwpMRHZ1k1m3zWAYDt0/edit#gid=0
+
+2. <App/> element full example:
+        <App name="ABC Reading" packageName="com.tal.abctimelibrary">
+            <StartUp>fullscreen</StartUp> // default value (when it's not present in <App/> element): undefined
+            <Unsupported>toggleIcon</Unsupported> // default (when it's not present in <App/>): can maximize & restore
+            <Unsupported>resize</Unsupported> // default (when it's not present in <App/>): can resize
+            <Unsupported>move</Unsupported> // default (when it's not present in <App/>): can move
+            <Unsupported>relunch</Unsupported> // when set, it don't relaunh because of SCREEN_LAYOUT.
+            <Unsupported>fullrelaunch</Unsupported> // When set , it can't relaunch any time when pcmode.
+            <Unsupported>kill</Unsupported> // When set, it can't be killed when close by X-icon or Nav-Bar-icon.
+        </App>
+See enumerations for every element in the corresponding Xml Schema Definition file,
+pcmode_app_window_config_schema.xsd
+
+3. Validate this file:
+$ sudo apt install libxml2-utils
+$ xmllint &#45;&#45;noout &#45;&#45;schema pcmode_app_window_config_schema.xsd pcmode_app_window_config.xml
+(&#45; is ASCII 45, a hyphen `-`. Double hyphens are not allowed in XML comments.)
+-->
+<AppWindowConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="./pcmode_app_window_config_schema.xsd"
+    versionName="1.3.11" versionCode="18" date="20210517">
+    <AppList>
+        <App name="UC浏览器" packageName="com.UCMobile">
+            <StartUp>fullscreen</StartUp>
+            <Unsupported>toggleIcon</Unsupported>
+            <Unsupported>resize</Unsupported>
+            <Unsupported>relaunch</Unsupported>
+        </App>
+    </AppList>
+</AppWindowConfig>
