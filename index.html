@@ -169,18 +169,17 @@
     .key-modal-box input:focus { border-color:var(--a-border); }
     .key-modal-box button { margin-top:12px; width:100%; background:var(--a); border:none; border-radius:10px; padding:10px; color:white; font-size:13px; cursor:pointer; }
     .task-modal { position:fixed; inset:0; background:rgba(0,0,0,0.7); display:flex; align-items:center; justify-content:center; z-index:100; padding:12px; }
-    .task-modal-box { background:#1e293b; border:1px solid rgba(255,255,255,0.1); border-radius:16px; padding:20px; max-width:700px; width:100%; max-height:90vh; display:flex; flex-direction:column; }
+    .task-modal-box { background:#1e293b; border:1px solid rgba(255,255,255,0.1); border-radius:16px; padding:20px; max-width:700px; width:100%; height:85vh; display:flex; flex-direction:column; }
     .task-modal-box h3 { font-size:14px; margin:0 0 4px; color:var(--a-light); }
-    .task-desc { font-size:13px; color:rgba(255,255,255,0.8); line-height:1.5; margin:0 0 12px; max-height:120px; overflow-y:auto; padding:8px 10px; background:rgba(0,0,0,0.2); border-radius:8px; }
-    .task-editor-wrap { flex:1; display:flex; gap:0; border:1px solid rgba(255,255,255,0.1); border-radius:10px; overflow:hidden; min-height:200px; }
-    .task-lines { background:rgba(0,0,0,0.3); padding:10px 6px; text-align:right; color:rgba(255,255,255,0.2); font-size:12px; line-height:1.5; font-family:'Cascadia Code','Fira Code',monospace; user-select:none; min-width:28px; }
-    .task-editor { flex:1; background:rgba(0,0,0,0.2); border:none; padding:10px 12px; color:rgba(255,255,255,0.85); font-size:12px; line-height:1.5; font-family:'Cascadia Code','Fira Code',monospace; outline:none; resize:none; white-space:pre; tab-size:2; }
+    .task-desc { font-size:13px; color:rgba(255,255,255,0.8); line-height:1.5; margin:0 0 10px; max-height:100px; overflow-y:auto; padding:8px 10px; background:rgba(0,0,0,0.2); border-radius:8px; flex-shrink:0; }
+    .task-editor-wrap { flex:1; border:1px solid rgba(255,255,255,0.1); border-radius:10px; overflow:hidden; min-height:150px; display:flex; }
+    .task-editor { width:100%; height:100%; background:rgba(0,0,0,0.2); border:none; padding:12px 14px; color:rgba(255,255,255,0.85); font-size:13px; line-height:1.6; font-family:'Cascadia Code','Fira Code',monospace; outline:none; resize:none; white-space:pre; tab-size:2; overflow:auto; box-sizing:border-box; }
     .task-editor:focus { background:rgba(0,0,0,0.3); }
-    .task-actions { display:flex; gap:8px; margin-top:12px; }
+    .task-actions { display:flex; gap:8px; margin-top:10px; flex-shrink:0; }
     .task-actions button { flex:1; padding:10px; border-radius:10px; font-size:13px; cursor:pointer; border:none; }
     .task-btn-submit { background:var(--a); color:white; }
     .task-btn-close { background:rgba(255,255,255,0.06); color:rgba(255,255,255,0.5); }
-    .task-hint { font-size:11px; color:rgba(255,255,255,0.3); margin-top:6px; text-align:center; }
+    .task-hint { font-size:11px; color:rgba(255,255,255,0.3); margin-top:6px; text-align:center; flex-shrink:0; }
   </style>
 </head>
 <body class="animated-bg text-white p-3 md:p-6 min-h-screen" style="background:#0f172a">
@@ -1298,8 +1297,7 @@
             '<h3>📝 Задача</h3>' +
             '<div class="task-desc" id="task-desc">' + esc(currentTask).replace(/\n/g, '<br>') + '</div>' +
             '<div class="task-editor-wrap">' +
-              '<div class="task-lines" id="task-lines">1</div>' +
-              '<textarea class="task-editor" id="task-editor" placeholder="// Напиши код здесь..." spellcheck="false" oninput="updateLineNumbers()" onkeydown="taskEditorKeydown(event)"></textarea>' +
+              '<textarea class="task-editor" id="task-editor" placeholder="// Напиши код здесь..." spellcheck="false" onkeydown="taskEditorKeydown(event)"></textarea>' +
             '</div>' +
             '<div class="task-actions">' +
               '<button class="task-btn-submit" onclick="submitTask()">✅ Сдать</button>' +
@@ -1309,22 +1307,8 @@
           '</div>';
         document.body.appendChild(div);
         var ed = document.getElementById('task-editor');
-        if (ed) {
-          ed.value = prefilled;
-          updateLineNumbers();
-          ed.focus();
-        }
+        if (ed) { ed.value = prefilled; ed.focus(); }
       }, 50);
-    };
-
-    window.updateLineNumbers = function() {
-      var editor = document.getElementById('task-editor');
-      var lines = document.getElementById('task-lines');
-      if (!editor || !lines) return;
-      var count = (editor.value.match(/\n/g) || []).length + 1;
-      var nums = [];
-      for (var i = 1; i <= count; i++) nums.push(i);
-      lines.textContent = nums.join('\n');
     };
 
     window.taskEditorKeydown = function(e) {
@@ -1336,7 +1320,6 @@
         var end = editor.selectionEnd;
         editor.value = editor.value.substring(0, start) + '  ' + editor.value.substring(end);
         editor.selectionStart = editor.selectionEnd = start + 2;
-        updateLineNumbers();
       }
       if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
         e.preventDefault();
