@@ -168,6 +168,19 @@
     .key-modal-box input { width:100%; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); border-radius:10px; padding:10px; color:white; font-size:13px; outline:none; box-sizing:border-box; }
     .key-modal-box input:focus { border-color:var(--a-border); }
     .key-modal-box button { margin-top:12px; width:100%; background:var(--a); border:none; border-radius:10px; padding:10px; color:white; font-size:13px; cursor:pointer; }
+    .task-modal { position:fixed; inset:0; background:rgba(0,0,0,0.7); display:flex; align-items:center; justify-content:center; z-index:100; padding:12px; }
+    .task-modal-box { background:#1e293b; border:1px solid rgba(255,255,255,0.1); border-radius:16px; padding:20px; max-width:700px; width:100%; max-height:90vh; display:flex; flex-direction:column; }
+    .task-modal-box h3 { font-size:14px; margin:0 0 4px; color:var(--a-light); }
+    .task-desc { font-size:13px; color:rgba(255,255,255,0.8); line-height:1.5; margin:0 0 12px; max-height:120px; overflow-y:auto; padding:8px 10px; background:rgba(0,0,0,0.2); border-radius:8px; }
+    .task-editor-wrap { flex:1; display:flex; gap:0; border:1px solid rgba(255,255,255,0.1); border-radius:10px; overflow:hidden; min-height:200px; }
+    .task-lines { background:rgba(0,0,0,0.3); padding:10px 6px; text-align:right; color:rgba(255,255,255,0.2); font-size:12px; line-height:1.5; font-family:'Cascadia Code','Fira Code',monospace; user-select:none; min-width:28px; }
+    .task-editor { flex:1; background:rgba(0,0,0,0.2); border:none; padding:10px 12px; color:rgba(255,255,255,0.85); font-size:12px; line-height:1.5; font-family:'Cascadia Code','Fira Code',monospace; outline:none; resize:none; white-space:pre; tab-size:2; }
+    .task-editor:focus { background:rgba(0,0,0,0.3); }
+    .task-actions { display:flex; gap:8px; margin-top:12px; }
+    .task-actions button { flex:1; padding:10px; border-radius:10px; font-size:13px; cursor:pointer; border:none; }
+    .task-btn-submit { background:var(--a); color:white; }
+    .task-btn-close { background:rgba(255,255,255,0.06); color:rgba(255,255,255,0.5); }
+    .task-hint { font-size:11px; color:rgba(255,255,255,0.3); margin-top:6px; text-align:center; }
   </style>
 </head>
 <body class="animated-bg text-white p-3 md:p-6 min-h-screen" style="background:#0f172a">
@@ -645,6 +658,7 @@
     <div class="chat-input-area">
       <textarea id="chat-input" placeholder="Спроси про код..." rows="1" onkeydown="chatInputKeydown(event)"></textarea>
       <button onclick="sendChat()">→</button>
+      <button onclick="requestTask()" style="background:transparent;border:1px solid var(--a-border);padding:10px;font-size:13px;color:var(--a-light)" title="Задача от AI">📝</button>
       <button onclick="showKeyModal()" style="background:transparent;border:1px solid rgba(255,255,255,0.1);padding:10px;font-size:13px;" title="API ключ">🔑</button>
     </div>
         </div>
@@ -1238,6 +1252,219 @@
       var val = document.getElementById('key-input').value.trim();
       if (val) localStorage.setItem('openrouterKey', val);
       var modal = document.querySelector('.key-modal');
+      if (modal) modal.remove();
+    };
+
+    // ═══════ CODE TASK ═══════
+    var currentTask = '';
+
+    window.requestTask = async function() {
+      var apiKey = localStorage.getItem('openrouterKey');
+      if (!apiKey) { showKeyModal(); return; }
+
+      chatHistory.push({ role: 'user', content: '📝 Дай мне задачу по программированию' });
+      renderChat();
+
+      var container = document.getElementById('chat-messages');
+      var msgDiv = document.createElement('div');
+      msgDiv.className = 'chat-msg assistant';
+      container.appendChild(msgDiv);
+      container.scrollTop = container.scrollHeight;
+
+      try {
+        var resp = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + apiKey,
+            'HTTP-Referer': 'https://devdashboard891.github.io/dashboard/',
+            'X-Title': 'Dashboard AI'
+          },
+          body: JSON.stringify({
+            model: 'cohere/north-mini-code:free',
+            messages: [
+              { role: 'system', content: 'Ты — учитель программирования. Придумай одну небольшую задачу по программированию для ученика. Задача должна быть понятной, с конкретным условием. Укажи язык программирования. Напиши задачу на русском. Не давай решение. В конце добавь подсказки.' },
+              { role: 'user', content: 'Придумай задачу по программированию' }
+            ],
+            stream: true
+          })
+        });
+
+        if (!resp.ok || !resp.body) throw new Error('Ошибка получения задачи');
+
+        var reader = resp.body.getReader();
+        var decoder = new TextDecoder();
+        var buffer = '';
+        var reply = '';
+
+        while (true) {
+          var readResult = await reader.read();
+          if (readResult.done) break;
+          buffer += decoder.decode(readResult.value, { stream: true });
+          var lines = buffer.split('\n');
+          buffer = lines.pop() || '';
+          for (var i = 0; i < lines.length; i++) {
+            var line = lines[i].trim();
+            if (!line || !line.startsWith('data: ')) continue;
+            var dataStr = line.slice(6);
+            if (dataStr === '[DONE]') continue;
+            try {
+              var parsed = JSON.parse(dataStr);
+              var delta = parsed.choices && parsed.choices[0] && parsed.choices[0].delta;
+              if (delta && delta.content) {
+                reply += delta.content;
+                msgDiv.textContent = reply;
+                container.scrollTop = container.scrollHeight;
+              }
+            } catch(e) {}
+          }
+        }
+
+        chatHistory.push({ role: 'assistant', content: reply });
+        saveChat();
+        renderChat();
+        currentTask = reply;
+        openTaskEditor();
+      } catch (err) {
+        msgDiv.remove();
+        chatHistory.push({ role: 'assistant', content: '❌ ' + esc(err.message) });
+        saveChat();
+        renderChat();
+      }
+    };
+
+    window.openTaskEditor = function() {
+      var existing = document.querySelector('.task-modal');
+      if (existing) existing.remove();
+
+      var div = document.createElement('div');
+      div.className = 'task-modal';
+      div.id = 'task-modal';
+      div.innerHTML =
+        '<div class="task-modal-box">' +
+          '<h3>📝 Задача</h3>' +
+          '<div class="task-desc" id="task-desc">' + esc(currentTask).replace(/\n/g, '<br>') + '</div>' +
+          '<div class="task-editor-wrap">' +
+            '<div class="task-lines" id="task-lines">1</div>' +
+            '<textarea class="task-editor" id="task-editor" placeholder="// Напиши код здесь..." spellcheck="false" oninput="updateLineNumbers()" onkeydown="taskEditorKeydown(event)"></textarea>' +
+          '</div>' +
+          '<div class="task-actions">' +
+            '<button class="task-btn-submit" onclick="submitTask()">✅ Сдать</button>' +
+            '<button class="task-btn-close" onclick="closeTaskModal()">✕ Закрыть</button>' +
+          '</div>' +
+          '<div class="task-hint">Tab = 2 пробела · Shift+Enter = новая строка</div>' +
+        '</div>';
+      document.body.appendChild(div);
+      document.getElementById('task-editor').focus();
+    };
+
+    window.updateLineNumbers = function() {
+      var editor = document.getElementById('task-editor');
+      var lines = document.getElementById('task-lines');
+      var count = (editor.value.match(/\n/g) || []).length + 1;
+      lines.textContent = '';
+      var nums = [];
+      for (var i = 1; i <= count; i++) nums.push(i);
+      lines.textContent = nums.join('\n');
+    };
+
+    window.taskEditorKeydown = function(e) {
+      if (e.key === 'Tab') {
+        e.preventDefault();
+        var editor = document.getElementById('task-editor');
+        var start = editor.selectionStart;
+        var end = editor.selectionEnd;
+        editor.value = editor.value.substring(0, start) + '  ' + editor.value.substring(end);
+        editor.selectionStart = editor.selectionEnd = start + 2;
+        updateLineNumbers();
+      }
+      if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+        e.preventDefault();
+        submitTask();
+      }
+    };
+
+    window.submitTask = async function() {
+      var editor = document.getElementById('task-editor');
+      var code = editor.value.trim();
+      if (!code) return;
+
+      closeTaskModal();
+
+      var apiKey = localStorage.getItem('openrouterKey');
+      if (!apiKey) { showKeyModal(); return; }
+
+      chatHistory.push({ role: 'user', content: '📝 Моё решение задачи:\n\n```\n' + code + '\n```\n\nПроверь код и дай обратную связь.' });
+      renderChat();
+
+      var container = document.getElementById('chat-messages');
+      var msgDiv = document.createElement('div');
+      msgDiv.className = 'chat-msg assistant';
+      container.appendChild(msgDiv);
+      container.scrollTop = container.scrollHeight;
+
+      try {
+        var resp = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + apiKey,
+            'HTTP-Referer': 'https://devdashboard891.github.io/dashboard/',
+            'X-Title': 'Dashboard AI'
+          },
+          body: JSON.stringify({
+            model: 'cohere/north-mini-code:free',
+            messages: [
+              { role: 'system', content: 'Ты — учитель программирования. Проверь решение задачи ученика. Укажи: правильно ли, что можно улучшить, какие ошибки. Будь конструктивным и доброжелательным. Отвечай на русском.' },
+              { role: 'user', content: 'Вот задача:\n' + currentTask + '\n\nВот решение ученика:\n' + code + '\n\nПроверь код и дай обратную связь.' }
+            ],
+            stream: true
+          })
+        });
+
+        if (!resp.ok || !resp.body) throw new Error('Ошибка проверки кода');
+
+        var reader = resp.body.getReader();
+        var decoder = new TextDecoder();
+        var buffer = '';
+        var reply = '';
+
+        while (true) {
+          var readResult = await reader.read();
+          if (readResult.done) break;
+          buffer += decoder.decode(readResult.value, { stream: true });
+          var lines = buffer.split('\n');
+          buffer = lines.pop() || '';
+          for (var i = 0; i < lines.length; i++) {
+            var line = lines[i].trim();
+            if (!line || !line.startsWith('data: ')) continue;
+            var dataStr = line.slice(6);
+            if (dataStr === '[DONE]') continue;
+            try {
+              var parsed = JSON.parse(dataStr);
+              var delta = parsed.choices && parsed.choices[0] && parsed.choices[0].delta;
+              if (delta && delta.content) {
+                reply += delta.content;
+                msgDiv.textContent = reply;
+                container.scrollTop = container.scrollHeight;
+              }
+            } catch(e) {}
+          }
+        }
+
+        chatHistory.push({ role: 'assistant', content: reply });
+        saveChat();
+        renderChat();
+      } catch (err) {
+        msgDiv.remove();
+        chatHistory.push({ role: 'assistant', content: '❌ ' + esc(err.message) });
+        saveChat();
+        renderChat();
+      }
+    };
+
+    window.closeTaskModal = function() {
+      var modal = document.querySelector('.task-modal');
       if (modal) modal.remove();
     };
 
