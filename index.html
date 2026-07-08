@@ -1143,7 +1143,7 @@
       var apiKey = localStorage.getItem('openrouterKey');
       if (!apiKey) { chatLoading = false; msgDiv.remove(); showKeyModal(); return; }
 
-      var systemMsg = 'Ты — опытный учитель программирования. Отвечаешь на русском языке, понятно, с примерами кода. Объясняешь сложные вещи простыми словами. Если нужно — показываешь примеры кода в блоках ```code```. Помогаешь с любыми языками программирования, алгоритмами, базами данных, веб-разработкой.';
+      var systemMsg = 'Ты — опытный учитель программирования. Отвечаешь на русском языке, понятно, с примерами кода. Объясняешь сложные вещи простыми словами. Если нужно — показываешь примеры кода в блоках ```code```. Помогаешь с любыми языками программирования, алгоритмами, базами данных, веб-разработкой. Когда хочешь, чтобы ученик сам написал код, используй тег /editor в конце ответа. После /editor напиши код-заготовку (шаблон) для ученика. Закрой тегом /editor. Пример:\n\nПридумай функцию, которая проверяет, является ли число простым.\n\n/editor\ndef is_prime(n):\n    # Напиши код здесь\n    pass\n/editor\n\nКогда ученик отправит код через редактор, ты увидишь его решение и проверишь его.';
       var messages = [{ role: 'system', content: systemMsg }].concat(chatHistory.slice(-10));
 
       try {
@@ -1152,6 +1152,7 @@
           container.scrollTop = container.scrollHeight;
         });
         addAssistantMsg(reply);
+        if (reply.indexOf('/editor') !== -1) openEditorFromReply(reply);
       } catch (err) {
         msgDiv.remove();
         addAssistantMsg('❌ ' + esc(err.message));
@@ -1258,7 +1259,7 @@
       try {
         var reply = await streamChat(
           [
-            { role: 'system', content: 'Ты — учитель программирования. Придумай одну небольшую задачу по программированию для ученика. Задача должна быть понятной, с конкретным условием. Укажи язык программирования. Напиши задачу на русском. Не давай решение. В конце добавь подсказки.' },
+            { role: 'system', content: 'Ты — учитель программирования. Придумай одну небольшую задачу по программированию для ученика. Задача должна быть понятной, с конкретным условием. Укажи язык программирования. Напиши задачу на русском. Не давай решение. В конце добавь подсказки. Если хочешь дать шаблон кода, используй тег /editor в конце, затем код-заготовку, затем закрой /editor. Пример:\n\nНапиши функцию, которая сортирует список.\n\n/editor\ndef sort_list(arr):\n    # Твой код\n    pass\n/editor' },
             { role: 'user', content: 'Придумай задачу по программированию' }
           ],
           function(text) { msgDiv.textContent = text; container.scrollTop = container.scrollHeight; }
@@ -1272,7 +1273,21 @@
       }
     };
 
-    window.openTaskEditor = function() {
+    window.openEditorFromReply = function(reply) {
+      var parts = reply.split('/editor');
+      if (parts.length < 2) return;
+      var desc = parts[0].trim();
+      var codePart = '';
+      if (parts.length >= 2) {
+        codePart = parts[1].trim();
+        if (codePart.endsWith('/editor')) codePart = codePart.slice(0, -7).trim();
+      }
+      currentTask = desc || 'Напиши код по заданию выше';
+      openTaskEditor(codePart);
+    };
+
+    window.openTaskEditor = function(prefilled) {
+      prefilled = prefilled || '';
       var existing = document.querySelector('.task-modal');
       if (existing) existing.remove();
       setTimeout(function() {
@@ -1294,7 +1309,11 @@
           '</div>';
         document.body.appendChild(div);
         var ed = document.getElementById('task-editor');
-        if (ed) ed.focus();
+        if (ed) {
+          ed.value = prefilled;
+          updateLineNumbers();
+          ed.focus();
+        }
       }, 50);
     };
 
