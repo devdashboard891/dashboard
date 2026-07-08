@@ -180,50 +180,51 @@
     .task-btn-submit { background:var(--a); color:white; }
     .task-btn-close { background:rgba(255,255,255,0.06); color:rgba(255,255,255,0.5); }
     .task-hint { font-size:11px; color:rgba(255,255,255,0.3); margin-top:6px; text-align:center; flex-shrink:0; }
-    .gh-token-bar { display:flex; gap:8px; align-items:center; margin-bottom:10px; }
+    .gh-token-bar { display:flex; gap:8px; align-items:center; margin-bottom:12px; }
     .gh-token-bar .gh-status { font-size:11px; color:rgba(255,255,255,0.4); flex:1; }
-    .gh-token-bar button { background:transparent; border:1px solid rgba(255,255,255,0.1); border-radius:8px; padding:6px 12px; color:rgba(255,255,255,0.5); font-size:11px; cursor:pointer; white-space:nowrap; }
-    .gh-search { width:100%; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); border-radius:10px; padding:10px 12px; color:white; font-size:12px; outline:none; box-sizing:border-box; margin-bottom:10px; }
-    .gh-search:focus { border-color:var(--a-border); }
-    .gh-list { display:flex; flex-direction:column; gap:6px; max-height:50vh; overflow-y:auto; }
-    .gh-item { display:flex; align-items:center; gap:8px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.06); border-radius:10px; padding:10px 12px; cursor:pointer; transition:all 0.2s; }
-    .gh-item:hover { background:rgba(255,255,255,0.06); border-color:var(--a-border); }
-    .gh-item .gh-icon { font-size:18px; flex-shrink:0; }
+    .gh-token-bar button { background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); border-radius:8px; padding:6px 12px; color:rgba(255,255,255,0.5); font-size:11px; cursor:pointer; white-space:nowrap; transition:all 0.2s; }
+    .gh-token-bar button:hover { background:rgba(255,255,255,0.1); border-color:var(--a-border); }
+    .gh-search { width:100%; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.08); border-radius:10px; padding:10px 12px; color:white; font-size:12px; outline:none; box-sizing:border-box; transition:border-color 0.2s; }
+    .gh-search:focus { border-color:var(--a-border); background:rgba(255,255,255,0.08); }
+    .gh-list { display:flex; flex-direction:column; gap:5px; max-height:55vh; overflow-y:auto; }
+    .gh-item { display:flex; align-items:center; gap:10px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.06); border-radius:12px; padding:10px 12px; cursor:pointer; transition:all 0.2s; }
+    .gh-item:hover { background:rgba(255,255,255,0.07); border-color:var(--a-border); transform:translateY(-1px); }
+    .gh-item .gh-icon { font-size:16px; flex-shrink:0; width:24px; text-align:center; }
     .gh-item .gh-info { flex:1; min-width:0; }
-    .gh-item .gh-name { font-size:13px; color:rgba(255,255,255,0.85); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-    .gh-item .gh-meta { font-size:10px; color:rgba(255,255,255,0.35); display:flex; gap:8px; }
-    .gh-item .gh-action { font-size:10px; color:var(--a-light); padding:4px 8px; border-radius:6px; border:1px solid var(--a-border); background:transparent; cursor:pointer; flex-shrink:0; }
-    .gh-detail { display:none; }
+    .gh-item .gh-name { font-size:13px; color:rgba(255,255,255,0.85); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; font-weight:500; }
+    .gh-item .gh-meta { font-size:10px; color:rgba(255,255,255,0.35); display:flex; gap:8px; margin-top:2px; }
+    .gh-detail { display:none; animation:fadeIn 0.2s ease-out; }
     .gh-detail.active { display:block; }
-    .gh-detail-header { display:flex; align-items:center; gap:8px; margin-bottom:10px; }
-    .gh-detail-header .back { background:transparent; border:none; color:rgba(255,255,255,0.5); font-size:16px; cursor:pointer; padding:4px; }
-    .gh-detail-header h3 { font-size:14px; flex:1; margin:0; }
-    .gh-commits { max-height:40vh; overflow-y:auto; display:flex; flex-direction:column; gap:4px; }
-    .gh-commit { padding:8px 10px; background:rgba(255,255,255,0.03); border-radius:8px; font-size:11px; }
-    .gh-commit .msg { color:rgba(255,255,255,0.8); }
-    .gh-commit .meta { color:rgba(255,255,255,0.3); font-size:10px; margin-top:2px; }
-    .gh-create { display:flex; gap:6px; margin-bottom:10px; }
-    .gh-create input { flex:1; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); border-radius:8px; padding:8px 10px; color:white; font-size:12px; outline:none; }
+    .gh-detail-header { display:flex; align-items:center; gap:8px; margin-bottom:12px; }
+    .gh-detail-header .back { background:rgba(255,255,255,0.06); border:none; color:rgba(255,255,255,0.5); font-size:16px; cursor:pointer; padding:4px 8px; border-radius:8px; transition:all 0.2s; }
+    .gh-detail-header .back:hover { background:rgba(255,255,255,0.1); color:white; }
+    .gh-detail-header h3 { font-size:15px; flex:1; margin:0; font-weight:600; }
+    .gh-commits { max-height:45vh; overflow-y:auto; display:flex; flex-direction:column; gap:4px; }
+    .gh-commit { padding:10px 12px; background:rgba(255,255,255,0.03); border-radius:10px; font-size:11px; border-left:2px solid var(--a-border); }
+    .gh-commit .msg { color:rgba(255,255,255,0.8); font-weight:500; }
+    .gh-commit .meta { color:rgba(255,255,255,0.3); font-size:10px; margin-top:3px; display:flex; gap:8px; }
+    .gh-create { display:flex; gap:6px; margin-bottom:12px; }
+    .gh-create input { flex:1; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.08); border-radius:10px; padding:10px 12px; color:white; font-size:12px; outline:none; transition:border-color 0.2s; }
     .gh-create input:focus { border-color:var(--a-border); }
-    .gh-create button { background:var(--a); border:none; border-radius:8px; padding:8px 14px; color:white; font-size:12px; cursor:pointer; white-space:nowrap; }
+    .gh-create button { background:var(--a); border:none; border-radius:10px; padding:10px 16px; color:white; font-size:12px; cursor:pointer; white-space:nowrap; transition:opacity 0.2s; font-weight:500; }
+    .gh-create button:hover { opacity:0.85; }
     .gh-create button:disabled { opacity:0.4; cursor:default; }
-    .gh-empty { text-align:center; color:rgba(255,255,255,0.2); font-size:12px; padding:20px; }
-    .gh-file-row { display:flex; align-items:center; gap:8px; padding:8px 10px; border-radius:8px; cursor:pointer; transition:all 0.1s; font-size:12px; }
-    .gh-file-row:hover { background:rgba(255,255,255,0.04); }
-    .gh-file-row .name { flex:1; color:rgba(255,255,255,0.8); }
-    .gh-file-row .size { color:rgba(255,255,255,0.3); font-size:10px; }
-    .gh-file-row .del { background:transparent; border:none; color:rgba(255,80,80,0.5); cursor:pointer; font-size:14px; padding:2px 6px; }
-    .gh-file-row .del:hover { color:rgba(255,80,80,0.9); }
-    .gh-preview { background:rgba(0,0,0,0.2); border-radius:8px; padding:10px 12px; margin-top:8px; font-size:12px; line-height:1.5; font-family:'Cascadia Code','Fira Code',monospace; white-space:pre-wrap; max-height:300px; overflow:auto; color:rgba(255,255,255,0.7); }
+    .gh-empty { text-align:center; color:rgba(255,255,255,0.2); font-size:12px; padding:24px; font-style:italic; }
+    .gh-file-row { display:flex; align-items:center; gap:10px; padding:9px 12px; border-radius:10px; cursor:pointer; transition:all 0.15s; font-size:12px; }
+    .gh-file-row:hover { background:rgba(255,255,255,0.05); }
+    .gh-file-row .name { flex:1; color:rgba(255,255,255,0.8); font-weight:450; }
+    .gh-file-row .size { color:rgba(255,255,255,0.25); font-size:10px; }
+    .gh-file-row .del { background:transparent; border:none; color:rgba(255,80,80,0.4); cursor:pointer; font-size:14px; padding:2px 6px; border-radius:6px; transition:all 0.2s; }
+    .gh-file-row .del:hover { color:rgba(255,80,80,0.9); background:rgba(255,80,80,0.1); }
+    .gh-preview { background:rgba(0,0,0,0.25); border-radius:10px; padding:12px 14px; margin-top:10px; font-size:12px; line-height:1.5; font-family:'Cascadia Code','Fira Code',monospace; white-space:pre-wrap; max-height:350px; overflow:auto; color:rgba(255,255,255,0.7); border:1px solid rgba(255,255,255,0.06); }
     .gh-path { font-size:11px; color:var(--a-light); margin-bottom:8px; word-break:break-all; }
-    .gh-bread { display:flex; gap:4px; flex-wrap:wrap; font-size:12px; margin-bottom:8px; color:rgba(255,255,255,0.4); }
-    .gh-bread span { cursor:pointer; }
-    .gh-bread span:hover { color:var(--a-light); }
-    .gh-bread .sep { color:rgba(255,255,255,0.2); }
-    .gh-upload-area { border:1px dashed rgba(255,255,255,0.15); border-radius:10px; padding:16px; text-align:center; margin-bottom:10px; cursor:pointer; transition:all 0.2s; }
-    .gh-upload-area:hover { border-color:var(--a-border); background:rgba(255,255,255,0.03); }
-    .gh-upload-area input { display:none; }
-    .gh-upload-area label { cursor:pointer; font-size:12px; color:rgba(255,255,255,0.4); }
+    .gh-bread { display:flex; gap:4px; flex-wrap:wrap; font-size:12px; margin-bottom:10px; color:rgba(255,255,255,0.4); padding:6px 8px; background:rgba(255,255,255,0.03); border-radius:8px; }
+    .gh-bread span { cursor:pointer; padding:2px 4px; border-radius:4px; transition:all 0.15s; }
+    .gh-bread span:hover { color:var(--a-light); background:rgba(255,255,255,0.05); }
+    .gh-bread .sep { color:rgba(255,255,255,0.15); cursor:default; }
+    .gh-bread .sep:hover { background:transparent; color:rgba(255,255,255,0.15); }
+    .gh-upload-area { display:block; border:1px dashed rgba(255,255,255,0.12); border-radius:12px; padding:18px; text-align:center; margin-bottom:10px; cursor:pointer; transition:all 0.25s; font-size:12px; color:rgba(255,255,255,0.4); }
+    .gh-upload-area:hover { border-color:var(--a-border); background:rgba(255,255,255,0.04); color:var(--a-light); }
   </style>
 </head>
 <body class="animated-bg text-white p-3 md:p-6 min-h-screen" style="background:#0f172a">
@@ -769,10 +770,15 @@
           <button onclick="showNewFileModal()" style="background:transparent;border:1px solid rgba(255,255,255,0.15);border-radius:8px;padding:8px;color:rgba(255,255,255,0.6);font-size:12px;cursor:pointer">➕ Новый файл</button>
         </div>
         <div class="gh-bread" id="gh-breadcrumbs"></div>
-        <label class="gh-upload-area">
+        <label class="gh-upload-area" id="gh-upload-label">
           📤 Загрузить файл
-          <input type="file" onchange="uploadFile(this)" style="display:none">
+          <input type="file" onchange="uploadFile(this)">
         </label>
+        <div style="display:flex;gap:6px;margin-bottom:8px">
+          <input id="gh-text-upload" placeholder="Или вставь содержимое файла..." style="flex:1;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:8px 10px;color:white;font-size:11px;outline:none">
+          <input id="gh-text-filename" placeholder="file.js" style="width:80px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:8px 10px;color:white;font-size:11px;outline:none;text-align:center">
+          <button onclick="uploadTextFile()" style="background:var(--a);border:none;border-radius:8px;padding:8px 12px;color:white;font-size:11px;cursor:pointer">📝 Создать</button>
+        </div>
         <div id="gh-files-list" class="gh-list"><div class="gh-empty">Введи owner/repo и нажми Enter</div></div>
         <div id="gh-preview" class="gh-preview" style="display:none"></div>
         <div id="gh-edit-area" style="display:none;margin-top:8px">
@@ -1829,6 +1835,26 @@
           body: JSON.stringify({ message: 'Delete ' + path, sha: data.sha, branch: br })
         });
         if (!r2.ok) { var er = await r2.json(); throw new Error(er.message || 'HTTP ' + r2.status); }
+        fetchFiles(ghCurrentPath);
+      } catch(e) { alert('❌ ' + e.message); }
+    };
+
+    window.uploadTextFile = async function() {
+      var content = document.getElementById('gh-text-upload').value;
+      var fname = document.getElementById('gh-text-filename').value.trim() || 'file.txt';
+      if (!content) return;
+      var path = ghCurrentPath ? ghCurrentPath + '/' + fname : fname;
+      var br = ghBranch();
+      var base64 = btoa(unescape(encodeURIComponent(content)));
+      try {
+        var r = await fetch('https://api.github.com/repos/' + ghCurrentRepo + '/contents/' + encodeURI(path), {
+          method: 'PUT',
+          headers: Object.assign(ghHeaders(), {'Content-Type':'application/json'}),
+          body: JSON.stringify({ message: 'Create ' + fname, content: base64, branch: br })
+        });
+        if (!r.ok) { var er = await r.json(); throw new Error(er.message || 'HTTP ' + r.status); }
+        document.getElementById('gh-text-upload').value = '';
+        document.getElementById('gh-text-filename').value = '';
         fetchFiles(ghCurrentPath);
       } catch(e) { alert('❌ ' + e.message); }
     };
