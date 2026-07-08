@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Дашборд</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0f172a;color:#e2e8f0;font-family:system-ui,-apple-system,sans-serif;padding:8px;min-height:100vh}
+.max{max-width:760px;margin:0 auto}
+.grid{display:grid;gap:8px;grid-template-columns:1fr}
+@media(min-width:480px){.grid{grid-template-columns:1fr 1fr}}
+@media(min-width:640px){.grid{grid-template-columns:1fr 1fr 1fr}}
+.card{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:14px}
+.card-full{grid-column:1/-1}
+.card-wide{grid-column:span 2}
+h2{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;color:rgba(255,255,255,0.35);margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.row{display:flex;align-items:center;gap:8px}
+.between{display:flex;justify-content:space-between;align-items:center}
+.col{display:flex;flex-direction:column;gap:4px}
+.mt-2{margin-top:8px}
+.mb-1{margin-bottom:4px}
+.text-xs{font-size:12px}
+.text-sm{font-size:14px}
+.text-lg{font-size:20px}
+.text-2xl{font-size:28px}
+.text-3xl{font-size:36px}
+.text-4xl{font-size:48px}
+.text-white-30{color:rgba(255,255,255,0.3)}
+.text-white-40{color:rgba(255,255,255,0.4)}
+.text-white-50{color:rgba(255,255,255,0.5)}
+.text-white-60{color:rgba(255,255,255,0.6)}
+.text-white-70{color:rgba(255,255,255,0.7)}
+.text-white-80{color:rgba(255,255,255,0.8)}
+.text-white-90{color:rgba(255,255,255,0.9)}
+.text-center{text-align:center}
+.accent{color:#d4740f}
+.border-b{border-bottom:1px solid rgba(255,255,255,0.06)}
+.py-1{padding-top:4px;padding-bottom:4px}
+.py-2{padding-top:8px;padding-bottom:8px}
+.px-2{padding-left:8px;padding-right:8px}
+.gap-1{gap:4px}
+.gap-2{gap:8px}
+.gap-3{gap:12px}
+.flex{display:flex}
+.flex-wrap{flex-wrap:wrap}
+.items-center{align-items:center}
+.justify-between{justify-content:space-between}
+.flex-1{flex:1}
+.w-full{width:100%}
+input{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:7px 12px;color:rgba(255,255,255,0.8);font-size:13px;outline:none}
+input:focus{border-color:rgba(212,116,15,0.5);background:rgba(255,255,255,0.08)}
+button{cursor:pointer;border:none;background:rgba(212,116,15,0.2);color:rgba(255,255,255,0.8);border-radius:10px;padding:7px 14px;font-size:12px;transition:all 0.2s;white-space:nowrap}
+button:hover{background:rgba(212,116,15,0.35)}
+.btn-sm{padding:4px 10px;font-size:11px}
+.btn-ghost{background:rgba(255,255,255,0.05);color:rgba(255,255,255,0.5)}
+.btn-ghost:hover{background:rgba(255,255,255,0.1)}
+.btn-icon{background:none;padding:4px 6px;color:rgba(255,255,255,0.25);font-size:14px}
+.btn-icon:hover{color:rgba(255,255,255,0.6);background:none}
+.overflow-y{overflow-y:auto}
+.max-h-32{max-height:128px}
+.max-h-20{max-height:80px}
+.pr-1{padding-right:4px}
+.hidden{display:none}
+.schedule-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.progress-bar{height:4px;border-radius:4px;background:rgba(255,255,255,0.06);overflow:hidden;margin-top:4px}
+.progress-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,#d4740f,#e8943a);transition:width 0.5s}
+.tag{border-radius:6px;padding:1px 6px;font-size:10px;background:rgba(212,116,15,0.15);color:#d4740f;display:inline-block}
+.fade-in{animation:fadeIn 0.4s ease-out forwards;opacity:0}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.delay-1{animation-delay:0.05s}
+.delay-2{animation-delay:0.1s}
+.delay-3{animation-delay:0.15s}
+.delay-4{animation-delay:0.2s}
+.delay-5{animation-delay:0.25s}
+.delay-6{animation-delay:0.3s}
+::-webkit-scrollbar{width:3px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:rgba(212,116,15,0.3);border-radius:3px}
+</style>
+</head>
+<body>
+<div class="max">
+
+<div class="card fade-in">
+  <div class="row between">
+    <div class="col">
+      <div class="row gap-1"><span id="greeting-icon">🔥</span><span id="greeting" class="text-sm text-white-70">Загрузка...</span></div>
+      <span id="day-progress" class="text-xs text-white-30"></span>
+    </div>
+    <div class="col" style="align-items:flex-end">
+      <div id="time" class="text-3xl text-white-90" style="font-weight:200;letter-spacing:2px">--:--:--</div>
+      <div id="date" class="text-xs text-white-40">...</div>
+    </div>
+  </div>
+</div>
+
+<div class="grid" style="margin-top:8px">
+
+<div class="card fade-in delay-1">
+  <h2><span>🌤</span>Погода</h2>
+  <div class="row between">
+    <div>
+      <div id="weather-temp" class="text-2xl text-white-90">--°C</div>
+      <div id="weather-feels" class="text-xs text-white-40">Ощущается: --°C</div>
+    </div>
+    <div id="weather-icon" class="text-3xl">⏳</div>
+  </div>
+  <div class="row between text-xs text-white-40 mt-2">
+    <span>💧 <span id="weather-humidity">--%</span></span>
+    <span>🌬 <span id="weather-wind">--</span></span>
+    <span>☁️ <span id="weather-clouds">--%</span></span>
+  </div>
+</div>
+
+<div class="card fade-in delay-2">
+  <h2><span>📅</span>Прогноз</h2>
+  <div id="forecast" class="col" style="gap:6px"><div class="text-xs text-white-30">Загрузка...</div></div>
+</div>
+
+<div class="card fade-in delay-3 card-wide">
+  <h2><span>✅</span>Задачи <span id="task-count" class="text-xs text-white-30" style="margin-left:auto">0/0</span></h2>
+  <div class="row gap-1">
+    <input id="task-input" type="text" placeholder="Новая задача..." class="flex-1">
+    <button id="task-add-btn" style="padding:7px 16px">+</button>
+  </div>
+  <div id="task-list" class="col overflow-y max-h-32 mt-2 pr-1" style="gap:2px">
+    <div class="text-xs text-white-20 text-center py-3">Нет задач</div>
+  </div>
+  <div class="row gap-2 mt-1">
+    <button onclick="window.clearDoneTasks()" class="btn-ghost btn-sm">Очистить ✔</button>
+    <button onclick="window.addSampleTasks()" class="btn-ghost btn-sm">Примеры</button>
+  </div>
+</div>
+
+<div class="card fade-in delay-4">
+  <h2><span>💱</span>Курс</h2>
+  <div class="col" style="gap:6px">
+    <div class="row between text-sm"><span class="text-white-40">USD/UAH</span><span id="usd-rate" class="text-white-80">--</span></div>
+    <div class="row between text-sm border-b py-1"><span class="text-white-40">EUR/UAH</span><span id="eur-rate" class="text-white-80">--</span></div>
+    <div class="row between text-sm"><span class="text-white-40">BTC/USD</span><span id="btc-rate" class="text-white-80">--</span></div>
+  </div>
+</div>
+
+<div class="card fade-in delay-4 card-wide">
+  <h2><span>📝</span>Заметки <span class="text-xs text-white-30" style="margin-left:auto" id="notes-count">0</span></h2>
+  <div class="row gap-1">
+    <input id="note-input" type="text" placeholder="Заметка..." class="flex-1">
+    <button id="note-add-btn" style="padding:7px 16px">+</button>
+  </div>
+  <div id="notes-list" class="col overflow-y max-h-20 mt-2 pr-1" style="gap:2px">
+    <div class="text-xs text-white-20 text-center py-2">Нет заметок</div>
+  </div>
+</div>
+
+<div class="card fade-in delay-5">
+  <h2><span>🕐</span>Расписание</h2>
+  <div id="schedule-list" class="col overflow-y max-h-32 pr-1" style="gap:2px"></div>
+</div>
+
+<div class="card fade-in delay-5">
+  <h2><span>🍅</span>Pomodoro</h2>
+  <div class="col items-center" style="gap:6px">
+    <div style="position:relative;width:80px;height:80px">
+      <svg width="80" height="80" viewBox="0 0 100 100">
+        <circle cx="50" cy="50" r="42" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="6"/>
+        <circle id="pomodoro-ring" cx="50" cy="50" r="42" fill="none" stroke="#d4740f" stroke-width="6" stroke-linecap="round" stroke-dasharray="263.89" stroke-dashoffset="0" transform="rotate(-90 50 50)"/>
+        <text x="50" y="50" text-anchor="middle" dominant-baseline="central" font-size="16" font-weight="300" fill="rgba(255,255,255,0.9)"><tspan id="pomodoro-time">25:00</tspan></text>
+      </svg>
+    </div>
+    <div class="row gap-1">
+      <button id="pomodoro-start-btn" style="padding:4px 12px;font-size:11px">Старт</button>
+      <button id="pomodoro-reset-btn" class="btn-ghost" style="padding:4px 12px;font-size:11px">Сброс</button>
+      <select id="pomodoro-mode" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:8px;font-size:11px;color:rgba(255,255,255,0.6);padding:3px 6px;outline:none">
+        <option value="25">25м</option><option value="15">15м</option><option value="30">30м</option>
+      </select>
+    </div>
+    <div id="pomodoro-sessions" class="text-xs text-white-30">🍅 0</div>
+  </div>
+</div>
+
+<div class="card fade-in delay-6">
+  <h2><span>📱</span>Экран</h2>
+  <div class="row between">
+    <span class="text-lg text-white-80" style="font-weight:200"><span id="screen-time-display">0ч 0м</span></span>
+    <span class="text-xs text-white-30">Цель: 6ч</span>
+  </div>
+  <div class="progress-bar"><div id="screen-progress" class="progress-fill" style="width:0%"></div></div>
+  <div class="row between text-xs text-white-20 mt-1"><span>0ч</span><span>6ч</span></div>
+  <button onclick="window.resetScreenTime()" class="btn-ghost btn-sm mt-2">↺ Сброс</button>
+</div>
+
+</div>
+
+<div class="card fade-in delay-6" style="margin-top:8px">
+  <h2><span>💬</span>Цитата дня <button onclick="fetchQuote()" class="btn-icon" style="margin-left:auto">⟳</button></h2>
+  <div id="quote-block">
+    <div class="text-sm text-white-60 italic" style="line-height:1.5">Загрузка...</div>
+    <div id="quote-author" class="text-xs text-white-30 mt-2"></div>
+  </div>
+</div>
+
+<div style="text-align:center;margin-top:12px;font-size:10px;color:rgba(255,255,255,0.15);padding-bottom:12px">🔥 Личный дашборд</div>
+</div>
+
+<script>
+(function(){
+'use strict';
+
+function $(id){return document.getElementById(id)}
+function esc(s){var d=document.createElement('div');d.textContent=s;return d.innerHTML}
+var LAT=49.83528,LON=28.79944;
+
+function updateGreeting(){
+  var h=new Date().getHours();
+  var greet,icon;
+  if(h<6){greet='Доброй ночи';icon='🌙'}
+  else if(h<12){greet='Доброе утро';icon='☀️'}
+  else if(h<18){greet='Добрый день';icon='🔥'}
+  else{greet='Добрый вечер';icon='🌅'}
+  $('greeting').textContent=greet;
+  $('greeting-icon').textContent=icon;
+  var s=new Date();s.setHours(0,0,0,0);
+  var e=new Date();e.setHours(23,59,59,999);
+  $('day-progress').textContent='День на '+((Date.now()-s.getTime())/(e.getTime()-s.getTime())*100).toFixed(1)+'%';
+}
+function updateClock(){
+  var n=new Date();
+  $('time').textContent=n.toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+  $('date').textContent=n.toLocaleDateString('ru-RU',{weekday:'long',day:'numeric',month:'long'});
+}
+updateGreeting();updateClock();
+setInterval(updateClock,1000);
+setInterval(updateGreeting,10000);
+
+function wmoEmoji(c,d){return c===0?d?'☀️':'🌙':c<=3?d?'⛅':'☁️':c<=48?'🌫':c<=57?'🌦':c<=67?'🌧':c<=77?'🌨':c<=82?'🌦':c<=86?'🌧':'⛈'}
+
+function fetchWeather(){
+  fetch('https://api.open-meteo.com/v1/forecast?latitude='+LAT+'&longitude='+LON+'&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m,cloud_cover,pressure_msl&daily=weather_code,temperature_2m_max,temperature_2m_min&timezone=auto&forecast_days=3')
+    .then(function(r){return r.json()}).then(function(d){
+      var c=d.current;if(!c)return;
+      $('weather-temp').textContent=Math.round(c.temperature_2m)+'°C';
+      $('weather-feels').textContent='Ощущается: '+Math.round(c.apparent_temperature)+'°C';
+      $('weather-humidity').textContent=c.relative_humidity_2m+'%';
+      $('weather-wind').textContent=c.wind_speed_10m+' км/ч';
+      $('weather-clouds').textContent=c.cloud_cover+'%';
+      $('weather-icon').textContent=wmoEmoji(c.weather_code,1);
+      if(d.daily){
+        var fc='';
+        for(var i=0;i<Math.min(3,d.daily.time.length);i++){
+          var dn=new Date(d.daily.time[i]+'T12:00:00').toLocaleDateString('ru-RU',{weekday:'short'});
+          fc+='<div class="row between" style="padding:4px 0;border-bottom:1px solid rgba(255,255,255,0.05)">'+
+            '<span class="text-xs text-white-50">'+dn+'</span>'+
+            '<span>'+wmoEmoji(d.daily.weather_code[i],1)+'</span>'+
+            '<span class="text-xs text-white-70">'+Math.round(d.daily.temperature_2m_max[i])+'°/'+Math.round(d.daily.temperature_2m_min[i])+'°</span></div>';
+        }
+        $('forecast').innerHTML=fc;
+      }
+    }).catch(function(){ $('forecast').innerHTML='<div class="text-xs text-white-30">Ошибка</div>'; });
+}
+fetchWeather();setInterval(fetchWeather,600000);
+
+var tasks=[];
+function loadTasks(){try{tasks=JSON.parse(localStorage.getItem('tasks'))||[]}catch(e){tasks=[]}}
+function saveTasks(){localStorage.setItem('tasks',JSON.stringify(tasks))}
+function renderTasks(){
+  var list=$('task-list'),total=tasks.length,done=tasks.filter(function(t){return t.done}).length;
+  $('task-count').textContent=done+'/'+total;
+  if(!total){list.innerHTML='<div class="text-xs text-white-20 text-center py-3">Нет задач</div>';return}
+  var h='';
+  for(var i=0;i<tasks.length;i++){
+    var t=tasks[i];
+    h+='<div class="row gap-2" style="padding:5px 8px;border-radius:10px">'+
+      '<input type="checkbox" '+(t.done?'checked':'')+' data-index="'+i+'" style="width:14px;height:14px">'+
+      '<span class="flex-1 text-sm '+(t.done?'text-white-30" style="text-decoration:line-through':'text-white-70')+'">'+esc(t.text)+'</span>'+
+      '<button data-del="'+i+'" class="del-task btn-icon" style="font-size:16px">&times;</button></div>';
+  }
+  list.innerHTML=h;
+  list.querySelectorAll('input[type="checkbox"]').forEach(function(cb){cb.addEventListener('change',function(){toggleTask(parseInt(this.dataset.index))})});
+  list.querySelectorAll('.del-task').forEach(function(btn){btn.addEventListener('click',function(){deleteTask(parseInt(this.dataset.del))})});
+}
+function addTask(){var v=$('task-input').value.trim();if(!v)return;tasks.push({text:v,done:false});saveTasks();renderTasks();$('task-input').value='';$('task-input').focus()}
+function toggleTask(i){if(i>=0&&i<tasks.length){tasks[i].done=!tasks[i].done;saveTasks();renderTasks()}}
+function deleteTask(i){if(i>=0&&i<tasks.length){tasks.splice(i,1);saveTasks();renderTasks()}}
+window.clearDoneTasks=function(){tasks=tasks.filter(function(t){return!t.done});saveTasks();renderTasks()}
+window.addSampleTasks=function(){var s=['Выучить JavaScript','Сделать зарядку','Почитать книгу','Написать код'];tasks=tasks.concat(s.map(function(x){return{text:x,done:false}}));saveTasks();renderTasks()}
+$('task-add-btn').addEventListener('click',addTask);
+$('task-input').addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();addTask()}});
+loadTasks();renderTasks();
+
+var notes=[];
+function loadNotes(){try{notes=JSON.parse(localStorage.getItem('notes'))||[]}catch(e){notes=[]}}
+function saveNotes(){localStorage.setItem('notes',JSON.stringify(notes))}
+function renderNotes(){var list=$('notes-list');$('notes-count').textContent=notes.length;if(!notes.length){list.innerHTML='<div class="text-xs text-white-20 text-center py-2">Нет заметок</div>';return}var h='';for(var i=notes.length-1;i>=0;i--)h+='<div class="row gap-1" style="padding:5px 8px;border-radius:8px;background:rgba(255,255,255,0.03)"><span class="flex-1 text-sm text-white-60">'+esc(notes[i])+'</span><button data-note="'+i+'" class="del-note btn-icon" style="font-size:14px">&times;</button></div>';list.innerHTML=h;list.querySelectorAll('.del-note').forEach(function(b){b.addEventListener('click',function(){var i=parseInt(this.dataset.note);notes.splice(i,1);saveNotes();renderNotes()})})}
+function addNote(){var v=$('note-input').value.trim();if(!v)return;notes.push(v);saveNotes();renderNotes();$('note-input').value=''}
+$('note-add-btn').addEventListener('click',addNote);
+$('note-input').addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();addNote()}});
+loadNotes();renderNotes();
+
+fetch('https://api.privatbank.ua/p24api/pubinfo?json&exchange&coursid=5').then(function(r){return r.json()}).then(function(d){for(var i=0;i<d.length;i++){if(d[i].ccy==='USD')$('usd-rate').textContent=parseFloat(d[i].buy).toFixed(2);if(d[i].ccy==='EUR')$('eur-rate').textContent=parseFloat(d[i].buy).toFixed(2)}}).catch(function(){});
+fetch('https://api.coindesk.com/v1/bpi/currentprice/USD.json').then(function(r){return r.json()}).then(function(d){$('btc-rate').textContent='$'+parseFloat(d.bpi.USD.rate.replace(/,/g,'')).toLocaleString('ru-RU',{minimumFractionDigits:0})}).catch(function(){});
+
+window.fetchQuote=function(){fetch('https://api.quotable.io/random?tags=technology|programming|inspirational').then(function(r){return r.json()}).then(function(d){$('quote-block').innerHTML='<div class="text-sm text-white-60 italic" style="line-height:1.5">"'+esc(d.content)+'"</div><div class="text-xs text-white-30 mt-2">— '+esc(d.author)+'</div>'}).catch(function(){$('quote-block').innerHTML='<div class="text-sm text-white-60 italic">"Код — это поэзия."</div><div class="text-xs text-white-30 mt-2">— Программист</div>'})};
+fetchQuote();
+
+var schedule=[
+  {time:'07:00',label:'Пробуждение',color:'#818cf8'},{time:'08:00',label:'Завтрак',color:'#60a5fa'},
+  {time:'09:00',label:'Кодинг',color:'#f59e0b'},{time:'11:00',label:'Перерыв',color:'#60a5fa'},
+  {time:'11:30',label:'Кодинг',color:'#f59e0b'},{time:'13:00',label:'Обед',color:'#60a5fa'},
+  {time:'14:00',label:'Учёба',color:'#fb923c'},{time:'16:00',label:'Прогулка',color:'#34d399'},
+  {time:'17:00',label:'Кодинг',color:'#f59e0b'},{time:'19:00',label:'Ужин',color:'#60a5fa'},
+  {time:'20:00',label:'Отдых',color:'#60a5fa'},{time:'22:00',label:'Чтение',color:'#818cf8'},
+  {time:'23:00',label:'Сон',color:'#818cf8'}];
+function renderSchedule(){
+  var list=$('schedule-list'),now=new Date(),cur=now.getHours()*60+now.getMinutes(),h='';
+  for(var i=0;i<schedule.length;i++){var s=schedule[i],p=s.time.split(':');var m=parseInt(p[0])*60+parseInt(p[1]),past=m<cur;
+    h+='<div class="row gap-2" style="padding:4px 6px;border-radius:8px;'+(past?'opacity:0.4':'')+'">'+
+      '<div class="schedule-dot" style="background:'+s.color+'"></div>'+
+      '<span class="text-xs text-white-40" style="width:32px">'+s.time+'</span>'+
+      '<span class="text-sm text-white-70">'+s.label+'</span>'+(past?'<span class="text-xs text-white-20" style="margin-left:auto">✔</span>':'')+'</div>';}
+  list.innerHTML=h;
+}
+renderSchedule();setInterval(renderSchedule,60000);
+
+var pomTime=25,pomRem=25*60,pomRun=false,pomInt=null,pomSess=parseInt(localStorage.getItem('pomSess_'+new Date().toDateString()))||0;
+function updatePom(){var m=Math.floor(pomRem/60),s=pomRem%60;$('pomodoro-time').textContent=(m<10?'0':'')+m+':'+(s<10?'0':'')+s;$('pomodoro-ring').setAttribute('stroke-dashoffset',pomTime*60>0?263.89*(1-pomRem/(pomTime*60)):0);$('pomodoro-sessions').textContent='🍅 '+pomSess}
+function togglePom(){if(pomRun){clearInterval(pomInt);pomRun=false;$('pomodoro-start-btn').textContent='Старт';return}if(pomRem<=0)resetPom();pomRun=true;$('pomodoro-start-btn').textContent='Пауза';pomInt=setInterval(function(){pomRem--;if(pomRem<=0){clearInterval(pomInt);pomRun=false;$('pomodoro-start-btn').textContent='Старт';pomSess++;localStorage.setItem('pomSess_'+new Date().toDateString(),pomSess);updatePom()}updatePom()},1000)}
+function resetPom(){clearInterval(pomInt);pomRun=false;$('pomodoro-start-btn').textContent='Старт';pomTime=parseInt($('pomodoro-mode').value);pomRem=pomTime*60;updatePom()}
+$('pomodoro-start-btn').addEventListener('click',togglePom);
+$('pomodoro-reset-btn').addEventListener('click',resetPom);
+$('pomodoro-mode').addEventListener('change',resetPom);
+updatePom();
+
+function initScreenTime(){var k='screenTime_'+new Date().toDateString();updateST(parseInt(localStorage.getItem(k))||0)}
+function updateST(m){var p=Math.min(100,(m/360)*100);$('screen-time-display').textContent=Math.floor(m/60)+'ч '+m%60+'м';$('screen-progress').style.width=p+'%'}
+window.resetScreenTime=function(){localStorage.setItem('screenTime_'+new Date().toDateString(),'0');updateST(0)}
+initScreenTime();
+setInterval(function(){var k='screenTime_'+new Date().toDateString(),m=parseInt(localStorage.getItem(k))||0;m+=1;localStorage.setItem(k,m);updateST(m)},60000);
+
+})();
+</script>
+</body>
+</html>
