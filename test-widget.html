@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Тест виджета</title>
+<style>
+*{margin:0;padding:0}
+body{background:#0f172a;color:#ffffff;font-family:system-ui,sans-serif;padding:10px}
+h1{color:#d4740f;font-size:18px;margin-bottom:8px}
+p{color:rgba(255,255,255,0.8);font-size:14px;margin-bottom:4px}
+.card{background:rgba(255,255,255,0.08);border-radius:12px;padding:12px;margin-bottom:8px}
+.warn{color:#ff6b6b;font-size:12px;margin-top:8px}
+</style>
+</head>
+<body>
+<div class="card">
+<h1>🔥 Тест</h1>
+<p>Если ты видишь этот текст — HTML рендерится.</p>
+<p>Время: <span id="t">--:--</span></p>
+</div>
+<p class="warn">⚠ JavaScript не работает</p>
+<script>
+document.getElementById('t').textContent=new Date().toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'});
+</script>
+</body>
+</html>
