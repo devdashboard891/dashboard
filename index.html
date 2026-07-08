@@ -732,6 +732,7 @@
             <button class="back" onclick="closeRepoDetail()">←</button>
             <h3 id="gh-detail-name"></h3>
             <button onclick="loadRepoBranches()" style="background:transparent;border:1px solid rgba(255,255,255,0.1);border-radius:6px;padding:4px 10px;color:rgba(255,255,255,0.5);font-size:10px;cursor:pointer">🌿 Ветки</button>
+            <button onclick="deleteRepo()" style="background:transparent;border:1px solid rgba(255,80,80,0.3);border-radius:6px;padding:4px 10px;color:rgba(255,80,80,0.6);font-size:10px;cursor:pointer">🗑 Удалить</button>
           </div>
           <div id="gh-detail-info" class="text-xs text-white/40 mb-2"></div>
           <div id="gh-branches" style="display:none;margin-bottom:8px">
@@ -768,10 +769,10 @@
           <button onclick="showNewFileModal()" style="background:transparent;border:1px solid rgba(255,255,255,0.15);border-radius:8px;padding:8px;color:rgba(255,255,255,0.6);font-size:12px;cursor:pointer">➕ Новый файл</button>
         </div>
         <div class="gh-bread" id="gh-breadcrumbs"></div>
-        <div class="gh-upload-area" onclick="document.getElementById('gh-upload-input').click()">
-          <input type="file" id="gh-upload-input" onchange="uploadFile(this)">
-          <label>📤 Загрузить файл</label>
-        </div>
+        <label class="gh-upload-area">
+          📤 Загрузить файл
+          <input type="file" onchange="uploadFile(this)" style="display:none">
+        </label>
         <div id="gh-files-list" class="gh-list"><div class="gh-empty">Введи owner/repo и нажми Enter</div></div>
         <div id="gh-preview" class="gh-preview" style="display:none"></div>
         <div id="gh-edit-area" style="display:none;margin-top:8px">
@@ -1639,6 +1640,20 @@
       document.getElementById('gh-repo-files').style.display = 'none';
       document.getElementById('gh-commits').style.display = '';
       document.getElementById('gh-branches').style.display = 'none';
+    };
+
+    window.deleteRepo = async function() {
+      if (!confirm('Точно удалить репозиторий ' + ghDetailRepo + '?\nЭто действие необратимо!')) return;
+      if (!confirm('Ещё раз подтверди: удалить ' + ghDetailRepo + '?')) return;
+      try {
+        var r = await fetch('https://api.github.com/repos/' + ghDetailRepo, {
+          method: 'DELETE',
+          headers: ghHeaders()
+        });
+        if (!r.ok) { var er = await r.json(); throw new Error(er.message || 'HTTP ' + r.status); }
+        closeRepoDetail();
+        loadRepos();
+      } catch(e) { alert('❌ ' + e.message); }
     };
 
     window.createRepo = async function() {
