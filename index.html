@@ -1101,7 +1101,7 @@
       renderChat();
     };
 
-    window.sendChat = function() {
+    window.sendChat = async function() {
       var input = document.getElementById('chat-input');
       var text = input.value.trim();
       if (!text || chatLoading) return;
@@ -1112,10 +1112,9 @@
       autoResizeInput();
 
       var container = document.getElementById('chat-messages');
-      var loadingEl = document.createElement('div');
-      loadingEl.className = 'chat-loading';
-      loadingEl.textContent = 'Отвечаю';
-      container.appendChild(loadingEl);
+      var msgDiv = document.createElement('div');
+      msgDiv.className = 'chat-msg assistant';
+      container.appendChild(msgDiv);
       container.scrollTop = container.scrollHeight;
       chatLoading = true;
 
@@ -1128,44 +1127,87 @@
       var apiKey = localStorage.getItem('openrouterKey') || '';
       if (!apiKey) {
         apiKey = prompt('🔑 Введи API ключ OpenRouter:\n(сохранится в браузере)');
-        if (!apiKey) { chatLoading = false; loadingEl.remove(); return; }
+        if (!apiKey) { chatLoading = false; msgDiv.remove(); return; }
         localStorage.setItem('openrouterKey', apiKey);
       }
 
-      fetch('https://openrouter.ai/api/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + apiKey,
-          'HTTP-Referer': 'https://devdashboard891.github.io/dashboard/',
-          'X-Title': 'Dashboard AI'
-        },
-        body: JSON.stringify({
-          model: 'cohere/north-mini-code:free',
-          messages: messages,
-          max_tokens: 2000
-        })
-      })
-      .then(function(r) { return r.json().then(function(j) { return { status: r.status, json: j }; }); })
-      .then(function(res) {
-        if (res.json.error) throw new Error((res.json.error.message||res.json.error.code||'API Error') + (res.status !== 200 ? ' (HTTP ' + res.status + ')' : ''));
-        if (!res.json.choices || !res.json.choices[0] || !res.json.choices[0].message) throw new Error('Неверный ответ API');
-        var reply = res.json.choices[0].message.content;
+      try {
+        var resp = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + apiKey,
+            'HTTP-Referer': 'https://devdashboard891.github.io/dashboard/',
+            'X-Title': 'Dashboard AI'
+          },
+          body: JSON.stringify({
+            model: 'cohere/north-mini-code:free',
+            messages: messages,
+            stream: true
+          })
+        });
+
+        if (!resp.ok) {
+          var errBody = await resp.json().catch(function(){ return {}; });
+          throw new Error((errBody.error && (errBody.error.message || errBody.error.code)) || 'Ошибка API (HTTP ' + resp.status + ')');
+        }
+
+        if (!resp.body) {
+          // Fallback: non-streaming
+          var data = await resp.json();
+          var reply = '';
+          if (data.choices && data.choices[0] && data.choices[0].message) {
+            reply = data.choices[0].message.content || '';
+          }
+          msgDiv.textContent = reply;
+          chatHistory.push({ role: 'assistant', content: reply });
+          saveChat();
+          chatLoading = false;
+          renderChat();
+          return;
+        }
+
+        var reader = resp.body.getReader();
+        var decoder = new TextDecoder();
+        var buffer = '';
+        var reply = '';
+
+        while (true) {
+          var readResult = await reader.read();
+          if (readResult.done) break;
+          buffer += decoder.decode(readResult.value, { stream: true });
+
+          var lines = buffer.split('\n');
+          buffer = lines.pop() || '';
+
+          for (var i = 0; i < lines.length; i++) {
+            var line = lines[i].trim();
+            if (!line || !line.startsWith('data: ')) continue;
+            var dataStr = line.slice(6);
+            if (dataStr === '[DONE]') continue;
+            try {
+              var parsed = JSON.parse(dataStr);
+              var delta = parsed.choices && parsed.choices[0] && parsed.choices[0].delta;
+              if (delta && delta.content) {
+                reply += delta.content;
+                msgDiv.textContent = reply;
+                container.scrollTop = container.scrollHeight;
+              }
+            } catch(e) { /* skip parse errors */ }
+          }
+        }
+
         chatHistory.push({ role: 'assistant', content: reply });
         saveChat();
         chatLoading = false;
-        var le = container.querySelector('.chat-loading');
-        if (le) le.remove();
         renderChat();
-      })
-      .catch(function(err) {
+      } catch (err) {
         chatLoading = false;
-        var le = container.querySelector('.chat-loading');
-        if (le) le.remove();
+        msgDiv.remove();
         chatHistory.push({ role: 'assistant', content: '❌ ' + esc(err.message) });
         saveChat();
         renderChat();
-      });
+      }
     };
 
     window.chatInputKeydown = function(e) {
