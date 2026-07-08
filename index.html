@@ -1111,10 +1111,10 @@
       renderChat();
       autoResizeInput();
 
+      var container = document.getElementById('chat-messages');
       var loadingEl = document.createElement('div');
       loadingEl.className = 'chat-loading';
-      loadingEl.textContent = 'Думаю';
-      var container = document.getElementById('chat-messages');
+      loadingEl.textContent = 'Отвечаю';
       container.appendChild(loadingEl);
       container.scrollTop = container.scrollHeight;
       chatLoading = true;
@@ -1122,7 +1122,6 @@
       var messages = [
         { role: 'system', content: 'Ты — опытный учитель программирования. Отвечаешь на русском языке, понятно, с примерами кода. Объясняешь сложные вещи простыми словами. Если нужно — показываешь примеры кода в блоках ```code```. Помогаешь с любыми языками программирования, алгоритмами, базами данных, веб-разработкой.' }
       ];
-      // last 10 messages for context
       var recent = chatHistory.slice(-10);
       messages = messages.concat(recent);
 
@@ -1147,22 +1146,23 @@
           max_tokens: 2000
         })
       })
-      .then(function(r) {
-        if (!r.ok) throw new Error('HTTP ' + r.status);
-        return r.json();
-      })
-      .then(function(data) {
-        var reply = data.choices && data.choices[0] && data.choices[0].message ? data.choices[0].message.content : 'Нет ответа';
+      .then(function(r) { return r.json().then(function(j) { return { status: r.status, json: j }; }); })
+      .then(function(res) {
+        if (res.json.error) throw new Error((res.json.error.message||res.json.error.code||'API Error') + (res.status !== 200 ? ' (HTTP ' + res.status + ')' : ''));
+        if (!res.json.choices || !res.json.choices[0] || !res.json.choices[0].message) throw new Error('Неверный ответ API');
+        var reply = res.json.choices[0].message.content;
         chatHistory.push({ role: 'assistant', content: reply });
         saveChat();
         chatLoading = false;
+        var le = container.querySelector('.chat-loading');
+        if (le) le.remove();
         renderChat();
       })
       .catch(function(err) {
         chatLoading = false;
-        var loadingEl = container.querySelector('.chat-loading');
-        if (loadingEl) loadingEl.remove();
-        chatHistory.push({ role: 'assistant', content: '❌ Ошибка: ' + err.message + '. Попробуй ещё раз.' });
+        var le = container.querySelector('.chat-loading');
+        if (le) le.remove();
+        chatHistory.push({ role: 'assistant', content: '❌ ' + esc(err.message) });
         saveChat();
         renderChat();
       });
