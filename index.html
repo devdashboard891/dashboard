@@ -1140,97 +1140,23 @@
       container.scrollTop = container.scrollHeight;
       chatLoading = true;
 
-      var messages = [
-        { role: 'system', content: 'Ты — опытный учитель программирования. Отвечаешь на русском языке, понятно, с примерами кода. Объясняешь сложные вещи простыми словами. Если нужно — показываешь примеры кода в блоках ```code```. Помогаешь с любыми языками программирования, алгоритмами, базами данных, веб-разработкой.' }
-      ];
-      var recent = chatHistory.slice(-10);
-      messages = messages.concat(recent);
+      var apiKey = localStorage.getItem('openrouterKey');
+      if (!apiKey) { chatLoading = false; msgDiv.remove(); showKeyModal(); return; }
 
-      var apiKey = localStorage.getItem('openrouterKey') || '';
-      if (!apiKey) {
-        chatLoading = false;
-        msgDiv.remove();
-        showKeyModal();
-        return;
-      }
+      var systemMsg = 'Ты — опытный учитель программирования. Отвечаешь на русском языке, понятно, с примерами кода. Объясняешь сложные вещи простыми словами. Если нужно — показываешь примеры кода в блоках ```code```. Помогаешь с любыми языками программирования, алгоритмами, базами данных, веб-разработкой.';
+      var messages = [{ role: 'system', content: systemMsg }].concat(chatHistory.slice(-10));
 
       try {
-        var resp = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + apiKey,
-            'HTTP-Referer': 'https://devdashboard891.github.io/dashboard/',
-            'X-Title': 'Dashboard AI'
-          },
-          body: JSON.stringify({
-            model: 'cohere/north-mini-code:free',
-            messages: messages,
-            stream: true
-          })
+        var reply = await streamChat(messages, function(text) {
+          msgDiv.textContent = text;
+          container.scrollTop = container.scrollHeight;
         });
-
-        if (!resp.ok) {
-          var errBody = await resp.json().catch(function(){ return {}; });
-          throw new Error((errBody.error && (errBody.error.message || errBody.error.code)) || 'Ошибка API (HTTP ' + resp.status + ')');
-        }
-
-        if (!resp.body) {
-          // Fallback: non-streaming
-          var data = await resp.json();
-          var reply = '';
-          if (data.choices && data.choices[0] && data.choices[0].message) {
-            reply = data.choices[0].message.content || '';
-          }
-          msgDiv.textContent = reply;
-          chatHistory.push({ role: 'assistant', content: reply });
-          saveChat();
-          chatLoading = false;
-          renderChat();
-          return;
-        }
-
-        var reader = resp.body.getReader();
-        var decoder = new TextDecoder();
-        var buffer = '';
-        var reply = '';
-
-        while (true) {
-          var readResult = await reader.read();
-          if (readResult.done) break;
-          buffer += decoder.decode(readResult.value, { stream: true });
-
-          var lines = buffer.split('\n');
-          buffer = lines.pop() || '';
-
-          for (var i = 0; i < lines.length; i++) {
-            var line = lines[i].trim();
-            if (!line || !line.startsWith('data: ')) continue;
-            var dataStr = line.slice(6);
-            if (dataStr === '[DONE]') continue;
-            try {
-              var parsed = JSON.parse(dataStr);
-              var delta = parsed.choices && parsed.choices[0] && parsed.choices[0].delta;
-              if (delta && delta.content) {
-                reply += delta.content;
-                msgDiv.textContent = reply;
-                container.scrollTop = container.scrollHeight;
-              }
-            } catch(e) { /* skip parse errors */ }
-          }
-        }
-
-        chatHistory.push({ role: 'assistant', content: reply });
-        saveChat();
-        chatLoading = false;
-        renderChat();
+        addAssistantMsg(reply);
       } catch (err) {
-        chatLoading = false;
         msgDiv.remove();
-        chatHistory.push({ role: 'assistant', content: '❌ ' + esc(err.message) });
-        saveChat();
-        renderChat();
+        addAssistantMsg('❌ ' + esc(err.message));
       }
+      chatLoading = false;
     };
 
     window.showKeyModal = function() {
@@ -1255,6 +1181,64 @@
       if (modal) modal.remove();
     };
 
+    // ═══════ HELPERS: STREAMING ═══════
+    async function streamChat(messages, onChunk) {
+      var apiKey = localStorage.getItem('openrouterKey');
+      var resp = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + apiKey,
+          'HTTP-Referer': 'https://devdashboard891.github.io/dashboard/',
+          'X-Title': 'Dashboard AI'
+        },
+        body: JSON.stringify({ model: 'cohere/north-mini-code:free', messages: messages, stream: true })
+      });
+      if (!resp.ok) {
+        var errBody = await resp.json().catch(function(){ return {}; });
+        throw new Error((errBody.error && (errBody.error.message || errBody.error.code)) || 'Ошибка API (HTTP ' + resp.status + ')');
+      }
+      if (!resp.body) {
+        // Fallback: non-streaming
+        var data = await resp.json();
+        var full = (data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content) || '';
+        if (onChunk) onChunk(full);
+        return full;
+      }
+      var reader = resp.body.getReader();
+      var decoder = new TextDecoder();
+      var buf = '';
+      var reply = '';
+      while (true) {
+        var r = await reader.read();
+        if (r.done) break;
+        buf += decoder.decode(r.value, { stream: true });
+        var lines = buf.split('\n');
+        buf = lines.pop() || '';
+        for (var i = 0; i < lines.length; i++) {
+          var line = lines[i].trim();
+          if (!line || !line.startsWith('data: ')) continue;
+          var ds = line.slice(6);
+          if (ds === '[DONE]') continue;
+          try {
+            var p = JSON.parse(ds);
+            var d = p.choices && p.choices[0] && p.choices[0].delta;
+            if (d && d.content) {
+              reply += d.content;
+              if (onChunk) onChunk(reply);
+            }
+          } catch(e) {}
+        }
+      }
+      return reply;
+    }
+
+    function addAssistantMsg(reply) {
+      chatHistory.push({ role: 'assistant', content: reply });
+      saveChat();
+      renderChat();
+    }
+
     // ═══════ CODE TASK ═══════
     var currentTask = '';
 
@@ -1272,97 +1256,53 @@
       container.scrollTop = container.scrollHeight;
 
       try {
-        var resp = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + apiKey,
-            'HTTP-Referer': 'https://devdashboard891.github.io/dashboard/',
-            'X-Title': 'Dashboard AI'
-          },
-          body: JSON.stringify({
-            model: 'cohere/north-mini-code:free',
-            messages: [
-              { role: 'system', content: 'Ты — учитель программирования. Придумай одну небольшую задачу по программированию для ученика. Задача должна быть понятной, с конкретным условием. Укажи язык программирования. Напиши задачу на русском. Не давай решение. В конце добавь подсказки.' },
-              { role: 'user', content: 'Придумай задачу по программированию' }
-            ],
-            stream: true
-          })
-        });
-
-        if (!resp.ok || !resp.body) throw new Error('Ошибка получения задачи');
-
-        var reader = resp.body.getReader();
-        var decoder = new TextDecoder();
-        var buffer = '';
-        var reply = '';
-
-        while (true) {
-          var readResult = await reader.read();
-          if (readResult.done) break;
-          buffer += decoder.decode(readResult.value, { stream: true });
-          var lines = buffer.split('\n');
-          buffer = lines.pop() || '';
-          for (var i = 0; i < lines.length; i++) {
-            var line = lines[i].trim();
-            if (!line || !line.startsWith('data: ')) continue;
-            var dataStr = line.slice(6);
-            if (dataStr === '[DONE]') continue;
-            try {
-              var parsed = JSON.parse(dataStr);
-              var delta = parsed.choices && parsed.choices[0] && parsed.choices[0].delta;
-              if (delta && delta.content) {
-                reply += delta.content;
-                msgDiv.textContent = reply;
-                container.scrollTop = container.scrollHeight;
-              }
-            } catch(e) {}
-          }
-        }
-
-        chatHistory.push({ role: 'assistant', content: reply });
-        saveChat();
-        renderChat();
+        var reply = await streamChat(
+          [
+            { role: 'system', content: 'Ты — учитель программирования. Придумай одну небольшую задачу по программированию для ученика. Задача должна быть понятной, с конкретным условием. Укажи язык программирования. Напиши задачу на русском. Не давай решение. В конце добавь подсказки.' },
+            { role: 'user', content: 'Придумай задачу по программированию' }
+          ],
+          function(text) { msgDiv.textContent = text; container.scrollTop = container.scrollHeight; }
+        );
+        addAssistantMsg(reply);
         currentTask = reply;
-        openTaskEditor();
+        if (reply) openTaskEditor(); else throw new Error('AI вернул пустую задачу');
       } catch (err) {
         msgDiv.remove();
-        chatHistory.push({ role: 'assistant', content: '❌ ' + esc(err.message) });
-        saveChat();
-        renderChat();
+        addAssistantMsg('❌ ' + esc(err.message));
       }
     };
 
     window.openTaskEditor = function() {
       var existing = document.querySelector('.task-modal');
       if (existing) existing.remove();
-
-      var div = document.createElement('div');
-      div.className = 'task-modal';
-      div.id = 'task-modal';
-      div.innerHTML =
-        '<div class="task-modal-box">' +
-          '<h3>📝 Задача</h3>' +
-          '<div class="task-desc" id="task-desc">' + esc(currentTask).replace(/\n/g, '<br>') + '</div>' +
-          '<div class="task-editor-wrap">' +
-            '<div class="task-lines" id="task-lines">1</div>' +
-            '<textarea class="task-editor" id="task-editor" placeholder="// Напиши код здесь..." spellcheck="false" oninput="updateLineNumbers()" onkeydown="taskEditorKeydown(event)"></textarea>' +
-          '</div>' +
-          '<div class="task-actions">' +
-            '<button class="task-btn-submit" onclick="submitTask()">✅ Сдать</button>' +
-            '<button class="task-btn-close" onclick="closeTaskModal()">✕ Закрыть</button>' +
-          '</div>' +
-          '<div class="task-hint">Tab = 2 пробела · Shift+Enter = новая строка</div>' +
-        '</div>';
-      document.body.appendChild(div);
-      document.getElementById('task-editor').focus();
+      setTimeout(function() {
+        var div = document.createElement('div');
+        div.className = 'task-modal';
+        div.innerHTML =
+          '<div class="task-modal-box">' +
+            '<h3>📝 Задача</h3>' +
+            '<div class="task-desc" id="task-desc">' + esc(currentTask).replace(/\n/g, '<br>') + '</div>' +
+            '<div class="task-editor-wrap">' +
+              '<div class="task-lines" id="task-lines">1</div>' +
+              '<textarea class="task-editor" id="task-editor" placeholder="// Напиши код здесь..." spellcheck="false" oninput="updateLineNumbers()" onkeydown="taskEditorKeydown(event)"></textarea>' +
+            '</div>' +
+            '<div class="task-actions">' +
+              '<button class="task-btn-submit" onclick="submitTask()">✅ Сдать</button>' +
+              '<button class="task-btn-close" onclick="closeTaskModal()">✕ Закрыть</button>' +
+            '</div>' +
+            '<div class="task-hint">Tab = 2 пробела · Ctrl+Enter = сдать</div>' +
+          '</div>';
+        document.body.appendChild(div);
+        var ed = document.getElementById('task-editor');
+        if (ed) ed.focus();
+      }, 50);
     };
 
     window.updateLineNumbers = function() {
       var editor = document.getElementById('task-editor');
       var lines = document.getElementById('task-lines');
+      if (!editor || !lines) return;
       var count = (editor.value.match(/\n/g) || []).length + 1;
-      lines.textContent = '';
       var nums = [];
       for (var i = 1; i <= count; i++) nums.push(i);
       lines.textContent = nums.join('\n');
@@ -1372,6 +1312,7 @@
       if (e.key === 'Tab') {
         e.preventDefault();
         var editor = document.getElementById('task-editor');
+        if (!editor) return;
         var start = editor.selectionStart;
         var end = editor.selectionEnd;
         editor.value = editor.value.substring(0, start) + '  ' + editor.value.substring(end);
@@ -1386,6 +1327,7 @@
 
     window.submitTask = async function() {
       var editor = document.getElementById('task-editor');
+      if (!editor) return;
       var code = editor.value.trim();
       if (!code) return;
 
@@ -1404,62 +1346,17 @@
       container.scrollTop = container.scrollHeight;
 
       try {
-        var resp = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + apiKey,
-            'HTTP-Referer': 'https://devdashboard891.github.io/dashboard/',
-            'X-Title': 'Dashboard AI'
-          },
-          body: JSON.stringify({
-            model: 'cohere/north-mini-code:free',
-            messages: [
-              { role: 'system', content: 'Ты — учитель программирования. Проверь решение задачи ученика. Укажи: правильно ли, что можно улучшить, какие ошибки. Будь конструктивным и доброжелательным. Отвечай на русском.' },
-              { role: 'user', content: 'Вот задача:\n' + currentTask + '\n\nВот решение ученика:\n' + code + '\n\nПроверь код и дай обратную связь.' }
-            ],
-            stream: true
-          })
-        });
-
-        if (!resp.ok || !resp.body) throw new Error('Ошибка проверки кода');
-
-        var reader = resp.body.getReader();
-        var decoder = new TextDecoder();
-        var buffer = '';
-        var reply = '';
-
-        while (true) {
-          var readResult = await reader.read();
-          if (readResult.done) break;
-          buffer += decoder.decode(readResult.value, { stream: true });
-          var lines = buffer.split('\n');
-          buffer = lines.pop() || '';
-          for (var i = 0; i < lines.length; i++) {
-            var line = lines[i].trim();
-            if (!line || !line.startsWith('data: ')) continue;
-            var dataStr = line.slice(6);
-            if (dataStr === '[DONE]') continue;
-            try {
-              var parsed = JSON.parse(dataStr);
-              var delta = parsed.choices && parsed.choices[0] && parsed.choices[0].delta;
-              if (delta && delta.content) {
-                reply += delta.content;
-                msgDiv.textContent = reply;
-                container.scrollTop = container.scrollHeight;
-              }
-            } catch(e) {}
-          }
-        }
-
-        chatHistory.push({ role: 'assistant', content: reply });
-        saveChat();
-        renderChat();
+        var reply = await streamChat(
+          [
+            { role: 'system', content: 'Ты — учитель программирования. Проверь решение задачи ученика. Укажи: правильно ли, что можно улучшить, какие ошибки. Будь конструктивным и доброжелательным. Отвечай на русском.' },
+            { role: 'user', content: 'Вот задача:\n' + currentTask + '\n\nВот решение ученика:\n' + code + '\n\nПроверь код и дай обратную связь.' }
+          ],
+          function(text) { msgDiv.textContent = text; container.scrollTop = container.scrollHeight; }
+        );
+        addAssistantMsg(reply);
       } catch (err) {
         msgDiv.remove();
-        chatHistory.push({ role: 'assistant', content: '❌ ' + esc(err.message) });
-        saveChat();
-        renderChat();
+        addAssistantMsg('❌ ' + esc(err.message));
       }
     };
 
