@@ -161,6 +161,13 @@
     .chat-clear { background:transparent; border:1px solid rgba(255,255,255,0.1); color:rgba(255,255,255,0.3); border-radius:8px; padding:4px 10px; font-size:10px; cursor:pointer; transition:all 0.2s; }
     .chat-clear:hover { border-color:rgba(255,255,255,0.3); color:rgba(255,255,255,0.6); }
     .chat-code { background:rgba(0,0,0,0.3); border-radius:8px; padding:8px 12px; margin:4px 0; font-family:'Cascadia Code','Fira Code',monospace; font-size:12px; white-space:pre-wrap; border-left:2px solid var(--a); }
+    .key-modal { position:fixed; inset:0; background:rgba(0,0,0,0.6); display:flex; align-items:center; justify-content:center; z-index:100; }
+    .key-modal-box { background:#1e293b; border:1px solid rgba(255,255,255,0.1); border-radius:16px; padding:24px; max-width:360px; width:90%; }
+    .key-modal-box h3 { font-size:15px; margin:0 0 8px; }
+    .key-modal-box p { font-size:12px; color:rgba(255,255,255,0.5); margin:0 0 12px; }
+    .key-modal-box input { width:100%; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); border-radius:10px; padding:10px; color:white; font-size:13px; outline:none; box-sizing:border-box; }
+    .key-modal-box input:focus { border-color:var(--a-border); }
+    .key-modal-box button { margin-top:12px; width:100%; background:var(--a); border:none; border-radius:10px; padding:10px; color:white; font-size:13px; cursor:pointer; }
   </style>
 </head>
 <body class="animated-bg text-white p-3 md:p-6 min-h-screen" style="background:#0f172a">
@@ -635,10 +642,11 @@
           <div id="chat-messages" class="chat-messages">
             <div class="chat-msg system">Привет! Я AI учитель программирования. Задавай вопросы по коду, языкам, алгоритмам — объясню понятно и с примерами.</div>
           </div>
-          <div class="chat-input-area">
-            <textarea id="chat-input" rows="1" placeholder="Спроси про код..." onkeydown="chatInputKeydown(event)"></textarea>
-            <button onclick="sendChat()">→</button>
-          </div>
+    <div class="chat-input-area">
+      <textarea id="chat-input" placeholder="Спроси про код..." rows="1" onkeydown="chatInputKeydown(event)"></textarea>
+      <button onclick="sendChat()">→</button>
+      <button onclick="showKeyModal()" style="background:transparent;border:1px solid rgba(255,255,255,0.1);padding:10px;font-size:13px;" title="API ключ">🔑</button>
+    </div>
         </div>
       </div>
     </div>
@@ -1126,9 +1134,10 @@
 
       var apiKey = localStorage.getItem('openrouterKey') || '';
       if (!apiKey) {
-        apiKey = prompt('🔑 Введи API ключ OpenRouter:\n(сохранится в браузере)');
-        if (!apiKey) { chatLoading = false; msgDiv.remove(); return; }
-        localStorage.setItem('openrouterKey', apiKey);
+        chatLoading = false;
+        msgDiv.remove();
+        showKeyModal();
+        return;
       }
 
       try {
@@ -1210,6 +1219,28 @@
       }
     };
 
+    window.showKeyModal = function() {
+      if (document.querySelector('.key-modal')) return;
+      var cur = localStorage.getItem('openrouterKey') || '';
+      var div = document.createElement('div');
+      div.className = 'key-modal';
+      div.innerHTML = '<div class="key-modal-box">' +
+        '<h3>🔑 API ключ OpenRouter</h3>' +
+        '<p>Ключ сохраняется в браузере</p>' +
+        '<input type="text" id="key-input" placeholder="sk-or-..." value="' + esc(cur) + '">' +
+        '<button onclick="setupKey()">Сохранить</button>' +
+        '</div>';
+      document.body.appendChild(div);
+      document.getElementById('key-input').focus();
+    };
+
+    window.setupKey = function() {
+      var val = document.getElementById('key-input').value.trim();
+      if (val) localStorage.setItem('openrouterKey', val);
+      var modal = document.querySelector('.key-modal');
+      if (modal) modal.remove();
+    };
+
     window.chatInputKeydown = function(e) {
       if (e.key === 'Enter' && !e.shiftKey) {
         e.preventDefault();
@@ -1225,6 +1256,8 @@
     document.getElementById('chat-input').addEventListener('input', autoResizeInput);
 
     renderChat();
+
+    if (!localStorage.getItem('openrouterKey')) showKeyModal();
 
   })();
   </script>
