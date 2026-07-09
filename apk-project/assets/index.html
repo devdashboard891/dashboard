@@ -190,6 +190,7 @@
     <div class="tab-bar mb-6 fade-in">
       <button class="tab-btn active" onclick="switchTab('dashboard')">📊 Дашборд</button>
       <button class="tab-btn" onclick="switchTab('code')">💻 Изучение кода</button>
+      <button class="tab-btn" onclick="switchTab('ai')">🤖 ИИ помощник</button>
       <button class="tab-btn" onclick="switchTab('terminal')">⌨️ Терминал</button>
     </div>
 
@@ -255,7 +256,7 @@
           </button>
           <button onclick="openAction('chat')" class="btn-action w-full rounded-2xl px-4 py-3 text-left flex items-center gap-3 group">
             <span class="text-xl">🤖</span>
-            <div class="flex-1"><div class="text-sm font-medium text-white/80 group-hover:text-white transition">AI Чат</div><div class="text-[11px] text-white/30">OpenCode</div></div>
+            <div class="flex-1"><div class="text-sm font-medium text-white/80 group-hover:text-white transition">AI Чат</div><div class="text-[11px] text-white/30">ИИ помощник</div></div>
             <span class="text-white/20 group-hover:text-white/40 transition text-sm">→</span>
           </button>
         </div>
@@ -627,9 +628,68 @@
     <!-- ═══════ CODE TAB ═══════ -->
     <div id="tab-code" class="tab-content">
       <div class="glass rounded-3xl p-5 fade-in">
-        <div class="flex items-center gap-2 mb-3 flex-wrap">
+        <div class="flex items-center gap-2 mb-4">
           <span class="text-lg">💻</span>
-          <h2 class="text-xs font-medium uppercase tracking-widest text-white/40 flex-1">AI Чат</h2>
+          <h2 class="text-xs font-medium uppercase tracking-widest text-white/40">Изучение кода</h2>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div class="bg-white/5 rounded-2xl p-4 border border-white/5 card-hover">
+            <div class="text-sm font-medium text-white/80 mb-2">🐍 Python</div>
+            <div class="text-[11px] text-white/40 leading-relaxed">Освой синтаксис, функции, ООП, библиотеки. От основ до продвинутых тем.</div>
+            <div class="mt-2 flex flex-wrap gap-1">
+              <span class="text-[10px] px-2 py-0.5 rounded-full bg-white/5 text-white/40">переменные</span>
+              <span class="text-[10px] px-2 py-0.5 rounded-full bg-white/5 text-white/40">циклы</span>
+              <span class="text-[10px] px-2 py-0.5 rounded-full bg-white/5 text-white/40">функции</span>
+              <span class="text-[10px] px-2 py-0.5 rounded-full bg-white/5 text-white/40">классы</span>
+            </div>
+          </div>
+          <div class="bg-white/5 rounded-2xl p-4 border border-white/5 card-hover">
+            <div class="text-sm font-medium text-white/80 mb-2">🟨 JavaScript</div>
+            <div class="text-[11px] text-white/40 leading-relaxed">Асинхронность, замыкания, прототипы, современный ES6+. Фронтенд и бэкенд.</div>
+            <div class="mt-2 flex flex-wrap gap-1">
+              <span class="text-[10px] px-2 py-0.5 rounded-full bg-white/5 text-white/40">async/await</span>
+              <span class="text-[10px] px-2 py-0.5 rounded-full bg-white/5 text-white/40">promises</span>
+              <span class="text-[10px] px-2 py-0.5 rounded-full bg-white/5 text-white/40">closures</span>
+            </div>
+          </div>
+          <div class="bg-white/5 rounded-2xl p-4 border border-white/5 card-hover">
+            <div class="text-sm font-medium text-white/80 mb-2">⚛️ React</div>
+            <div class="text-[11px] text-white/40 leading-relaxed">Компоненты, хуки, состояние, роутинг. Построй современное SPA-приложение.</div>
+            <div class="mt-2 flex flex-wrap gap-1">
+              <span class="text-[10px] px-2 py-0.5 rounded-full bg-white/5 text-white/40">hooks</span>
+              <span class="text-[10px] px-2 py-0.5 rounded-full bg-white/5 text-white/40">JSX</span>
+              <span class="text-[10px] px-2 py-0.5 rounded-full bg-white/5 text-white/40">state</span>
+            </div>
+          </div>
+          <div class="bg-white/5 rounded-2xl p-4 border border-white/5 card-hover">
+            <div class="text-sm font-medium text-white/80 mb-2">🗄️ SQL</div>
+            <div class="text-[11px] text-white/40 leading-relaxed">Запросы, JOIN, индексы, нормализация. Работа с базами данных уверенно.</div>
+            <div class="mt-2 flex flex-wrap gap-1">
+              <span class="text-[10px] px-2 py-0.5 rounded-full bg-white/5 text-white/40">SELECT</span>
+              <span class="text-[10px] px-2 py-0.5 rounded-full bg-white/5 text-white/40">JOIN</span>
+              <span class="text-[10px] px-2 py-0.5 rounded-full bg-white/5 text-white/40">индексы</span>
+            </div>
+          </div>
+        </div>
+        <div class="mt-3 bg-white/5 rounded-2xl p-4 border border-white/5">
+          <div class="text-xs font-medium text-white/60 mb-2">📚 Ресурсы для обучения</div>
+          <div class="flex flex-wrap gap-2">
+            <a href="https://learn.javascript.ru" target="_blank" class="text-[11px] px-3 py-1.5 rounded-xl bg-white/5 text-white/50 hover:text-white hover:bg-white/10 transition">learn.javascript.ru</a>
+            <a href="https://python.org/doc" target="_blank" class="text-[11px] px-3 py-1.5 rounded-xl bg-white/5 text-white/50 hover:text-white hover:bg-white/10 transition">Python Docs</a>
+            <a href="https://react.dev" target="_blank" class="text-[11px] px-3 py-1.5 rounded-xl bg-white/5 text-white/50 hover:text-white hover:bg-white/10 transition">React.dev</a>
+            <a href="https://sql-tutorial.ru" target="_blank" class="text-[11px] px-3 py-1.5 rounded-xl bg-white/5 text-white/50 hover:text-white hover:bg-white/10 transition">SQL Tutorial</a>
+            <a href="https://github.com/devdashboard891/dashboard" target="_blank" class="text-[11px] px-3 py-1.5 rounded-xl bg-white/5 text-white/50 hover:text-white hover:bg-white/10 transition">📦 Наш GitHub</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════ AI ASSISTANT TAB ═══════ -->
+    <div id="tab-ai" class="tab-content">
+      <div class="glass rounded-3xl p-5 fade-in">
+        <div class="flex items-center gap-2 mb-3 flex-wrap">
+          <span class="text-lg">🤖</span>
+          <h2 class="text-xs font-medium uppercase tracking-widest text-white/40 flex-1">ИИ помощник</h2>
           <select id="provider-select" class="text-xs bg-white/5 border border-white/10 rounded-lg px-2 py-1 text-white/60 outline-none">
             <option value="openrouter">OpenRouter</option>
             <option value="groq">Groq</option>
@@ -642,10 +702,10 @@
         </div>
         <div class="chat-container">
           <div id="chat-messages" class="chat-messages">
-            <div class="chat-msg system">Привет! Я мульти-AI чат. Выбери провайдера или включи Авто — будет пробовать по очереди, пока один не ответит.</div>
+            <div class="chat-msg system">Привет! Я ИИ помощник с доступом к твоему дашборду. Могу помогать с кодом, отвечать на вопросы, анализировать данные. Выбери провайдера или включи Авто.</div>
           </div>
           <div class="chat-input-area">
-            <textarea id="chat-input" rows="1" placeholder="Спроси про код..." onkeydown="chatInputKeydown(event)"></textarea>
+            <textarea id="chat-input" rows="1" placeholder="Спроси о чём угодно..." onkeydown="chatInputKeydown(event)"></textarea>
             <button onclick="sendChat()">→</button>
           </div>
         </div>
@@ -860,7 +920,7 @@
     setInterval(fetchQuote, 3600000);
 
     // ═══════ QUICK ACTIONS ═══════
-    window.openAction=function(t){if(t==='chat'){window.switchTab('code');return;}var l={code:'https://vscode.dev/',editor:'https://github.dev/',files:'https://github.com/'};window.location.href=l[t]||l.code;};
+    window.openAction=function(t){if(t==='chat'){window.switchTab('ai');return;}var l={code:'https://vscode.dev/',editor:'https://github.dev/',files:'https://github.com/'};window.location.href=l[t]||l.code;};
 
     // ═══════ PERMISSION ═══════
     if('Notification'in window&&Notification.permission==='default')setTimeout(function(){Notification.requestPermission()},30000);
@@ -1266,7 +1326,14 @@
       chatLoading = true;
 
       var container = document.getElementById('chat-messages');
-      var systemMsg = 'Ты — опытный учитель программирования. Отвечаешь на русском языке, понятно, с примерами кода. Объясняешь сложные вещи простыми словами. Если нужно — показываешь примеры кода в блоках ```code```. Помогаешь с любыми языками программирования, алгоритмами, базами данных, веб-разработкой.';
+      var weatherInfo = $('weather-desc') ? $('weather-desc').textContent : '—';
+      var tempInfo = $('weather-temp') ? $('weather-temp').textContent : '—';
+      var btcRate = $('btc-rate') ? $('btc-rate').textContent : '—';
+      var systemMsg = 'Ты — ИИ помощник личного дашборда. Отвечаешь на русском языке. '
+        + 'У тебя есть доступ к функциям дашборда: погода, время, список задач, курсы валют/крипты, быстрые действия (VS Code, GitHub, файлы). '
+        + 'Текущие данные дашборда: погода=' + weatherInfo + ', температура=' + tempInfo + ', BTC=' + btcRate + '. '
+        + 'Ты можешь отвечать на вопросы по программированию, помогать с кодом, давать советы, анализировать данные. '
+        + 'Показывай примеры кода в блоках ```code```. Будь полезным и понятным.';
       var msgs = [{ role: 'system', content: systemMsg }].concat(chatHistory.slice(-15));
 
       var select = document.getElementById('provider-select');
