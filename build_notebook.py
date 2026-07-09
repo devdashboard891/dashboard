@@ -1,11 +1,4 @@
-import json, base64, os
-
-with open('training_data/code_tutor_dataset.json') as f:
-    dataset = json.load(f)
-
-encoded = base64.b64encode(
-    json.dumps(dataset, ensure_ascii=False).encode('utf-8')
-).decode('ascii')
+import json, os
 
 notebook = {
  "cells": [
@@ -14,8 +7,8 @@ notebook = {
    "metadata": {},
    "source": [
     "# Fine-tune Qwen2.5-Coder-1.5B — Русский учитель кода\n",
-    "Датасет встроен (base64). Нажми **Runtime → Run all**\n",
-    "Нужен GPU: **Runtime → Change runtime type → T4 GPU**"
+    "Нажми **Runtime → Run all** (сначала **Runtime → Change runtime type → T4 GPU**)\n",
+    "Датасет загружается с GitHub — ничего встраивать не нужно."
    ]
   },
   {
@@ -33,9 +26,13 @@ notebook = {
    "cell_type": "code",
    "metadata": {},
    "source": [
-    "import json, base64, random\n",
-    "encoded = '" + encoded + "'\n",
-    "data = json.loads(base64.b64decode(encoded).decode('utf-8'))\n",
+    "import json, random\n",
+    "import urllib.request\n",
+    "\n",
+    "url = 'https://raw.githubusercontent.com/devdashboard891/dashboard/refs/heads/main/training_data/code_tutor_dataset.json'\n",
+    "with urllib.request.urlopen(url) as f:\n",
+    "    data = json.loads(f.read().decode('utf-8'))\n",
+    "\n",
     "random.shuffle(data)\n",
     "print(f'Загружено {len(data)} примеров')"
    ],
@@ -51,6 +48,7 @@ notebook = {
     "    u = ex['instruction']\n",
     "    if ex.get('input'): u += '\\n' + ex['input']\n",
     "    return {'text': f\"<|im_start|>system\\n{s}<|im_end|>\\n<|im_start|>user\\n{u}<|im_end|>\\n<|im_start|>assistant\\n{ex['output']}<|im_end|>\"}\n",
+    "\n",
     "formatted = [fmt(ex) for ex in data]\n",
     "print(formatted[0]['text'][:120])"
    ],
@@ -63,6 +61,7 @@ notebook = {
    "source": [
     "from unsloth import FastLanguageModel\n",
     "import torch\n",
+    "\n",
     "model, tokenizer = FastLanguageModel.from_pretrained(\n",
     "    model_name='Qwen/Qwen2.5-Coder-1.5B-Instruct',\n",
     "    max_seq_length=2048, dtype=torch.bfloat16, load_in_4bit=True,\n",
@@ -105,6 +104,7 @@ notebook = {
    "source": [
     "from trl import SFTTrainer\n",
     "from transformers import TrainingArguments\n",
+    "\n",
     "trainer = SFTTrainer(\n",
     "    model=model, tokenizer=tokenizer, train_dataset=ds,\n",
     "    args=TrainingArguments(\n",
@@ -139,6 +139,7 @@ notebook = {
    "metadata": {},
    "source": [
     "from peft import PeftModel\n",
+    "\n",
     "base, _ = FastLanguageModel.from_pretrained(\n",
     "    'Qwen/Qwen2.5-Coder-1.5B-Instruct',\n",
     "    load_in_4bit=False, dtype=torch.bfloat16,\n",
@@ -156,7 +157,6 @@ notebook = {
    "cell_type": "code",
    "metadata": {},
    "source": [
-    "import os\n",
     "if not os.path.exists('/content/llama.cpp'):\n",
     "    !git clone --depth 1 https://github.com/ggerganov/llama.cpp.git /content/llama.cpp\n",
     "!pip install -q /content/llama.cpp 2>/dev/null || true\n",
@@ -164,9 +164,9 @@ notebook = {
     "    /content/qwen-coder-merged \\\n",
     "    --outfile /content/qwen-coder-russian.gguf \\\n",
     "    --outtype q4_k_m\n",
-    "print(f'GGUF: {os.path.getsize(\"/content/qwen-coder-russian.gguf\") / 1024**2:.0f} MB')\n",
     "import shutil\n",
-    "shutil.make_archive('/content/qwen-coder', 'zip', '/content', 'qwen-coder-russian.gguf')"
+    "shutil.make_archive('/content/qwen-coder', 'zip', '/content', 'qwen-coder-russian.gguf')\n",
+    "print(f'GGUF: {os.path.getsize(\"/content/qwen-coder-russian.gguf\") / 1024**2:.0f} MB')"
    ],
    "execution_count": None,
    "outputs": []
@@ -196,6 +196,5 @@ notebook = {
 with open('finetune_colab.ipynb', 'w') as f:
     json.dump(notebook, f, ensure_ascii=False)
 
-size = os.path.getsize('finetune_colab.ipynb')
-data_len = len(dataset)
-print(f'OK: {size/1024:.0f} KB, {data_len} examples')
+sz = os.path.getsize("finetune_colab.ipynb")
+print(f'OK: {sz / 1024:.0f} KB')
