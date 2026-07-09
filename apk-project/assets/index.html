@@ -865,7 +865,7 @@
 
     // ═══════ WEATHER ═══════
     function fetchWeather() {
-      fetch('https://api.open-meteo.com/v1/forecast?latitude='+LAT+'&longitude='+LON+'&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m,cloud_cover,pressure_msl&daily=weather_code,temperature_2m_max,temperature_2m_min&timezone=auto&forecast_days=3')
+      fetch('https://api.open-meteo.com/v1/forecast?latitude='+LAT+'&longitude='+LON+'&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m,cloud_cover,pressure_msl&daily=weather_code,temperature_2m_max,temperature_2m_min&timezone=auto&forecast_days=16')
         .then(function(r){return r.json()}).then(function(d){
           var c = d.current; if(!c) return;
           $('weather-temp').textContent = Math.round(c.temperature_2m)+'°C';
@@ -877,7 +877,7 @@
           $('weather-icon').textContent = wmoEmoji(c.weather_code, c.is_day);
           if(d.daily) {
             var fc='';
-            for(var i=0;i<Math.min(3,d.daily.time.length);i++){
+            for(var i=0;i<Math.min(16,d.daily.time.length);i++){
               var dn=new Date(d.daily.time[i]+'T12:00:00').toLocaleDateString('ru-RU',{weekday:'short'});
               fc+='<div class="flex items-center justify-between py-1.5 border-b border-white/5 last:border-0">'+
                 '<span class="text-xs text-white/50 w-10">'+dn+'</span>'+
