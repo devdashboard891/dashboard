@@ -161,6 +161,57 @@
     .chat-clear { background:transparent; border:1px solid rgba(255,255,255,0.1); color:rgba(255,255,255,0.3); border-radius:8px; padding:4px 10px; font-size:10px; cursor:pointer; transition:all 0.2s; }
     .chat-clear:hover { border-color:rgba(255,255,255,0.3); color:rgba(255,255,255,0.6); }
     .chat-code { background:rgba(0,0,0,0.3); border-radius:8px; padding:8px 12px; margin:4px 0; font-family:'Cascadia Code','Fira Code',monospace; font-size:12px; white-space:pre-wrap; border-left:2px solid var(--a); }
+    .gh-token-bar { display:flex; gap:8px; align-items:center; margin-bottom:10px; }
+    .gh-token-bar .gh-status { font-size:11px; color:rgba(255,255,255,0.4); flex:1; }
+    .gh-token-bar button { background:transparent; border:1px solid rgba(255,255,255,0.1); border-radius:8px; padding:6px 12px; color:rgba(255,255,255,0.5); font-size:11px; cursor:pointer; white-space:nowrap; }
+    .gh-search { width:100%; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); border-radius:10px; padding:10px 12px; color:white; font-size:12px; outline:none; box-sizing:border-box; margin-bottom:10px; }
+    .gh-search:focus { border-color:var(--a-border); }
+    .gh-list { display:flex; flex-direction:column; gap:6px; max-height:50vh; overflow-y:auto; }
+    .gh-item { display:flex; align-items:center; gap:8px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.06); border-radius:10px; padding:10px 12px; cursor:pointer; transition:all 0.2s; }
+    .gh-item:hover { background:rgba(255,255,255,0.06); border-color:var(--a-border); }
+    .gh-item .gh-icon { font-size:18px; flex-shrink:0; }
+    .gh-item .gh-info { flex:1; min-width:0; }
+    .gh-item .gh-name { font-size:13px; color:rgba(255,255,255,0.85); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .gh-item .gh-meta { font-size:10px; color:rgba(255,255,255,0.35); display:flex; gap:8px; }
+    .gh-item .gh-action { font-size:10px; color:var(--a-light); padding:4px 8px; border-radius:6px; border:1px solid var(--a-border); background:transparent; cursor:pointer; flex-shrink:0; }
+    .gh-detail { display:none; }
+    .gh-detail.active { display:block; }
+    .gh-detail-header { display:flex; align-items:center; gap:8px; margin-bottom:10px; }
+    .gh-detail-header .back { background:transparent; border:none; color:rgba(255,255,255,0.5); font-size:16px; cursor:pointer; padding:4px; }
+    .gh-detail-header h3 { font-size:14px; flex:1; margin:0; }
+    .gh-commits { max-height:40vh; overflow-y:auto; display:flex; flex-direction:column; gap:4px; }
+    .gh-commit { padding:8px 10px; background:rgba(255,255,255,0.03); border-radius:8px; font-size:11px; }
+    .gh-commit .msg { color:rgba(255,255,255,0.8); }
+    .gh-commit .meta { color:rgba(255,255,255,0.3); font-size:10px; margin-top:2px; }
+    .gh-create { display:flex; gap:6px; margin-bottom:10px; }
+    .gh-create input { flex:1; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); border-radius:8px; padding:8px 10px; color:white; font-size:12px; outline:none; }
+    .gh-create input:focus { border-color:var(--a-border); }
+    .gh-create button { background:var(--a); border:none; border-radius:8px; padding:8px 14px; color:white; font-size:12px; cursor:pointer; white-space:nowrap; }
+    .gh-create button:disabled { opacity:0.4; cursor:default; }
+    .gh-empty { text-align:center; color:rgba(255,255,255,0.2); font-size:12px; padding:20px; }
+    .gh-file-row { display:flex; align-items:center; gap:8px; padding:8px 10px; border-radius:8px; cursor:pointer; transition:all 0.1s; font-size:12px; }
+    .gh-file-row:hover { background:rgba(255,255,255,0.04); }
+    .gh-file-row .name { flex:1; color:rgba(255,255,255,0.8); }
+    .gh-file-row .size { color:rgba(255,255,255,0.3); font-size:10px; }
+    .gh-file-row .del { background:transparent; border:none; color:rgba(255,80,80,0.5); cursor:pointer; font-size:14px; padding:2px 6px; }
+    .gh-file-row .del:hover { color:rgba(255,80,80,0.9); }
+    .gh-preview { background:rgba(0,0,0,0.2); border-radius:8px; padding:10px 12px; margin-top:8px; font-size:12px; line-height:1.5; font-family:'Cascadia Code','Fira Code',monospace; white-space:pre-wrap; max-height:300px; overflow:auto; color:rgba(255,255,255,0.7); }
+    .gh-path { font-size:11px; color:var(--a-light); margin-bottom:8px; word-break:break-all; }
+    .gh-bread { display:flex; gap:4px; flex-wrap:wrap; font-size:12px; margin-bottom:8px; color:rgba(255,255,255,0.4); }
+    .gh-bread span { cursor:pointer; }
+    .gh-bread span:hover { color:var(--a-light); }
+    .gh-bread .sep { color:rgba(255,255,255,0.2); }
+    .gh-upload-area { border:2px dashed rgba(255,255,255,0.1); border-radius:12px; padding:16px; text-align:center; cursor:pointer; margin-bottom:8px; transition:all 0.2s; }
+    .gh-upload-area:hover { border-color:var(--a-border); background:var(--a-bg); }
+    .gh-upload-area input { display:none; }
+    .gh-upload-area label { font-size:12px; color:rgba(255,255,255,0.4); cursor:pointer; }
+    .key-modal { position:fixed; inset:0; background:rgba(0,0,0,0.6); display:flex; align-items:center; justify-content:center; z-index:100; }
+    .key-modal-box { background:#1e293b; border:1px solid rgba(255,255,255,0.1); border-radius:16px; padding:24px; max-width:360px; width:90%; }
+    .key-modal-box h3 { font-size:15px; margin:0 0 8px; }
+    .key-modal-box p { font-size:12px; color:rgba(255,255,255,0.5); margin:0 0 12px; }
+    .key-modal-box input { width:100%; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); border-radius:10px; padding:10px; color:white; font-size:13px; outline:none; box-sizing:border-box; }
+    .key-modal-box input:focus { border-color:var(--a-border); }
+    .key-modal-box button { margin-top:12px; width:100%; background:var(--a); border:none; border-radius:10px; padding:10px; color:white; font-size:13px; cursor:pointer; }
   </style>
 </head>
 <body class="animated-bg text-white p-3 md:p-6 min-h-screen" style="background:#0f172a">
@@ -190,6 +241,8 @@
     <div class="tab-bar mb-6 fade-in">
       <button class="tab-btn active" onclick="switchTab('dashboard')">📊 Дашборд</button>
       <button class="tab-btn" onclick="switchTab('ai')">🤖 ИИ помощник</button>
+      <button class="tab-btn" onclick="switchTab('git')">📂 Git</button>
+      <button class="tab-btn" onclick="switchTab('files')">🗄 Файлы</button>
       <button class="tab-btn" onclick="switchTab('terminal')">⌨️ Терминал</button>
     </div>
 
@@ -647,6 +700,80 @@
           <div class="chat-input-area">
             <textarea id="chat-input" rows="1" placeholder="Спроси о чём угодно..." onkeydown="chatInputKeydown(event)"></textarea>
             <button onclick="sendChat()">→</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════ GIT TAB ═══════ -->
+    <div id="tab-git" class="tab-content">
+      <div class="glass rounded-3xl p-4 fade-in">
+        <div class="flex items-center gap-2 mb-3">
+          <span class="text-lg">📂</span>
+          <h2 class="text-xs font-medium uppercase tracking-widest text-white/40 flex-1">Git Репозитории</h2>
+        </div>
+        <div class="gh-token-bar">
+          <span class="gh-status" id="gh-status">⚙️ токен не установлен</span>
+          <button onclick="showGHTokenModal()">🔑</button>
+          <button onclick="loadRepos()" id="gh-refresh-btn" style="display:none">🔄</button>
+        </div>
+        <div class="gh-create">
+          <input id="gh-create-name" placeholder="Название репозитория..." onkeydown="if(event.key==='Enter')createRepo()">
+          <button onclick="createRepo()" id="gh-create-btn">➕ Создать</button>
+        </div>
+        <div id="gh-list" class="gh-list"><div class="gh-empty">🔄 Укажи токен и нажми загрузку</div></div>
+        <div id="gh-detail" class="gh-detail">
+          <div class="gh-detail-header">
+            <button class="back" onclick="closeRepoDetail()">←</button>
+            <h3 id="gh-detail-name"></h3>
+            <button onclick="loadRepoBranches()" style="background:transparent;border:1px solid rgba(255,255,255,0.1);border-radius:6px;padding:4px 10px;color:rgba(255,255,255,0.5);font-size:10px;cursor:pointer">🌿 Ветки</button>
+          </div>
+          <div id="gh-detail-info" class="text-xs text-white/40 mb-2"></div>
+          <div id="gh-branches" style="display:none;margin-bottom:8px">
+            <div style="font-size:11px;color:rgba(255,255,255,0.4);margin-bottom:4px">Ветки:</div>
+            <div id="gh-branch-list" style="display:flex;flex-wrap:wrap;gap:4px"></div>
+          </div>
+          <div style="display:flex;gap:6px;margin-bottom:8px">
+            <button onclick="loadRepoFiles()" style="flex:1;background:transparent;border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:6px;color:rgba(255,255,255,0.5);font-size:11px;cursor:pointer">📂 Файлы</button>
+            <button onclick="loadRepoCommits()" style="flex:1;background:var(--a);border:none;border-radius:8px;padding:6px;color:white;font-size:11px;cursor:pointer">📜 Коммиты</button>
+          </div>
+          <div class="gh-commits" id="gh-commits"></div>
+          <div id="gh-repo-files" style="display:none"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════ FILES TAB ═══════ -->
+    <div id="tab-files" class="tab-content">
+      <div class="glass rounded-3xl p-4 fade-in">
+        <div class="flex items-center gap-2 mb-3">
+          <span class="text-lg">🗄</span>
+          <h2 class="text-xs font-medium uppercase tracking-widest text-white/40 flex-1">Файлы</h2>
+        </div>
+        <div class="gh-token-bar">
+          <span class="gh-status" id="gh-fstatus">⚙️ токен не установлен</span>
+          <button onclick="showGHTokenModal()">🔑</button>
+        </div>
+        <div style="display:flex;gap:6px;margin-bottom:10px">
+          <input class="gh-search" id="gh-repo-path" placeholder="owner/repo" style="flex:1;margin:0" onkeydown="if(event.key==='Enter')loadFiles()">
+          <input class="gh-search" id="gh-branch" value="main" placeholder="branch" style="width:70px;flex-shrink:0;margin:0;text-align:center">
+        </div>
+        <div style="display:flex;gap:6px;margin-bottom:8px">
+          <button onclick="loadFiles()" style="flex:1;background:var(--a);border:none;border-radius:8px;padding:8px;color:white;font-size:12px;cursor:pointer">📂 Открыть</button>
+          <button onclick="showNewFileModal()" style="background:transparent;border:1px solid rgba(255,255,255,0.15);border-radius:8px;padding:8px;color:rgba(255,255,255,0.6);font-size:12px;cursor:pointer">➕ Новый файл</button>
+        </div>
+        <div class="gh-bread" id="gh-breadcrumbs"></div>
+        <div class="gh-upload-area" onclick="document.getElementById('gh-upload-input').click()">
+          <input type="file" id="gh-upload-input" onchange="uploadFile(this)">
+          <label>📤 Загрузить файл</label>
+        </div>
+        <div id="gh-files-list" class="gh-list"><div class="gh-empty">Введи owner/repo и нажми Enter</div></div>
+        <div id="gh-preview" class="gh-preview" style="display:none"></div>
+        <div id="gh-edit-area" style="display:none;margin-top:8px">
+          <div style="display:flex;gap:6px;margin-bottom:6px">
+            <input id="gh-commit-msg" placeholder="Commit message..." style="flex:1;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:8px 10px;color:white;font-size:11px;outline:none">
+            <button onclick="saveEditedFile()" style="background:var(--a);border:none;border-radius:8px;padding:8px 14px;color:white;font-size:11px;cursor:pointer">💾 Сохранить</button>
+            <button onclick="cancelEdit()" style="background:transparent;border:1px solid rgba(255,255,255,0.15);border-radius:8px;padding:8px 14px;color:rgba(255,255,255,0.5);font-size:11px;cursor:pointer">✕</button>
           </div>
         </div>
       </div>
@@ -1323,6 +1450,284 @@
 
       tryNext(0);
     };
+
+    // ═══════ GITHUB API ═══════
+    function ghToken() { return localStorage.getItem('githubToken') || ''; }
+    function ghHeaders() { return { 'Authorization': 'Bearer ' + ghToken(), 'Accept': 'application/vnd.github.v3+json' }; }
+    function ghUpdateStatus() {
+      var t = ghToken();
+      ['gh-status','gh-fstatus'].forEach(function(id){
+        var el = document.getElementById(id);
+        if (el) el.textContent = t ? '🔑 токен есть' : '⚙️ токен не установлен';
+      });
+      document.getElementById('gh-refresh-btn').style.display = t ? '' : 'none';
+    }
+    window.showGHTokenModal = function() {
+      if (document.querySelector('.key-modal')) return;
+      var cur = ghToken();
+      var div = document.createElement('div');
+      div.className = 'key-modal';
+      div.innerHTML = '<div class="key-modal-box">' +
+        '<h3>🔑 GitHub Token</h3>' +
+        '<p>Personal Access Token (repo scope)</p>' +
+        '<input type="text" id="key-input" placeholder="ghp_..." value="' + esc(cur) + '">' +
+        '<button onclick="setupGHToken()">Сохранить</button></div>';
+      document.body.appendChild(div);
+      document.getElementById('key-input').focus();
+    };
+    window.setupGHToken = function() {
+      var val = document.getElementById('key-input').value.trim();
+      if (val) localStorage.setItem('githubToken', val);
+      var modal = document.querySelector('.key-modal');
+      if (modal) modal.remove();
+      ghUpdateStatus();
+      if (ghToken()) loadRepos();
+    };
+    var ghDetailRepo = '';
+    window.loadRepos = async function() {
+      var t = ghToken();
+      if (!t) { showGHTokenModal(); return; }
+      var list = document.getElementById('gh-list');
+      list.innerHTML = '<div class="gh-empty">🔄 Загрузка...</div>';
+      try {
+        var r = await fetch('https://api.github.com/user/repos?per_page=50&sort=updated', { headers: ghHeaders() });
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        var repos = await r.json();
+        if (!repos.length) { list.innerHTML = '<div class="gh-empty">Нет репозиториев</div>'; return; }
+        list.innerHTML = repos.map(function(repo){
+          return '<div class="gh-item" onclick="openRepo(\'' + repo.full_name + '\')">' +
+            '<span class="gh-icon">' + (repo.private ? '🔒' : '📂') + '</span>' +
+            '<div class="gh-info"><div class="gh-name">' + esc(repo.name) + '</div>' +
+            '<div class="gh-meta">⭐ ' + repo.stargazers_count + ' · 🍴 ' + repo.forks_count + (repo.language ? ' · ' + repo.language : '') + '</div></div>' +
+            '</div>';
+        }).join('');
+      } catch(e) { list.innerHTML = '<div class="gh-empty">❌ ' + esc(e.message) + '</div>'; }
+    };
+    window.openRepo = function(fullName) {
+      ghDetailRepo = fullName;
+      document.getElementById('gh-list').style.display = 'none';
+      document.getElementById('gh-create').style.display = 'none';
+      document.getElementById('gh-detail').classList.add('active');
+      document.getElementById('gh-detail-name').textContent = fullName;
+      document.getElementById('gh-branches').style.display = 'none';
+      loadRepoCommits();
+    };
+    window.loadRepoCommits = async function() {
+      document.getElementById('gh-repo-files').style.display = 'none';
+      document.getElementById('gh-commits').style.display = '';
+      document.getElementById('gh-detail-info').innerHTML = '🔄 Загрузка коммитов...';
+      try {
+        var r = await fetch('https://api.github.com/repos/' + ghDetailRepo + '/commits?per_page=20', { headers: ghHeaders() });
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        var commits = await r.json();
+        document.getElementById('gh-detail-info').textContent = 'Последние коммиты (' + commits.length + ')';
+        document.getElementById('gh-commits').innerHTML = commits.map(function(c){
+          var msg = esc(c.commit.message.split('\n')[0]);
+          var date = new Date(c.commit.author.date).toLocaleDateString('ru-RU');
+          return '<div class="gh-commit"><div class="msg">' + msg + '</div><div class="meta">' + c.commit.author.name + ' · ' + date + ' · ' + c.sha.slice(0,7) + '</div></div>';
+        }).join('');
+      } catch(e) { document.getElementById('gh-detail-info').innerHTML = '❌ ' + e.message; }
+    };
+    window.loadRepoBranches = async function() {
+      var branchDiv = document.getElementById('gh-branches');
+      if (branchDiv.style.display === 'block') { branchDiv.style.display = 'none'; return; }
+      branchDiv.style.display = 'block';
+      document.getElementById('gh-branch-list').innerHTML = '🔄';
+      try {
+        var r = await fetch('https://api.github.com/repos/' + ghDetailRepo + '/branches?per_page=30', { headers: ghHeaders() });
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        var branches = await r.json();
+        document.getElementById('gh-branch-list').innerHTML = branches.map(function(b){
+          return '<span onclick="ghSwitchBranch(\'' + b.name + '\')" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:6px;padding:4px 10px;font-size:11px;cursor:pointer;color:rgba(255,255,255,0.7)">🌿 ' + b.name + '</span>';
+        }).join('');
+      } catch(e) { document.getElementById('gh-branch-list').textContent = '❌ ' + e.message; }
+    };
+    window.ghSwitchBranch = function(name) {
+      document.getElementById('gh-branch').value = name;
+      document.getElementById('gh-branches').style.display = 'none';
+      if (document.getElementById('gh-repo-path').value.trim() === ghDetailRepo) fetchFiles('');
+    };
+    window.loadRepoFiles = async function() {
+      document.getElementById('gh-commits').style.display = 'none';
+      var filesDiv = document.getElementById('gh-repo-files');
+      filesDiv.style.display = 'block';
+      filesDiv.innerHTML = '🔄 Загрузка...';
+      try {
+        var r = await fetch('https://api.github.com/repos/' + ghDetailRepo + '/git/trees/main?recursive=1', { headers: ghHeaders() });
+        if (!r.ok) { r = await fetch('https://api.github.com/repos/' + ghDetailRepo + '/git/trees/master?recursive=1', { headers: ghHeaders() }); }
+        var tree = await r.json();
+        filesDiv.innerHTML = tree.tree.filter(function(i){ return i.type === 'blob'; }).slice(0,50).map(function(i){
+          return '<div class="gh-file-row" onclick="openFileFromGit(\'' + i.path + '\')"><span class="name">📄 ' + esc(i.path) + '</span></div>';
+        }).join('') + (tree.tree.length > 50 ? '<div class="gh-empty">...и ещё ' + (tree.tree.length - 50) + ' файлов</div>' : '');
+      } catch(e) { filesDiv.textContent = '❌ ' + e.message; }
+    };
+    window.openFileFromGit = function(path) {
+      document.getElementById('gh-repo-path').value = ghDetailRepo;
+      ghCurrentRepo = ghDetailRepo;
+      var dir = path.includes('/') ? path.substring(0, path.lastIndexOf('/')) : '';
+      closeRepoDetail(); switchTab('files');
+      ghCurrentPath = '';
+      setTimeout(function(){ fetchFiles(dir); }, 100);
+    };
+    window.closeRepoDetail = function() {
+      document.getElementById('gh-detail').classList.remove('active');
+      document.getElementById('gh-list').style.display = '';
+      document.getElementById('gh-create').style.display = '';
+      document.getElementById('gh-repo-files').style.display = 'none';
+      document.getElementById('gh-commits').style.display = '';
+      document.getElementById('gh-branches').style.display = 'none';
+    };
+    window.createRepo = async function() {
+      var name = document.getElementById('gh-create-name').value.trim();
+      if (!name) return;
+      var btn = document.getElementById('gh-create-btn');
+      btn.disabled = true; btn.textContent = '⏳';
+      try {
+        var r = await fetch('https://api.github.com/user/repos', {
+          method: 'POST', headers: Object.assign(ghHeaders(), {'Content-Type':'application/json'}),
+          body: JSON.stringify({ name: name, auto_init: true })
+        });
+        if (!r.ok) { var e = await r.json(); throw new Error(e.message || 'HTTP ' + r.status); }
+        document.getElementById('gh-create-name').value = '';
+        loadRepos();
+      } catch(e) { alert('❌ ' + e.message); }
+      btn.disabled = false; btn.textContent = '➕ Создать';
+    };
+    // ── Files ──
+    var ghCurrentPath = '', ghCurrentRepo = '', ghEditingFile = '', ghEditingSha = '';
+    function ghBranch() { return document.getElementById('gh-branch').value.trim() || 'main'; }
+    window.loadFiles = function() {
+      var rp = document.getElementById('gh-repo-path').value.trim();
+      if (!rp) return;
+      ghCurrentRepo = rp; ghCurrentPath = '';
+      cancelEdit(); fetchFiles('');
+    };
+    async function fetchFiles(path) {
+      ghCurrentPath = path;
+      var list = document.getElementById('gh-files-list');
+      var prev = document.getElementById('gh-preview');
+      var edit = document.getElementById('gh-edit-area');
+      prev.style.display = 'none'; edit.style.display = 'none';
+      list.innerHTML = '<div class="gh-empty">🔄 Загрузка...</div>';
+      var br = ghBranch();
+      var bread = document.getElementById('gh-breadcrumbs');
+      if (path) {
+        var parts = path.split('/').filter(Boolean);
+        bread.innerHTML = '<span onclick="fetchFiles(\'\')">' + ghCurrentRepo + ' (' + br + ')</span>' + parts.map(function(p,i){ var pth=parts.slice(0,i+1).join('/'); return '<span class="sep">/</span><span onclick="fetchFiles(\''+pth+'\')">'+p+'</span>'; }).join('');
+      } else { bread.innerHTML = '<span>' + ghCurrentRepo + ' (' + br + ')</span>'; }
+      try {
+        var r = await fetch('https://api.github.com/repos/' + ghCurrentRepo + '/contents/' + encodeURI(path) + '?ref=' + br, { headers: ghHeaders() });
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        var items = await r.json();
+        if (!items.length) { list.innerHTML = '<div class="gh-empty">пусто</div>'; return; }
+        var isSingle = !Array.isArray(items);
+        if (isSingle) items = [items];
+        list.innerHTML = items.sort(function(a,b){ return a.type === 'dir' ? -1 : 1; }).map(function(item){
+          return '<div class="gh-file-row"><span>' + (item.type === 'dir' ? '📁' : '📄') + '</span>' +
+            '<span class="name" onclick="' + (item.type === 'dir' ? 'fetchFiles(\''+item.path+'\')' : 'previewFile(\''+item.path+'\',\''+item.download_url+'\',\''+(item.sha||'')+'\')') + '">' + esc(item.name) + '</span>' +
+            '<span class="size">' + (item.size ? (item.size > 1024 ? (item.size/1024).toFixed(1)+'KB' : item.size+'B') : '') + '</span>' +
+            '<button class="del" onclick="deleteFile(\'' + item.path + '\')">🗑</button></div>';
+        }).join('');
+      } catch(e) { list.innerHTML = '<div class="gh-empty">❌ ' + esc(e.message) + '</div>'; }
+    }
+    var ghEditingContent = '';
+    window.previewFile = async function(path, url, sha) {
+      var prev = document.getElementById('gh-preview');
+      var edit = document.getElementById('gh-edit-area');
+      edit.style.display = 'none'; prev.style.display = 'block';
+      prev.textContent = '🔄 Загрузка...';
+      ghEditingFile = path; ghEditingSha = sha;
+      try {
+        var r = await fetch(url); var text = await r.text();
+        prev.innerHTML = esc(text) + '<div style="margin-top:10px;display:flex;gap:6px"><button onclick="enableEdit()" style="background:var(--a);border:none;border-radius:8px;padding:6px 14px;color:white;font-size:11px;cursor:pointer">✏️ Редактировать</button></div>';
+        ghEditingContent = text;
+      } catch(e) { prev.textContent = '❌ ' + e.message; }
+    };
+    window.enableEdit = function() {
+      var prev = document.getElementById('gh-preview');
+      prev.innerHTML = '<textarea style="width:100%;min-height:150px;background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:10px;color:white;font-size:12px;font-family:monospace;outline:none;resize:vertical;box-sizing:border-box" id="gh-edit-text">' + esc(ghEditingContent) + '</textarea>';
+      document.getElementById('gh-edit-area').style.display = 'flex';
+    };
+    window.saveEditedFile = async function() {
+      var msg = document.getElementById('gh-commit-msg').value.trim() || 'Update ' + ghEditingFile;
+      var content = document.getElementById('gh-edit-text').value;
+      var base64 = btoa(unescape(encodeURIComponent(content)));
+      var br = ghBranch();
+      try {
+        var r = await fetch('https://api.github.com/repos/' + ghCurrentRepo + '/contents/' + encodeURI(ghEditingFile), {
+          method: 'PUT', headers: Object.assign(ghHeaders(), {'Content-Type':'application/json'}),
+          body: JSON.stringify({ message: msg, content: base64, sha: ghEditingSha, branch: br })
+        });
+        if (!r.ok) { var er = await r.json(); throw new Error(er.message || 'HTTP ' + r.status); }
+        cancelEdit(); fetchFiles(ghCurrentPath);
+        document.getElementById('gh-commit-msg').value = '';
+      } catch(e) { alert('❌ ' + e.message); }
+    };
+    window.cancelEdit = function() { document.getElementById('gh-edit-area').style.display = 'none'; ghEditingFile = ''; ghEditingSha = ''; ghEditingContent = ''; };
+    window.uploadFile = async function(input) {
+      var file = input.files[0]; if (!file) return;
+      var path = ghCurrentPath ? ghCurrentPath + '/' + file.name : file.name;
+      var br = ghBranch();
+      var reader = new FileReader();
+      reader.onload = async function(e) {
+        var base64 = e.target.result.split(',')[1];
+        try {
+          var r = await fetch('https://api.github.com/repos/' + ghCurrentRepo + '/contents/' + encodeURI(path), {
+            method: 'PUT', headers: Object.assign(ghHeaders(), {'Content-Type':'application/json'}),
+            body: JSON.stringify({ message: 'Upload ' + file.name, content: base64, branch: br })
+          });
+          if (!r.ok) { var er = await r.json(); throw new Error(er.message || 'HTTP ' + r.status); }
+          fetchFiles(ghCurrentPath);
+        } catch(err) { alert('❌ ' + err.message); }
+      };
+      reader.readAsDataURL(file); input.value = '';
+    };
+    window.deleteFile = async function(path) {
+      if (!confirm('Удалить ' + path + '?')) return;
+      var br = ghBranch();
+      try {
+        var r = await fetch('https://api.github.com/repos/' + ghCurrentRepo + '/contents/' + encodeURI(path) + '?ref=' + br, { headers: ghHeaders() });
+        var data = await r.json();
+        var r2 = await fetch('https://api.github.com/repos/' + ghCurrentRepo + '/contents/' + encodeURI(path), {
+          method: 'DELETE', headers: Object.assign(ghHeaders(), {'Content-Type':'application/json'}),
+          body: JSON.stringify({ message: 'Delete ' + path, sha: data.sha, branch: br })
+        });
+        if (!r2.ok) { var er = await r2.json(); throw new Error(er.message || 'HTTP ' + r2.status); }
+        fetchFiles(ghCurrentPath);
+      } catch(e) { alert('❌ ' + e.message); }
+    };
+    window.showNewFileModal = function() {
+      if (document.querySelector('.key-modal')) return;
+      var div = document.createElement('div');
+      div.className = 'key-modal';
+      div.innerHTML = '<div class="key-modal-box"><h3>➕ Новый файл</h3>' +
+        '<input type="text" id="nf-path" placeholder="путь/к/файлу.js" style="width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:10px;color:white;font-size:13px;outline:none;box-sizing:border-box;margin-bottom:8px">' +
+        '<textarea id="nf-content" placeholder="Содержимое файла..." style="width:100%;min-height:120px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:10px;color:white;font-size:12px;font-family:monospace;outline:none;resize:vertical;box-sizing:border-box;margin-bottom:8px"></textarea>' +
+        '<input id="nf-msg" placeholder="Commit message..." style="width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:10px;color:white;font-size:13px;outline:none;box-sizing:border-box;margin-bottom:12px">' +
+        '<button onclick="createNewFile()" style="width:100%;background:var(--a);border:none;border-radius:10px;padding:10px;color:white;font-size:13px;cursor:pointer">✅ Создать</button></div>';
+      document.body.appendChild(div);
+      document.getElementById('nf-path').focus();
+    };
+    window.createNewFile = async function() {
+      var path = document.getElementById('nf-path').value.trim();
+      var content = document.getElementById('nf-content').value;
+      var msg = document.getElementById('nf-msg').value.trim() || 'Create ' + path;
+      if (!path) { alert('Укажи путь к файлу'); return; }
+      var fullPath = ghCurrentPath ? ghCurrentPath + '/' + path : path;
+      var base64 = btoa(unescape(encodeURIComponent(content)));
+      var br = ghBranch();
+      try {
+        var r = await fetch('https://api.github.com/repos/' + ghCurrentRepo + '/contents/' + encodeURI(fullPath), {
+          method: 'PUT', headers: Object.assign(ghHeaders(), {'Content-Type':'application/json'}),
+          body: JSON.stringify({ message: msg, content: base64, branch: br })
+        });
+        if (!r.ok) { var er = await r.json(); throw new Error(er.message || 'HTTP ' + r.status); }
+        var modal = document.querySelector('.key-modal');
+        if (modal) modal.remove();
+        fetchFiles(ghCurrentPath);
+      } catch(e) { alert('❌ ' + e.message); }
+    };
+    ghUpdateStatus();
 
     window.chatInputKeydown = function(e) {
       if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendChat(); }
