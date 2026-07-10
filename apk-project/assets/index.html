@@ -1317,8 +1317,8 @@
       nvidia: {
         name: 'NVIDIA NIM',
         endpoint: 'https://integrate.api.nvidia.com/v1/chat/completions',
-        model: 'meta/llama-3.3-70b-instruct',
-        headers: function() { return { 'Authorization': 'Bearer ' + API_KEYS.nvidia }; },
+        model: 'meta/llama-3.1-8b-instruct',
+        headers: function() { return { 'Authorization': 'Bearer ' + API_KEYS.nvidia, 'Content-Type': 'application/json' }; },
         body: function(msgs) { return { model: this.model, messages: msgs, max_tokens: 2000 }; },
         parser: function(json) { return json.choices && json.choices[0] && json.choices[0].message ? json.choices[0].message.content : null; },
         errorCheck: function(json, status) { return json.error ? (json.error.message || 'NVIDIA error') : null; }

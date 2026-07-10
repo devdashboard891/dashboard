@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Дашборд</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0f172a;color:#e2e8f0;font-family:system-ui,-apple-system,sans-serif;padding:6px;width:100%;overflow-x:hidden}
+.grid{display:grid;gap:6px;grid-template-columns:1fr}
+@media(min-width:400px){.grid{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:600px){.grid{grid-template-columns:repeat(3,1fr)}}
+@media(min-width:800px){.grid{grid-template-columns:repeat(4,1fr)}}
+.card{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:10px;overflow:hidden}
+.cs2{grid-column:span 2}
+.cs3{grid-column:span 3}
+.cs4{grid-column:span 4}
+@media(max-width:399px){.cs2,.cs3,.cs4{grid-column:1/-1}}
+h2{font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:rgba(255,255,255,0.35);margin-bottom:5px;display:flex;align-items:center;gap:4px}
+.row{display:flex;align-items:center;gap:5px}
+.col{display:flex;flex-direction:column;gap:3px}
+.jcsb{display:flex;justify-content:space-between;align-items:center}
+.mt-1{margin-top:4px}.mt-2{margin-top:6px}
+.text-10{font-size:10px}.text-xs{font-size:11px}.text-sm{font-size:13px}.text-lg{font-size:17px}.text-xl{font-size:22px}.text-2xl{font-size:28px}
+.w30{color:rgba(255,255,255,0.3)}.w40{color:rgba(255,255,255,0.4)}.w60{color:rgba(255,255,255,0.6)}.w70{color:rgba(255,255,255,0.7)}.w80{color:rgba(255,255,255,0.8)}.w90{color:rgba(255,255,255,0.9)}
+.tc{text-align:center}.accent{color:#d4740f}
+.border-b{border-bottom:1px solid rgba(255,255,255,0.06)}
+.flex{display:flex}.fw{flex-wrap:wrap}.aic{align-items:center}.f1{flex:1}.w100{width:100%}
+input{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:5px 8px;color:rgba(255,255,255,0.8);font-size:12px;outline:none;width:100%}
+input:focus{border-color:rgba(212,116,15,0.5)}
+button{cursor:pointer;border:none;background:rgba(212,116,15,0.2);color:rgba(255,255,255,0.8);border-radius:8px;padding:5px 10px;font-size:11px;white-space:nowrap}
+button:hover{background:rgba(212,116,15,0.35)}
+.bg2{background:rgba(255,255,255,0.05)}
+.overflow-y{overflow-y:auto}
+.maxh32{max-height:120px}.maxh20{max-height:72px}
+.dot{width:5px;height:5px;border-radius:50%;flex-shrink:0}
+.pbar{height:3px;border-radius:3px;background:rgba(255,255,255,0.06);overflow:hidden;margin-top:3px}
+.pfill{height:100%;border-radius:3px;background:linear-gradient(90deg,#d4740f,#e8943a);transition:width 0.5s}
+::-webkit-scrollbar{width:2px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:rgba(212,116,15,0.3);border-radius:2px}
+.cg{display:grid;grid-template-columns:repeat(4,1fr);gap:3px;margin-top:4px}
+.cg button{padding:4px 0;font-size:12px;text-align:center}
+input[type="checkbox"]{width:14px;height:14px;accent-color:#d4740f}
+svg{display:block}
+</style>
+</head>
+<body>
+
+<div class="card">
+  <div class="row jcsb">
+    <div>
+      <div class="row gap-1"><span id="gi">🔥</span><span id="gr" class="text-sm w70">Загрузка...</span></div>
+      <div id="dp" class="text-10 w30"></div>
+    </div>
+    <div style="text-align:right">
+      <div id="t" class="text-xl w90" style="font-weight:200;letter-spacing:2px">--:--:--</div>
+      <div id="d" class="text-10 w40">...</div>
+    </div>
+  </div>
+</div>
+
+<div class="grid" style="margin-top:6px">
+
+<div class="card">
+  <h2><span>🌤</span>Погода</h2>
+  <div class="row jcsb">
+    <div><div id="wt" class="text-xl w90">--°C</div><div id="wf" class="text-xs w40">Ощущается: --°C</div></div>
+    <div id="wi" class="text-2xl">⏳</div>
+  </div>
+  <div class="row jcsb text-10 w40 mt-1">
+    <span>💧 <span id="wh">--%</span></span>
+    <span>🌬 <span id="ww">--</span></span>
+    <span>☁️ <span id="wc">--%</span></span>
+  </div>
+</div>
+
+<div class="card">
+  <h2><span>📅</span>Прогноз</h2>
+  <div id="fc" class="col" style="gap:4px"><div class="text-xs w30">Загрузка...</div></div>
+</div>
+
+<div class="card cs2">
+  <h2><span>✅</span>Задачи <span id="tcnt" class="text-xs w30" style="margin-left:auto">0/0</span></h2>
+  <div class="row gap-1"><input id="ti" type="text" placeholder="Новая задача..."><button id="ta" style="padding:5px 12px">+</button></div>
+  <div id="tl" class="col overflow-y maxh32 mt-1" style="gap:2px"><div class="text-xs w30 tc" style="padding:8px 0">Нет задач</div></div>
+  <div class="row gap-2 mt-1">
+    <button onclick="window.clearDoneTasks()" class="bg2" style="padding:3px 8px;font-size:10px">Очистить ✔</button>
+    <button onclick="window.addSampleTasks()" class="bg2" style="padding:3px 8px;font-size:10px">Примеры</button>
+  </div>
+</div>
+
+<div class="card">
+  <h2><span>💱</span>Курс</h2>
+  <div class="col" style="gap:5px">
+    <div class="row jcsb text-xs"><span class="w40">USD/UAH</span><span id="usd" class="w80">--</span></div>
+    <div class="row jcsb text-xs border-b" style="padding:4px 0"><span class="w40">EUR/UAH</span><span id="eur" class="w80">--</span></div>
+    <div class="row jcsb text-xs"><span class="w40">BTC/USD</span><span id="btc" class="w80">--</span></div>
+  </div>
+</div>
+
+<div class="card cs2">
+  <h2><span>📝</span>Заметки <span class="text-xs w30" style="margin-left:auto" id="nc">0</span></h2>
+  <div class="row gap-1"><input id="ni" type="text" placeholder="Заметка..."><button id="na" style="padding:5px 12px">+</button></div>
+  <div id="nl" class="col overflow-y maxh20 mt-1" style="gap:2px"><div class="text-xs w30 tc" style="padding:6px 0">Нет заметок</div></div>
+</div>
+
+<div class="card">
+  <h2><span>🕐</span>Расписание</h2>
+  <div id="sl" class="col overflow-y maxh32" style="gap:2px"></div>
+</div>
+
+<div class="card">
+  <h2><span>🍅</span>Pomodoro</h2>
+  <div class="col aic" style="gap:5px">
+    <svg width="70" height="70" viewBox="0 0 100 100">
+      <circle cx="50" cy="50" r="42" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="6"/>
+      <circle id="pr" cx="50" cy="50" r="42" fill="none" stroke="#d4740f" stroke-width="6" stroke-linecap="round" stroke-dasharray="263.89" stroke-dashoffset="0" transform="rotate(-90 50 50)"/>
+      <text x="50" y="50" text-anchor="middle" dominant-baseline="central" font-size="16" font-weight="300" fill="rgba(255,255,255,0.9)"><tspan id="pt">25:00</tspan></text>
+    </svg>
+    <div class="row gap-1">
+      <button id="ps" style="padding:3px 10px;font-size:10px">Старт</button>
+      <button id="prs" class="bg2" style="padding:3px 10px;font-size:10px">Сброс</button>
+      <select id="pm" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:6px;font-size:10px;color:rgba(255,255,255,0.6);padding:2px 4px;outline:none">
+        <option value="25">25м</option><option value="15">15м</option><option value="30">30м</option>
+      </select>
+    </div>
+    <div id="pses" class="text-xs w30">🍅 0</div>
+  </div>
+</div>
+
+<div class="card">
+  <h2><span>📱</span>Экран</h2>
+  <div class="row jcsb"><span class="text-lg w80" style="font-weight:200"><span id="st">0ч 0м</span></span><span class="text-xs w30">6ч</span></div>
+  <div class="pbar"><div id="sp" class="pfill" style="width:0%"></div></div>
+  <div class="row jcsb text-10 w30 mt-1"><span>0ч</span><span>6ч</span></div>
+  <button onclick="window.resetScreenTime()" class="bg2" style="padding:3px 8px;font-size:10px;margin-top:4px">↺ Сброс</button>
+</div>
+
+<div class="card cs2">
+  <h2><span>💬</span>Цитата <button onclick="fetchQuote()" style="background:none;padding:2px 4px;color:rgba(255,255,255,0.25);font-size:13px;margin-left:auto">⟳</button></h2>
+  <div id="qb"><div class="text-xs w60" style="line-height:1.5">Загрузка...</div><div id="qa" class="text-10 w30 mt-1"></div></div>
+</div>
+
+<div class="card">
+  <h2><span>🧮</span>Кальк</h2>
+  <div id="cd" class="text-sm w80 tc" style="background:rgba(255,255,255,0.04);border-radius:6px;padding:6px 8px;margin-bottom:4px;text-align:right;font-weight:200">0</div>
+  <div class="cg">
+    <button onclick="ci('7')">7</button><button onclick="ci('8')">8</button><button onclick="ci('9')">9</button><button onclick="co('/')" style="background:rgba(212,116,15,0.3)">÷</button>
+    <button onclick="ci('4')">4</button><button onclick="ci('5')">5</button><button onclick="ci('6')">6</button><button onclick="co('*')" style="background:rgba(212,116,15,0.3)">×</button>
+    <button onclick="ci('1')">1</button><button onclick="ci('2')">2</button><button onclick="ci('3')">3</button><button onclick="co('-')" style="background:rgba(212,116,15,0.3)">−</button>
+    <button onclick="ci('0')">0</button><button onclick="ci('.')">.</button><button onclick="cr()" style="background:rgba(212,116,15,0.3)">=</button><button onclick="co('+')" style="background:rgba(212,116,15,0.3)">+</button>
+  </div>
+  <button onclick="cc()" class="bg2" style="width:100%;margin-top:3px;padding:3px;font-size:10px;color:rgba(255,255,255,0.4)">C</button>
+</div>
+
+<div class="card">
+  <h2><span>⏳</span>Новый год</h2>
+  <div id="nyc" class="text-lg w80 tc" style="font-weight:200">-- дн.</div>
+  <div class="text-10 w30 tc">до 2027</div>
+</div>
+
+</div>
+
+<div class="tc text-10" style="padding:8px 0;color:rgba(255,255,255,0.12)">🔥 Личный дашборд</div>
+
+<script>
+(function(){
+'use strict';
+var $=function(id){return document.getElementById(id)};
+var esc=function(s){var d=document.createElement('div');d.textContent=s;return d.innerHTML};
+
+function ug(){
+  var h=(new Date()).getHours(),g,i;
+  if(h<6){g='Доброй ночи';i='🌙'}else if(h<12){g='Доброе утро';i='☀️'}else if(h<18){g='Добрый день';i='🔥'}else{g='Добрый вечер';i='🌅'}
+  $('gr').textContent=g;$('gi').textContent=i;
+  var s=new Date();s.setHours(0,0,0,0);var e=new Date();e.setHours(23,59,59,999);
+  $('dp').textContent='День на '+((Date.now()-s.getTime())/(e.getTime()-s.getTime())*100).toFixed(1)+'%';
+}
+function uc(){
+  var n=new Date();
+  $('t').textContent=n.toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+  $('d').textContent=n.toLocaleDateString('ru-RU',{weekday:'long',day:'numeric',month:'long'});
+}
+ug();uc();setInterval(uc,1000);setInterval(ug,10000);
+
+function wmo(c,d){return c===0?d?'☀️':'🌙':c<=3?d?'⛅':'☁️':c<=48?'🌫':c<=57?'🌦':c<=67?'🌧':c<=77?'🌨':c<=82?'🌦':c<=86?'🌧':'⛈'}
+
+function fw(){
+  fetch('https://api.open-meteo.com/v1/forecast?latitude=49.83528&longitude=28.79944&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m,cloud_cover,pressure_msl&daily=weather_code,temperature_2m_max,temperature_2m_min&timezone=auto&forecast_days=3')
+    .then(function(r){return r.json()}).then(function(d){
+      var c=d.current;if(!c)return;
+      $('wt').textContent=Math.round(c.temperature_2m)+'°C';
+      $('wf').textContent='Ощущается: '+Math.round(c.apparent_temperature)+'°C';
+      $('wh').textContent=c.relative_humidity_2m+'%';
+      $('ww').textContent=c.wind_speed_10m+' км/ч';
+      $('wc').textContent=c.cloud_cover+'%';
+      $('wi').textContent=wmo(c.weather_code,1);
+      if(d.daily){var h='';for(var i=0;i<Math.min(3,d.daily.time.length);i++){var dn=new Date(d.daily.time[i]+'T12:00:00').toLocaleDateString('ru-RU',{weekday:'short'});h+='<div class="row jcsb" style="padding:3px 0;border-bottom:1px solid rgba(255,255,255,0.05)"><span class="text-xs w50">'+dn+'</span><span>'+wmo(d.daily.weather_code[i],1)+'</span><span class="text-xs w70">'+Math.round(d.daily.temperature_2m_max[i])+'°/'+Math.round(d.daily.temperature_2m_min[i])+'°</span></div>';}$('fc').innerHTML=h}
+    }).catch(function(){});
+}
+fw();setInterval(fw,600000);
+
+var tasks=[];
+function lt(){try{tasks=JSON.parse(localStorage.getItem('tasks'))||[]}catch(e){tasks=[]}}
+function st(){localStorage.setItem('tasks',JSON.stringify(tasks))}
+function rt(){
+  var l=$('tl'),t=tasks.length,d=tasks.filter(function(x){return x.done}).length;
+  $('tcnt').textContent=d+'/'+t;
+  if(!t){l.innerHTML='<div class="text-xs w30 tc" style="padding:8px 0">Нет задач</div>';return}
+  var h='';
+  for(var i=0;i<tasks.length;i++){var x=tasks[i];h+='<div class="row gap-1" style="padding:4px 6px;border-radius:8px"><input type="checkbox" '+(x.done?'checked':'')+' data-i="'+i+'"><span class="f1 text-xs '+(x.done?'w30" style="text-decoration:line-through':'w70')+'">'+esc(x.text)+'</span><button data-d="'+i+'" style="background:none;padding:2px 4px;font-size:14px;color:rgba(255,255,255,0.15)">&times;</button></div>'}
+  l.innerHTML=h;
+  l.querySelectorAll('input[type="checkbox"]').forEach(function(b){b.addEventListener('change',function(){tt(parseInt(this.dataset.i))})});
+  l.querySelectorAll('[data-d]').forEach(function(b){b.addEventListener('click',function(){dt(parseInt(this.dataset.d))})});
+}
+function addTask(){var v=$('ti').value.trim();if(!v)return;tasks.push({text:v,done:false});st();rt();$('ti').value='';$('ti').focus()}
+function tt(i){if(i>=0&&i<tasks.length){tasks[i].done=!tasks[i].done;st();rt()}}
+function dt(i){if(i>=0&&i<tasks.length){tasks.splice(i,1);st();rt()}}
+window.clearDoneTasks=function(){tasks=tasks.filter(function(x){return!x.done});st();rt()}
+window.addSampleTasks=function(){var s=['Выучить JavaScript','Сделать зарядку','Почитать книгу','Написать код'];tasks=tasks.concat(s.map(function(x){return{text:x,done:false}}));st();rt()}
+$('ta').addEventListener('click',addTask);
+$('ti').addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();addTask()}});
+lt();rt();
+
+var notes=[];
+function ln(){try{notes=JSON.parse(localStorage.getItem('notes'))||[]}catch(e){notes=[]}}
+function sn(){localStorage.setItem('notes',JSON.stringify(notes))}
+function rn(){var l=$('nl');$('nc').textContent=notes.length;if(!notes.length){l.innerHTML='<div class="text-xs w30 tc" style="padding:6px 0">Нет заметок</div>';return}var h='';for(var i=notes.length-1;i>=0;i--)h+='<div class="row gap-1" style="padding:4px 6px;border-radius:6px;background:rgba(255,255,255,0.03)"><span class="f1 text-xs w60">'+esc(notes[i])+'</span><button data-n="'+i+'" style="background:none;padding:2px 4px;font-size:13px;color:rgba(255,255,255,0.15)">&times;</button></div>';l.innerHTML=h;l.querySelectorAll('[data-n]').forEach(function(b){b.addEventListener('click',function(){var i=parseInt(this.dataset.n);notes.splice(i,1);sn();rn()})})}
+function addNote(){var v=$('ni').value.trim();if(!v)return;notes.push(v);sn();rn();$('ni').value=''}
+$('na').addEventListener('click',addNote);
+$('ni').addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();addNote()}});
+ln();rn();
+
+fetch('https://api.privatbank.ua/p24api/pubinfo?json&exchange&coursid=5').then(function(r){return r.json()}).then(function(d){for(var i=0;i<d.length;i++){if(d[i].ccy==='USD')$('usd').textContent=parseFloat(d[i].buy).toFixed(2);if(d[i].ccy==='EUR')$('eur').textContent=parseFloat(d[i].buy).toFixed(2)}}).catch(function(){});
+fetch('https://api.coindesk.com/v1/bpi/currentprice/USD.json').then(function(r){return r.json()}).then(function(d){$('btc').textContent='$'+parseFloat(d.bpi.USD.rate.replace(/,/g,'')).toLocaleString('ru-RU',{minimumFractionDigits:0})}).catch(function(){});
+
+window.fetchQuote=function(){fetch('https://api.quotable.io/random?tags=technology|programming|inspirational').then(function(r){return r.json()}).then(function(d){$('qb').innerHTML='<div class="text-xs w60" style="line-height:1.5">"'+esc(d.content)+'"</div><div class="text-10 w30 mt-1">— '+esc(d.author)+'</div>'}).catch(function(){})};
+fetchQuote();
+
+var sched=[
+  {t:'07:00',l:'Пробуждение',c:'#818cf8'},{t:'08:00',l:'Завтрак',c:'#60a5fa'},
+  {t:'09:00',l:'Кодинг',c:'#f59e0b'},{t:'11:00',l:'Перерыв',c:'#60a5fa'},
+  {t:'11:30',l:'Кодинг',c:'#f59e0b'},{t:'13:00',l:'Обед',c:'#60a5fa'},
+  {t:'14:00',l:'Учёба',c:'#fb923c'},{t:'16:00',l:'Прогулка',c:'#34d399'},
+  {t:'17:00',l:'Кодинг',c:'#f59e0b'},{t:'19:00',l:'Ужин',c:'#60a5fa'},
+  {t:'20:00',l:'Отдых',c:'#60a5fa'},{t:'22:00',l:'Чтение',c:'#818cf8'},{t:'23:00',l:'Сон',c:'#818cf8'}];
+function rs(){
+  var l=$('sl'),n=new Date(),c=n.getHours()*60+n.getMinutes(),h='';
+  for(var i=0;i<sched.length;i++){var s=sched[i],p=s.t.split(':');var m=parseInt(p[0])*60+parseInt(p[1]);h+='<div class="row gap-1" style="padding:3px 4px;border-radius:6px'+(m<c?';opacity:0.4':'')+'"><div class="dot" style="background:'+s.c+'"></div><span class="text-10 w40" style="width:30px">'+s.t+'</span><span class="text-xs w70">'+s.l+'</span>'+(m<c?'<span class="text-10 w30" style="margin-left:auto">✔</span>':'')+'</div>'}
+  l.innerHTML=h;
+}
+rs();setInterval(rs,60000);
+
+var pT=25,pR=25*60,pRun=false,pI=null,pS=parseInt(localStorage.getItem('pomSess_'+new Date().toDateString()))||0;
+function up(){var m=Math.floor(pR/60),s=pR%60;$('pt').textContent=(m<10?'0':'')+m+':'+(s<10?'0':'')+s;$('pr').setAttribute('stroke-dashoffset',pT*60>0?263.89*(1-pR/(pT*60)):0);$('pses').textContent='🍅 '+pS}
+function tp(){if(pRun){clearInterval(pI);pRun=false;$('ps').textContent='Старт';return}if(pR<=0)rp();pRun=true;$('ps').textContent='Пауза';pI=setInterval(function(){pR--;if(pR<=0){clearInterval(pI);pRun=false;$('ps').textContent='Старт';pS++;localStorage.setItem('pomSess_'+new Date().toDateString(),pS);up()}up()},1000)}
+function rp(){clearInterval(pI);pRun=false;$('ps').textContent='Старт';pT=parseInt($('pm').value);pR=pT*60;up()}
+$('ps').addEventListener('click',tp);
+$('prs').addEventListener('click',rp);
+$('pm').addEventListener('change',rp);
+up();
+
+function ist(){var k='screenTime_'+new Date().toDateString();ust(parseInt(localStorage.getItem(k))||0)}
+function ust(m){var p=Math.min(100,(m/360)*100);$('st').textContent=Math.floor(m/60)+'ч '+m%60+'м';$('sp').style.width=p+'%'}
+window.resetScreenTime=function(){localStorage.setItem('screenTime_'+new Date().toDateString(),'0');ust(0)}
+ist();
+setInterval(function(){var k='screenTime_'+new Date().toDateString(),m=parseInt(localStorage.getItem(k))||0;m+=1;localStorage.setItem(k,m);ust(m)},60000);
+
+function ny(){var n=new Date(),y=n.getFullYear();$('nyc').textContent=Math.ceil((new Date(y+1,0,1)-n)/86400000)+' дн.'}
+ny();
+
+var calc='0',cop=null,cpr=null;
+function cup(){$('cd').textContent=calc}
+window.ci=function(n){if(calc==='0'&&n!=='.')calc=n;else calc+=n;cup()}
+window.co=function(o){cpr=parseFloat(calc);cop=o;calc='0';cup()}
+window.cr=function(){if(cop===null)return;var c=parseFloat(calc);switch(cop){case'+':calc=cpr+c;break;case'-':calc=cpr-c;break;case'*':calc=cpr*c;break;case'/':calc=c!==0?cpr/c:'Error';break}cop=null;cpr=null;cup()}
+window.cc=function(){calc='0';cop=null;cpr=null;cup()}
+
+})();
+</script>
+</body>
+</html>

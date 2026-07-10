@@ -1,0 +1,1920 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🔥 Личный дашборд</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#d4740f">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Дашборд">
+  <link rel="apple-touch-icon" href="icon.png">
+  <link rel="preload" href="dist.css" as="style">
+  <link rel="stylesheet" href="dist.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <style>
+    * { font-family: 'Roboto', sans-serif; }
+    body { min-height: 100vh; overflow-x: hidden; background: #0f172a; }
+
+    :root {
+      --a: #d4740f;
+      --a-rgb: 212, 116, 15;
+      --a-light: #e8943a;
+      --a-dark: #a05600;
+      --a-glow: rgba(212, 116, 15, 0.15);
+      --a-border: rgba(212, 116, 15, 0.3);
+      --a-bg: rgba(212, 116, 15, 0.12);
+      --a-bg-hover: rgba(212, 116, 15, 0.25);
+      --a-bg-strong: rgba(212, 116, 15, 0.3);
+      --bg-1: #0f172a;
+      --bg-2: #1a0f05;
+      --bg-3: #2a1505;
+      --bg-4: #0f172a;
+    }
+    body.morning {
+      --a: #ff8c00; --a-rgb: 255, 140, 0;
+      --a-light: #ffb347; --a-dark: #cc6600;
+      --a-glow: rgba(255, 140, 0, 0.15); --a-border: rgba(255, 140, 0, 0.3);
+      --a-bg: rgba(255, 140, 0, 0.12); --a-bg-hover: rgba(255, 140, 0, 0.25); --a-bg-strong: rgba(255, 140, 0, 0.3);
+      --bg-2: #2a1500; --bg-3: #3d1f00;
+    }
+    body.evening {
+      --a: #a04000; --a-rgb: 160, 64, 0;
+      --a-light: #c06020; --a-dark: #703000;
+      --a-glow: rgba(160, 64, 0, 0.15); --a-border: rgba(160, 64, 0, 0.3);
+      --a-bg: rgba(160, 64, 0, 0.12); --a-bg-hover: rgba(160, 64, 0, 0.25); --a-bg-strong: rgba(160, 64, 0, 0.3);
+      --bg-2: #0f0a05; --bg-3: #1a0f05;
+    }
+
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    .animated-bg {
+      background: linear-gradient(-45deg, var(--bg-1), var(--bg-2), var(--bg-3), var(--bg-4));
+      background-size: 400% 400%;
+      animation: gradientShift 15s ease infinite;
+    }
+
+    .glass {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .card-hover {
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .card-hover:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px var(--a-glow);
+      border-color: var(--a-border);
+    }
+
+    .progress-bar { transition: width 1s ease-in-out; }
+
+    @keyframes slideIn { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
+    .task-enter { animation: slideIn 0.3s ease-out; }
+    @keyframes popIn { 0% { transform: scale(0.5); opacity: 0; } 70% { transform: scale(1.1); } 100% { transform: scale(1); opacity: 1; } }
+    .pop-in { animation: popIn 0.4s ease-out; }
+
+    .fade-in { animation: fadeIn 0.6s ease-out forwards; opacity: 0; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+    .delay-1 { animation-delay: 0.05s; }
+    .delay-2 { animation-delay: 0.1s; }
+    .delay-3 { animation-delay: 0.15s; }
+    .delay-4 { animation-delay: 0.2s; }
+    .delay-5 { animation-delay: 0.25s; }
+    .delay-6 { animation-delay: 0.3s; }
+    .delay-7 { animation-delay: 0.35s; }
+    .delay-8 { animation-delay: 0.4s; }
+    .delay-9 { animation-delay: 0.45s; }
+
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--a-bg-strong); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--a-bg-hover); }
+
+    input[type="checkbox"] {
+      appearance: none; width: 16px; height: 16px;
+      border: 2px solid var(--a-border); border-radius: 4px;
+      cursor: pointer; transition: all 0.2s;
+      display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    input[type="checkbox"]:checked { background: var(--a); border-color: var(--a); }
+    input[type="checkbox"]:checked::after { content: "✓"; color: white; font-size: 11px; font-weight: 700; }
+
+    .btn-action { background: var(--a-bg); border: 1px solid var(--a-border); transition: all 0.3s; }
+    .btn-action:hover { background: var(--a-bg-hover); border-color: var(--a-border); transform: translateY(-1px); }
+
+    .mini-btn { background: var(--a-bg); border: 1px solid var(--a-border); transition: all 0.25s; cursor: pointer; }
+    .mini-btn:hover { background: var(--a-bg-hover); border-color: var(--a-border); transform: scale(1.05); }
+    .mini-btn:active { transform: scale(0.95); }
+
+    .mini-btn-strong { background: var(--a-bg); border: 1px solid var(--a-border); transition: all 0.25s; cursor: pointer; }
+    .mini-btn-strong:hover { background: var(--a-bg-strong); border-color: var(--a); transform: scale(1.05); }
+    .mini-btn-strong:active { transform: scale(0.95); }
+
+    .accent-text { color: var(--a); }
+    .accent-border { border-color: var(--a-border); }
+    .accent-bg { background: var(--a-bg); }
+    .accent-bg-strong { background: var(--a-bg-strong); }
+
+    @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
+    .shake { animation: shake 0.3s ease; }
+
+    .mood-btn { transition: all 0.2s; cursor: pointer; font-size: 24px; filter: grayscale(0.6); }
+    .mood-btn:hover, .mood-btn.active { filter: grayscale(0); transform: scale(1.2); }
+    .mood-btn.active { filter: grayscale(0); }
+
+    .rps-btn { transition: all 0.2s; cursor: pointer; }
+    .rps-btn:hover { transform: scale(1.15); }
+    .rps-btn:active { transform: scale(0.9); }
+
+    .tab-bar { display:flex; gap:4px; border:1px solid var(--a-border); border-radius:16px; padding:4px; background:var(--a-bg); }
+    .tab-btn { flex:1; text-align:center; padding:8px; border-radius:12px; font-size:13px; font-weight:500; cursor:pointer; transition:all 0.3s; color:rgba(255,255,255,0.5); background:transparent; border:none; }
+    .tab-btn:hover { color:rgba(255,255,255,0.8); background:var(--a-bg-hover); }
+    .tab-btn.active { color:white; background:var(--a); }
+    .tab-content { display:none; }
+    .tab-content.active { display:block; }
+
+    .chat-container { display:flex; flex-direction:column; height:60vh; min-height:300px; }
+    .chat-messages { flex:1; overflow-y:auto; padding:12px; display:flex; flex-direction:column; gap:8px; }
+    .chat-msg { max-width:85%; padding:10px 14px; border-radius:14px; font-size:13px; line-height:1.5; animation:slideIn 0.2s ease-out; }
+    .chat-msg.user { align-self:flex-end; background:var(--a); color:white; border-bottom-right-radius:4px; }
+    .chat-msg.assistant { align-self:flex-start; background:rgba(255,255,255,0.06); color:rgba(255,255,255,0.85); border-bottom-left-radius:4px; border:1px solid rgba(255,255,255,0.06); }
+    .chat-msg.system { align-self:center; background:rgba(212,116,15,0.12); color:var(--a-light); font-size:11px; border:1px solid var(--a-border); border-radius:8px; text-align:center; }
+    .chat-input-area { display:flex; gap:8px; padding:8px; border-top:1px solid rgba(255,255,255,0.06); }
+    .chat-input-area textarea { flex:1; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); border-radius:12px; padding:10px 14px; color:rgba(255,255,255,0.8); font-size:13px; outline:none; resize:none; font-family:inherit; max-height:80px; }
+    .chat-input-area textarea:focus { border-color:var(--a-border); background:rgba(255,255,255,0.08); }
+    .chat-input-area button { background:var(--a); color:white; border:none; border-radius:12px; padding:10px 16px; font-size:13px; cursor:pointer; transition:all 0.2s; white-space:nowrap; }
+    .chat-input-area button:hover { opacity:0.85; }
+    .chat-loading { align-self:center; color:rgba(255,255,255,0.3); font-size:12px; display:flex; align-items:center; gap:6px; }
+    .chat-loading::after { content:''; width:12px; height:12px; border:2px solid var(--a-border); border-top-color:var(--a); border-radius:50%; animation:spin 0.6s linear infinite; }
+    @keyframes spin { to { transform:rotate(360deg); } }
+    .chat-clear { background:transparent; border:1px solid rgba(255,255,255,0.1); color:rgba(255,255,255,0.3); border-radius:8px; padding:4px 10px; font-size:10px; cursor:pointer; transition:all 0.2s; }
+    .chat-clear:hover { border-color:rgba(255,255,255,0.3); color:rgba(255,255,255,0.6); }
+    .chat-code { background:rgba(0,0,0,0.3); border-radius:8px; padding:8px 12px; margin:4px 0; font-family:'Cascadia Code','Fira Code',monospace; font-size:12px; white-space:pre-wrap; border-left:2px solid var(--a); }
+    .key-modal { position:fixed; inset:0; background:rgba(0,0,0,0.6); display:flex; align-items:center; justify-content:center; z-index:100; }
+    .key-modal-box { background:#1e293b; border:1px solid rgba(255,255,255,0.1); border-radius:16px; padding:24px; max-width:360px; width:90%; }
+    .key-modal-box h3 { font-size:15px; margin:0 0 8px; }
+    .key-modal-box p { font-size:12px; color:rgba(255,255,255,0.5); margin:0 0 12px; }
+    .key-modal-box input { width:100%; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); border-radius:10px; padding:10px; color:white; font-size:13px; outline:none; box-sizing:border-box; }
+    .key-modal-box input:focus { border-color:var(--a-border); }
+    .key-modal-box button { margin-top:12px; width:100%; background:var(--a); border:none; border-radius:10px; padding:10px; color:white; font-size:13px; cursor:pointer; }
+    .task-modal { position:fixed; inset:0; background:rgba(0,0,0,0.7); display:flex; align-items:center; justify-content:center; z-index:100; padding:12px; }
+    .task-modal-box { background:#1e293b; border:1px solid rgba(255,255,255,0.1); border-radius:16px; padding:20px; max-width:700px; width:100%; height:85vh; display:flex; flex-direction:column; }
+    .task-modal-box h3 { font-size:14px; margin:0 0 4px; color:var(--a-light); }
+    .task-desc { font-size:13px; color:rgba(255,255,255,0.8); line-height:1.5; margin:0 0 10px; max-height:100px; overflow-y:auto; padding:8px 10px; background:rgba(0,0,0,0.2); border-radius:8px; flex-shrink:0; }
+    .task-editor-wrap { flex:1; border:1px solid rgba(255,255,255,0.1); border-radius:10px; overflow:hidden; min-height:150px; display:flex; }
+    .task-editor { width:100%; height:100%; background:rgba(0,0,0,0.2); border:none; padding:12px 14px; color:rgba(255,255,255,0.85); font-size:13px; line-height:1.6; font-family:'Cascadia Code','Fira Code',monospace; outline:none; resize:none; white-space:pre; tab-size:2; overflow:auto; box-sizing:border-box; }
+    .task-editor:focus { background:rgba(0,0,0,0.3); }
+    .task-actions { display:flex; gap:8px; margin-top:10px; flex-shrink:0; }
+    .task-actions button { flex:1; padding:10px; border-radius:10px; font-size:13px; cursor:pointer; border:none; }
+    .task-btn-submit { background:var(--a); color:white; }
+    .task-btn-close { background:rgba(255,255,255,0.06); color:rgba(255,255,255,0.5); }
+    .task-hint { font-size:11px; color:rgba(255,255,255,0.3); margin-top:6px; text-align:center; flex-shrink:0; }
+    .gh-token-bar { display:flex; gap:8px; align-items:center; margin-bottom:12px; }
+    .gh-token-bar .gh-status { font-size:11px; color:rgba(255,255,255,0.4); flex:1; }
+    .gh-token-bar button { background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1); border-radius:8px; padding:6px 12px; color:rgba(255,255,255,0.5); font-size:11px; cursor:pointer; white-space:nowrap; transition:all 0.2s; }
+    .gh-token-bar button:hover { background:rgba(255,255,255,0.1); border-color:var(--a-border); }
+    .gh-search { width:100%; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.08); border-radius:10px; padding:10px 12px; color:white; font-size:12px; outline:none; box-sizing:border-box; transition:border-color 0.2s; }
+    .gh-search:focus { border-color:var(--a-border); background:rgba(255,255,255,0.08); }
+    .gh-list { display:flex; flex-direction:column; gap:5px; max-height:55vh; overflow-y:auto; }
+    .gh-item { display:flex; align-items:center; gap:10px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.06); border-radius:12px; padding:10px 12px; cursor:pointer; transition:all 0.2s; }
+    .gh-item:hover { background:rgba(255,255,255,0.07); border-color:var(--a-border); transform:translateY(-1px); }
+    .gh-item .gh-icon { font-size:16px; flex-shrink:0; width:24px; text-align:center; }
+    .gh-item .gh-info { flex:1; min-width:0; }
+    .gh-item .gh-name { font-size:13px; color:rgba(255,255,255,0.85); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; font-weight:500; }
+    .gh-item .gh-meta { font-size:10px; color:rgba(255,255,255,0.35); display:flex; gap:8px; margin-top:2px; }
+    .gh-detail { display:none; animation:fadeIn 0.2s ease-out; }
+    .gh-detail.active { display:block; }
+    .gh-detail-header { display:flex; align-items:center; gap:8px; margin-bottom:12px; }
+    .gh-detail-header .back { background:rgba(255,255,255,0.06); border:none; color:rgba(255,255,255,0.5); font-size:16px; cursor:pointer; padding:4px 8px; border-radius:8px; transition:all 0.2s; }
+    .gh-detail-header .back:hover { background:rgba(255,255,255,0.1); color:white; }
+    .gh-detail-header h3 { font-size:15px; flex:1; margin:0; font-weight:600; }
+    .gh-commits { max-height:45vh; overflow-y:auto; display:flex; flex-direction:column; gap:4px; }
+    .gh-commit { padding:10px 12px; background:rgba(255,255,255,0.03); border-radius:10px; font-size:11px; border-left:2px solid var(--a-border); }
+    .gh-commit .msg { color:rgba(255,255,255,0.8); font-weight:500; }
+    .gh-commit .meta { color:rgba(255,255,255,0.3); font-size:10px; margin-top:3px; display:flex; gap:8px; }
+    .gh-create { display:flex; gap:6px; margin-bottom:12px; }
+    .gh-create input { flex:1; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.08); border-radius:10px; padding:10px 12px; color:white; font-size:12px; outline:none; transition:border-color 0.2s; }
+    .gh-create input:focus { border-color:var(--a-border); }
+    .gh-create button { background:var(--a); border:none; border-radius:10px; padding:10px 16px; color:white; font-size:12px; cursor:pointer; white-space:nowrap; transition:opacity 0.2s; font-weight:500; }
+    .gh-create button:hover { opacity:0.85; }
+    .gh-create button:disabled { opacity:0.4; cursor:default; }
+    .gh-empty { text-align:center; color:rgba(255,255,255,0.2); font-size:12px; padding:24px; font-style:italic; }
+    .gh-file-row { display:flex; align-items:center; gap:10px; padding:9px 12px; border-radius:10px; cursor:pointer; transition:all 0.15s; font-size:12px; }
+    .gh-file-row:hover { background:rgba(255,255,255,0.05); }
+    .gh-file-row .name { flex:1; color:rgba(255,255,255,0.8); font-weight:450; }
+    .gh-file-row .size { color:rgba(255,255,255,0.25); font-size:10px; }
+    .gh-file-row .del { background:transparent; border:none; color:rgba(255,80,80,0.4); cursor:pointer; font-size:14px; padding:2px 6px; border-radius:6px; transition:all 0.2s; }
+    .gh-file-row .del:hover { color:rgba(255,80,80,0.9); background:rgba(255,80,80,0.1); }
+    .gh-preview { background:rgba(0,0,0,0.25); border-radius:10px; padding:12px 14px; margin-top:10px; font-size:12px; line-height:1.5; font-family:'Cascadia Code','Fira Code',monospace; white-space:pre-wrap; max-height:350px; overflow:auto; color:rgba(255,255,255,0.7); border:1px solid rgba(255,255,255,0.06); }
+    .gh-path { font-size:11px; color:var(--a-light); margin-bottom:8px; word-break:break-all; }
+    .gh-bread { display:flex; gap:4px; flex-wrap:wrap; font-size:12px; margin-bottom:10px; color:rgba(255,255,255,0.4); padding:6px 8px; background:rgba(255,255,255,0.03); border-radius:8px; }
+    .gh-bread span { cursor:pointer; padding:2px 4px; border-radius:4px; transition:all 0.15s; }
+    .gh-bread span:hover { color:var(--a-light); background:rgba(255,255,255,0.05); }
+    .gh-bread .sep { color:rgba(255,255,255,0.15); cursor:default; }
+    .gh-bread .sep:hover { background:transparent; color:rgba(255,255,255,0.15); }
+    .gh-upload-area { display:block; border:1px dashed rgba(255,255,255,0.12); border-radius:12px; padding:18px; text-align:center; margin-bottom:10px; cursor:pointer; transition:all 0.25s; font-size:12px; color:rgba(255,255,255,0.4); }
+    .gh-upload-area:hover { border-color:var(--a-border); background:rgba(255,255,255,0.04); color:var(--a-light); }
+  </style>
+</head>
+<body class="animated-bg text-white p-3 md:p-6 min-h-screen" style="background:#0f172a">
+
+  <div class="max-w-7xl mx-auto">
+
+    <!-- ═══════ HEADER ═══════ -->
+    <header class="glass rounded-3xl p-5 md:p-6 mb-6 card-hover fade-in">
+      <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="accent-text text-xl" id="greeting-icon">🔥</span>
+            <h1 class="text-xl md:text-2xl font-light tracking-wide" id="greeting">Добрый день</h1>
+          </div>
+          <p class="text-white/40 text-xs md:text-sm mt-1">Панасовка &middot; <span id="day-progress"></span></p>
+        </div>
+        <div class="flex items-end gap-6">
+          <div class="text-right">
+            <div id="time" class="text-4xl md:text-5xl font-light tracking-wider text-white/90">--:--:--</div>
+            <div id="date" class="text-sm text-white/50 mt-1">...</div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- ═══════ TABS ═══════ -->
+    <div class="tab-bar mb-6 fade-in">
+      <button class="tab-btn active" onclick="switchTab('dashboard')">📊 Дашборд</button>
+      <button class="tab-btn" onclick="switchTab('code')">💻 Изучение кода</button>
+      <button class="tab-btn" onclick="switchTab('git')">📂 Git</button>
+      <button class="tab-btn" onclick="switchTab('files')">🗄 Файлы</button>
+    </div>
+
+    <!-- ═══════ DASHBOARD TAB ═══════ -->
+    <div id="tab-dashboard" class="tab-content active">
+
+    <!-- ═══════ ROW 1 ═══════ -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+
+      <!-- ─── Weather ─── -->
+      <div class="glass rounded-3xl p-5 card-hover fade-in delay-1">
+        <div class="flex items-center gap-2 mb-3">
+          <span class="text-lg">🌤</span>
+          <h2 class="text-xs font-medium uppercase tracking-widest text-white/40">Погода сейчас</h2>
+        </div>
+        <div id="weather">
+          <div class="flex items-center justify-between">
+            <div>
+              <div id="weather-temp" class="text-4xl font-light text-white/90">--°C</div>
+              <div id="weather-feels" class="text-xs text-white/40 mt-1">Ощущается: --°C</div>
+            </div>
+            <div id="weather-icon" class="text-5xl">⏳</div>
+          </div>
+          <div class="grid grid-cols-2 gap-2 mt-4 pt-3 border-t border-white/5 text-xs">
+            <div><span class="text-white/30">Влажность</span><div id="weather-humidity" class="text-white/70">--%</div></div>
+            <div><span class="text-white/30">Ветер</span><div id="weather-wind" class="text-white/70">-- км/ч</div></div>
+            <div><span class="text-white/30">Облачность</span><div id="weather-clouds" class="text-white/70">--%</div></div>
+            <div><span class="text-white/30">Давление</span><div id="weather-pressure" class="text-white/70">-- гПа</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ─── Weather Forecast ─── -->
+      <div class="glass rounded-3xl p-5 card-hover fade-in delay-2">
+        <div class="flex items-center gap-2 mb-3">
+          <span class="text-lg">📅</span>
+          <h2 class="text-xs font-medium uppercase tracking-widest text-white/40">Прогноз на 3 дня</h2>
+        </div>
+        <div id="forecast" class="space-y-2 text-sm"><div class="text-white/30 text-xs">Загрузка...</div></div>
+      </div>
+
+      <!-- ─── Quick Actions ─── -->
+      <div class="glass rounded-3xl p-5 card-hover fade-in delay-3">
+        <div class="flex items-center gap-2 mb-3">
+          <span class="text-lg">⚡</span>
+          <h2 class="text-xs font-medium uppercase tracking-widest text-white/40">Быстрые действия</h2>
+        </div>
+        <div class="space-y-2">
+          <button onclick="openAction('code')" class="btn-action w-full rounded-2xl px-4 py-3 text-left flex items-center gap-3 group">
+            <span class="text-xl">💻</span>
+            <div class="flex-1"><div class="text-sm font-medium text-white/80 group-hover:text-white transition">Кодить</div><div class="text-[11px] text-white/30">VS Code</div></div>
+            <span class="text-white/20 group-hover:text-white/40 transition text-sm">→</span>
+          </button>
+          <button onclick="openAction('editor')" class="btn-action w-full rounded-2xl px-4 py-3 text-left flex items-center gap-3 group">
+            <span class="text-xl">✏️</span>
+            <div class="flex-1"><div class="text-sm font-medium text-white/80 group-hover:text-white transition">Мой редактор</div><div class="text-[11px] text-white/30">github.dev</div></div>
+            <span class="text-white/20 group-hover:text-white/40 transition text-sm">→</span>
+          </button>
+          <button onclick="openAction('files')" class="btn-action w-full rounded-2xl px-4 py-3 text-left flex items-center gap-3 group">
+            <span class="text-xl">📁</span>
+            <div class="flex-1"><div class="text-sm font-medium text-white/80 group-hover:text-white transition">Хранилище</div><div class="text-[11px] text-white/30">GitHub</div></div>
+            <span class="text-white/20 group-hover:text-white/40 transition text-sm">→</span>
+          </button>
+          <button onclick="openAction('chat')" class="btn-action w-full rounded-2xl px-4 py-3 text-left flex items-center gap-3 group">
+            <span class="text-xl">🤖</span>
+            <div class="flex-1"><div class="text-sm font-medium text-white/80 group-hover:text-white transition">AI Чат</div><div class="text-[11px] text-white/30">OpenCode</div></div>
+            <span class="text-white/20 group-hover:text-white/40 transition text-sm">→</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════ ROW 2 ═══════ -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 mt-4 md:mt-6">
+
+      <!-- ─── To-Do List ─── -->
+      <div class="glass rounded-3xl p-5 card-hover fade-in delay-4 lg:col-span-2">
+        <div class="flex items-center gap-2 mb-3">
+          <span class="text-lg">✅</span>
+          <h2 class="text-xs font-medium uppercase tracking-widest text-white/40">Задачи</h2>
+          <span id="task-count" class="ml-auto text-xs text-white/30">0 / 0</span>
+        </div>
+        <div class="flex gap-2 mb-3">
+          <input id="task-input" type="text" placeholder="Новая задача..."
+                 class="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white/80 placeholder-white/20 outline-none focus:border-[var(--a-border)] focus:bg-white/10 transition">
+          <button id="task-add-btn" class="px-5 py-2.5 accent-bg-strong hover:opacity-80 border accent-border rounded-xl text-sm text-white/80 transition font-medium">+</button>
+        </div>
+        <div id="task-list" class="space-y-1 max-h-48 overflow-y-auto pr-1">
+          <div class="text-white/20 text-sm text-center py-6">Нет задач. Добавьте новую!</div>
+        </div>
+        <div class="mt-2 flex gap-3 flex-wrap">
+          <button onclick="window.clearDoneTasks()" class="text-xs text-white/20 hover:text-white/50 transition">Очистить ✔</button>
+          <button onclick="window.addSampleTasks()" class="text-xs text-white/20 hover:text-white/50 transition">Примеры</button>
+        </div>
+      </div>
+
+      <!-- ─── Screen Time ─── -->
+      <div class="glass rounded-3xl p-5 card-hover fade-in delay-5">
+        <div class="flex items-center gap-2 mb-3">
+          <span class="text-lg">📱</span>
+          <h2 class="text-xs font-medium uppercase tracking-widest text-white/40">Экранное время</h2>
+          <button onclick="window.resetScreenTime()" class="ml-auto text-xs text-white/20 hover:text-red-400/60 transition" title="Сбросить">↺</button>
+        </div>
+        <div>
+          <div class="flex justify-between items-end mb-2">
+            <span class="text-3xl font-light text-white/90"><span id="screen-time-display">0ч 0м</span></span>
+            <span class="text-xs text-white/30">Цель: 6ч</span>
+          </div>
+          <div class="w-full h-2 bg-white/5 rounded-full overflow-hidden">
+            <div id="screen-progress" class="h-full rounded-full progress-bar" style="width:0%; background:linear-gradient(90deg,var(--a),var(--a-light))"></div>
+          </div>
+          <div class="flex justify-between text-[10px] text-white/20 mt-0.5">
+            <span>0ч</span><span>3ч</span><span>6ч</span>
+          </div>
+          <div class="mt-3 flex items-center justify-between text-xs">
+            <span class="text-white/30">Устройство</span>
+            <span id="device-name" class="text-white/50"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════ ROW 3 ═══════ -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mt-4 md:mt-6">
+
+      <!-- ─── Schedule ─── -->
+      <div class="glass rounded-3xl p-5 card-hover fade-in delay-6">
+        <div class="flex items-center gap-2 mb-3">
+          <span class="text-lg">⏰</span>
+          <h2 class="text-xs font-medium uppercase tracking-widest text-white/40">Расписание дня</h2>
+        </div>
+        <div id="schedule-list" class="space-y-1.5 max-h-52 overflow-y-auto pr-1"></div>
+      </div>
+
+      <!-- ─── Pomodoro ─── -->
+      <div class="glass rounded-3xl p-5 card-hover fade-in delay-7">
+        <div class="flex items-center gap-2 mb-3">
+          <span class="text-lg">🍅</span>
+          <h2 class="text-xs font-medium uppercase tracking-widest text-white/40">Pomodoro</h2>
+        </div>
+        <div class="flex flex-col items-center">
+          <svg width="90" height="90" viewBox="0 0 100 100" class="mb-2">
+            <circle cx="50" cy="50" r="42" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="6"/>
+            <circle id="pomodoro-ring" cx="50" cy="50" r="42" fill="none" stroke="var(--a)" stroke-width="6"
+                    stroke-linecap="round" stroke-dasharray="263.89" stroke-dashoffset="0" transform="rotate(-90 50 50)"/>
+            <text x="50" y="50" text-anchor="middle" dominant-baseline="central"
+                  font-size="16" font-weight="300" fill="rgba(255,255,255,0.9)">
+              <tspan id="pomodoro-time">25:00</tspan>
+            </text>
+          </svg>
+          <div class="flex gap-1.5 flex-wrap justify-center">
+            <button id="pomodoro-start-btn" class="px-3 py-1.5 accent-bg-strong hover:opacity-80 border accent-border rounded-xl text-xs text-white/80 transition">Старт</button>
+            <button id="pomodoro-reset-btn" class="px-3 py-1.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-xs text-white/50 transition">Сброс</button>
+            <select id="pomodoro-mode" class="bg-white/5 border border-white/10 rounded-xl text-xs text-white/60 px-2 py-1.5 outline-none">
+              <option value="25">25м</option><option value="15">15м</option><option value="30">30м</option><option value="50">50м</option>
+            </select>
+          </div>
+          <div class="text-[10px] text-white/20 mt-2" id="pomodoro-sessions">🍅 0</div>
+        </div>
+      </div>
+
+      <!-- ─── Notes ─── -->
+      <div class="glass rounded-3xl p-5 card-hover fade-in delay-8">
+        <div class="flex items-center gap-2 mb-3">
+          <span class="text-lg">📝</span>
+          <h2 class="text-xs font-medium uppercase tracking-widest text-white/40">Заметки</h2>
+          <span id="notes-count" class="ml-auto text-xs text-white/20">0</span>
+        </div>
+        <div class="flex gap-2 mb-3">
+          <input id="note-input" type="text" placeholder="Заметка..."
+                 class="flex-1 bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-sm text-white/80 placeholder-white/20 outline-none focus:border-[var(--a-border)] focus:bg-white/10 transition">
+          <button id="note-add-btn" class="px-4 py-2 accent-bg-strong hover:opacity-80 border accent-border rounded-xl text-sm text-white/80 transition">+</button>
+        </div>
+        <div id="notes-list" class="space-y-1 max-h-28 overflow-y-auto pr-1">
+          <div class="text-white/20 text-sm text-center py-4">Нет заметок</div>
+        </div>
+      </div>
+
+      <!-- ─── Currency ─── -->
+      <div class="glass rounded-3xl p-5 card-hover fade-in delay-9">
+        <div class="flex items-center gap-2 mb-3">
+          <span class="text-lg">💱</span>
+          <h2 class="text-xs font-medium uppercase tracking-widest text-white/40">Курс валют</h2>
+        </div>
+        <div class="space-y-2 text-sm">
+          <div class="flex justify-between py-1.5 border-b border-white/5"><span class="text-white/40">USD/UAH</span><span id="usd-rate" class="text-white/80 font-medium">--</span></div>
+          <div class="flex justify-between py-1.5 border-b border-white/5"><span class="text-white/40">EUR/UAH</span><span id="eur-rate" class="text-white/80 font-medium">--</span></div>
+          <div class="flex justify-between py-1.5"><span class="text-white/40">BTC/USD</span><span id="btc-rate" class="text-white/80 font-medium">--</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════ ROW 4 — Quote ═══════ -->
+    <div class="grid grid-cols-1 gap-4 md:gap-6 mt-4 md:mt-6">
+      <div class="glass rounded-3xl p-5 card-hover fade-in delay-1">
+        <div class="flex items-center gap-2 mb-2">
+          <span class="text-lg">💬</span>
+          <h2 class="text-xs font-medium uppercase tracking-widest text-white/40">Цитата дня</h2>
+          <button onclick="fetchQuote()" class="ml-auto text-xs text-white/20 hover:text-white/50 transition">⟳</button>
+        </div>
+        <div id="quote-block">
+          <div class="text-sm text-white/60 italic leading-relaxed">Загрузка...</div>
+          <div id="quote-author" class="text-xs text-white/30 mt-2"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════ ROW 5 — Linux Commits ═══════ -->
+    <div class="grid grid-cols-1 gap-4 md:gap-6 mt-4 md:mt-6">
+      <div class="glass rounded-3xl p-5 card-hover fade-in delay-1">
+        <div class="flex items-center gap-2 mb-3">
+          <span class="text-lg">🐧</span>
+          <h2 class="text-xs font-medium uppercase tracking-widest text-white/40">Коммиты ядра Linux</h2>
+          <span id="commits-status" class="ml-auto text-xs text-white/20">в реальном времени</span>
+        </div>
+        <div id="commits-list" class="space-y-2 max-h-80 overflow-y-auto pr-1">
+          <div class="text-white/20 text-sm text-center py-6">Загрузка коммитов...</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════ ROW 6 — 20 FUN WIDGETS ═══════ -->
+    <div class="mt-8 mb-2">
+      <h2 class="text-lg font-light text-white/50 tracking-wide flex items-center gap-2">
+        <span>🎮</span> Мини-виджеты
+        <span class="text-xs text-white/20 font-normal">(нажимай на кнопки!)</span>
+      </h2>
+    </div>
+    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-4">
+
+      <!-- 1. Dice -->
+      <div class="glass rounded-2xl p-4 card-hover fade-in delay-1 flex flex-col items-center text-center">
+        <div class="text-5xl mb-2" id="dice-display">🎲</div>
+        <div id="dice-value" class="text-3xl font-light text-white/80">1</div>
+        <button onclick="rollDice()" class="mini-btn mt-2 text-xs px-4 py-1.5 rounded-xl text-white/70 w-full">Бросить</button>
+      </div>
+
+      <!-- 2. Magic 8 Ball -->
+      <div class="glass rounded-2xl p-4 card-hover fade-in delay-1 flex flex-col items-center text-center">
+        <div class="text-5xl mb-1" id="ball-display">🔮</div>
+        <div id="ball-answer" class="text-xs text-white/40 leading-tight h-8 flex items-center">Задай вопрос</div>
+        <button onclick="shakeBall()" class="mini-btn mt-1 text-xs px-4 py-1.5 rounded-xl text-white/70 w-full">Спросить</button>
+      </div>
+
+      <!-- 3. Rock Paper Scissors -->
+      <div class="glass rounded-2xl p-4 card-hover fade-in delay-2 flex flex-col items-center text-center">
+        <div class="text-xs text-white/30 mb-1">Ты vs Комп</div>
+        <div class="flex gap-2 text-2xl mb-1">
+          <span id="rps-player" class="opacity-50">🤚</span>
+          <span class="text-white/20">vs</span>
+          <span id="rps-computer" class="opacity-50">🤚</span>
+        </div>
+        <div id="rps-result" class="text-xs text-white/50 mb-1 h-4">Выбери!</div>
+        <div class="flex gap-1">
+          <button onclick="playRPS('rock')" class="rps-btn text-xl px-2">✊</button>
+          <button onclick="playRPS('paper')" class="rps-btn text-xl px-2">✋</button>
+          <button onclick="playRPS('scissors')" class="rps-btn text-xl px-2">✌️</button>
+        </div>
+      </div>
+
+      <!-- 4. Riddle -->
+      <div class="glass rounded-2xl p-4 card-hover fade-in delay-2 flex flex-col items-center text-center">
+        <div class="text-2xl mb-1">🧩</div>
+        <div id="riddle-text" class="text-xs text-white/60 leading-tight h-10 flex items-center">Загрузка...</div>
+        <button onclick="showRiddleAnswer()" class="mini-btn mt-1 text-xs px-4 py-1.5 rounded-xl text-white/70 w-full">Ответ</button>
+      </div>
+
+      <!-- 5. Random Number -->
+      <div class="glass rounded-2xl p-4 card-hover fade-in delay-2 flex flex-col items-center text-center">
+        <div class="text-2xl mb-1">🎯</div>
+        <div id="random-num" class="text-3xl font-light accent-text">42</div>
+        <div class="text-[10px] text-white/30">от 1 до 100</div>
+        <button onclick="generateRandom()" class="mini-btn mt-1 text-xs px-4 py-1.5 rounded-xl text-white/70 w-full">Сгенерить</button>
+      </div>
+
+      <!-- 6. Random Color -->
+      <div class="glass rounded-2xl p-4 card-hover fade-in delay-3 flex flex-col items-center text-center">
+        <div class="text-2xl mb-1">🎨</div>
+        <div id="color-preview" class="w-10 h-10 rounded-full mx-auto mb-1 border border-white/10" style="background:var(--a)"></div>
+        <div id="color-hex" class="text-xs text-white/50">#d4740f</div>
+        <button onclick="randomColor()" class="mini-btn mt-1 text-xs px-4 py-1.5 rounded-xl text-white/70 w-full">Новый цвет</button>
+      </div>
+
+      <!-- 7. Random Emoji -->
+      <div class="glass rounded-2xl p-4 card-hover fade-in delay-3 flex flex-col items-center text-center">
+        <div class="text-5xl mb-1" id="emoji-display">🦄</div>
+        <div class="text-xs text-white/40" id="emoji-name">Единорог</div>
+        <button onclick="randomEmoji()" class="mini-btn mt-1 text-xs px-4 py-1.5 rounded-xl text-white/70 w-full">→ Другой</button>
+      </div>
+
+      <!-- 8. Compliment -->
+      <div class="glass rounded-2xl p-4 card-hover fade-in delay-3 flex flex-col items-center text-center">
+        <div class="text-2xl mb-1">💪</div>
+        <div id="compliment-text" class="text-xs text-white/60 leading-tight h-12 flex items-center">Ты супер!</div>
+        <button onclick="newCompliment()" class="mini-btn mt-1 text-xs px-4 py-1.5 rounded-xl text-white/70 w-full">Ещё!</button>
+      </div>
+
+      <!-- 9. Idea Generator -->
+      <div class="glass rounded-2xl p-4 card-hover fade-in delay-4 flex flex-col items-center text-center">
+        <div class="text-2xl mb-1">✨</div>
+        <div id="idea-text" class="text-xs text-white/60 leading-tight h-12 flex items-center">Чем заняться?</div>
+        <button onclick="newIdea()" class="mini-btn mt-1 text-xs px-4 py-1.5 rounded-xl text-white/70 w-full">Идея!</button>
+      </div>
+
+      <!-- 10. Mood Tracker -->
+      <div class="glass rounded-2xl p-4 card-hover fade-in delay-4 flex flex-col items-center text-center">
+        <div class="text-xs text-white/30 mb-1">Моё настроение</div>
+        <div class="flex gap-2 text-2xl mb-1">
+          <span class="mood-btn" data-mood="😊" onclick="setMood('😊')">😊</span>
+          <span class="mood-btn" data-mood="😐" onclick="setMood('😐')">😐</span>
+          <span class="mood-btn" data-mood="😢" onclick="setMood('😢')">😢</span>
+          <span class="mood-btn" data-mood="😡" onclick="setMood('😡')">😡</span>
+          <span class="mood-btn" data-mood="🥳" onclick="setMood('🥳')">🥳</span>
+        </div>
+        <div id="mood-display" class="text-xs text-white/30">—</div>
+      </div>
+
+      <!-- 11. New Year Countdown -->
+      <div class="glass rounded-2xl p-4 card-hover fade-in delay-4 flex flex-col items-center text-center">
+        <div class="text-2xl mb-1">⏳</div>
+        <div id="ny-countdown" class="text-lg font-light text-white/80">--</div>
+        <div class="text-[10px] text-white/30">до Нового года</div>
+      </div>
+
+      <!-- 12. Animal Fact -->
+      <div class="glass rounded-2xl p-4 card-hover fade-in delay-5 flex flex-col items-center text-center">
+        <div class="text-2xl mb-1">🐱</div>
+        <div id="animal-fact" class="text-xs text-white/60 leading-tight h-12 flex items-center">Загрузка...</div>
+        <button onclick="newAnimalFact()" class="mini-btn mt-1 text-xs px-4 py-1.5 rounded-xl text-white/70 w-full">Новый факт</button>
+      </div>
+
+      <!-- 13. XP Level -->
+      <div class="glass rounded-2xl p-4 card-hover fade-in delay-5 flex flex-col items-center text-center">
+        <div class="text-2xl mb-1">🏆</div>
+        <div id="xp-level" class="text-lg accent-text font-light">Ур. 1</div>
+        <div class="w-full h-1.5 bg-white/5 rounded-full mt-1 overflow-hidden">
+          <div id="xp-bar" class="h-full rounded-full" style="width:0%;background:linear-gradient(90deg,var(--a),var(--a-light))"></div>
+        </div>
+        <div id="xp-text" class="text-[10px] text-white/30 mt-0.5">0 XP</div>
+        <button onclick="addXP()" class="mini-btn mt-1 text-xs px-4 py-1.5 rounded-xl text-white/70 w-full">+10 XP</button>
+      </div>
+
+      <!-- 14. Music Suggestion -->
+      <div class="glass rounded-2xl p-4 card-hover fade-in delay-5 flex flex-col items-center text-center">
+        <div class="text-2xl mb-1">🎵</div>
+        <div id="music-text" class="text-xs text-white/60 leading-tight h-10 flex items-center">Нажми!</div>
+        <button onclick="suggestMusic()" class="mini-btn mt-1 text-xs px-4 py-1.5 rounded-xl text-white/70 w-full">Что послушать?</button>
+      </div>
+
+      <!-- 15. Wish List -->
+      <div class="glass rounded-2xl p-4 card-hover fade-in delay-6 flex flex-col items-center text-center">
+        <div class="text-xs text-white/30 mb-1.5">Мои желания</div>
+        <div class="w-full flex gap-1 mb-1">
+          <input id="wish-input" type="text" placeholder="Хочу..."
+                 class="flex-1 bg-white/5 border border-white/10 rounded-lg px-2 py-1 text-xs text-white/70 placeholder-white/20 outline-none focus:border-[var(--a-border)]">
+          <button onclick="addWish()" class="mini-btn text-xs px-2 py-1 rounded-lg text-white/70">+</button>
+        </div>
+        <div id="wish-list" class="w-full text-xs text-white/50 max-h-16 overflow-y-auto space-y-0.5">Пусто</div>
+      </div>
+
+      <!-- 16. Calculator -->
+      <div class="glass rounded-2xl p-4 card-hover fade-in delay-6">
+        <div class="flex items-center gap-1 mb-2">
+          <span class="text-base">🧮</span>
+          <span class="text-[10px] text-white/30">Кальк</span>
+        </div>
+        <div id="calc-display" class="text-right text-lg font-light text-white/80 bg-white/5 rounded-lg px-3 py-2 mb-2 overflow-hidden">0</div>
+        <div class="grid grid-cols-4 gap-1">
+          <button onclick="calcInput('7')" class="mini-btn text-xs py-1.5 rounded-lg">7</button>
+          <button onclick="calcInput('8')" class="mini-btn text-xs py-1.5 rounded-lg">8</button>
+          <button onclick="calcInput('9')" class="mini-btn text-xs py-1.5 rounded-lg">9</button>
+          <button onclick="calcOp('/')" class="mini-btn-strong text-xs py-1.5 rounded-lg">÷</button>
+          <button onclick="calcInput('4')" class="mini-btn text-xs py-1.5 rounded-lg">4</button>
+          <button onclick="calcInput('5')" class="mini-btn text-xs py-1.5 rounded-lg">5</button>
+          <button onclick="calcInput('6')" class="mini-btn text-xs py-1.5 rounded-lg">6</button>
+          <button onclick="calcOp('*')" class="mini-btn-strong text-xs py-1.5 rounded-lg">×</button>
+          <button onclick="calcInput('1')" class="mini-btn text-xs py-1.5 rounded-lg">1</button>
+          <button onclick="calcInput('2')" class="mini-btn text-xs py-1.5 rounded-lg">2</button>
+          <button onclick="calcInput('3')" class="mini-btn text-xs py-1.5 rounded-lg">3</button>
+          <button onclick="calcOp('-')" class="mini-btn-strong text-xs py-1.5 rounded-lg">−</button>
+          <button onclick="calcInput('0')" class="mini-btn text-xs py-1.5 rounded-lg">0</button>
+          <button onclick="calcInput('.')" class="mini-btn text-xs py-1.5 rounded-lg">.</button>
+          <button onclick="calcResult()" class="mini-btn-strong text-xs py-1.5 rounded-lg">=</button>
+          <button onclick="calcOp('+')" class="mini-btn-strong text-xs py-1.5 rounded-lg">+</button>
+        </div>
+        <button onclick="calcClear()" class="mini-btn text-[10px] py-1 rounded-lg w-full mt-1 text-white/40">C</button>
+      </div>
+
+      <!-- 17. Random Image -->
+      <div class="glass rounded-2xl p-4 card-hover fade-in delay-7 flex flex-col items-center text-center">
+        <div class="text-xs text-white/30 mb-1">Картинка дня</div>
+        <img id="random-img" src="https://picsum.photos/200/120?random=1" class="w-full h-16 object-cover rounded-lg mb-1" alt="random">
+        <button onclick="newImage()" class="mini-btn text-xs px-4 py-1.5 rounded-xl text-white/70 w-full">Новая</button>
+      </div>
+
+      <!-- 18. Birthday Countdown -->
+      <div class="glass rounded-2xl p-4 card-hover fade-in delay-7 flex flex-col items-center text-center">
+        <div class="text-2xl mb-1">🎂</div>
+        <div id="bday-countdown" class="text-lg font-light text-white/80">--</div>
+        <div class="text-[10px] text-white/30">до Дня Рождения</div>
+        <div class="flex gap-1 mt-1">
+          <select id="bday-month" class="bg-white/5 border border-white/10 rounded-lg text-[10px] text-white/60 px-1 py-0.5 outline-none">
+            <option value="0">Янв</option><option value="1">Фев</option><option value="2">Мар</option><option value="3">Апр</option>
+            <option value="4">Май</option><option value="5">Июн</option><option value="6">Июл</option><option value="7">Авг</option>
+            <option value="8">Сен</option><option value="9">Окт</option><option value="10">Ноя</option><option value="11">Дек</option>
+          </select>
+          <select id="bday-day" class="bg-white/5 border border-white/10 rounded-lg text-[10px] text-white/60 px-1 py-0.5 outline-none">
+            <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option>
+            <option>11</option><option>12</option><option>13</option><option>14</option><option>15</option><option>16</option><option>17</option><option>18</option><option>19</option><option>20</option>
+            <option>21</option><option>22</option><option>23</option><option>24</option><option>25</option><option>26</option><option>27</option><option>28</option><option>29</option><option>30</option><option>31</option>
+          </select>
+          <button onclick="updateBday()" class="mini-btn text-[10px] px-2 py-0.5 rounded-lg">OK</button>
+        </div>
+      </div>
+
+      <!-- 19. Space Fact -->
+      <div class="glass rounded-2xl p-4 card-hover fade-in delay-8 flex flex-col items-center text-center">
+        <div class="text-2xl mb-1">🚀</div>
+        <div id="space-fact" class="text-xs text-white/60 leading-tight h-12 flex items-center">Загрузка...</div>
+        <button onclick="newSpaceFact()" class="mini-btn mt-1 text-xs px-4 py-1.5 rounded-xl text-white/70 w-full">Космос!</button>
+      </div>
+
+      <!-- 20. Game Suggestion -->
+      <div class="glass rounded-2xl p-4 card-hover fade-in delay-8 flex flex-col items-center text-center">
+        <div class="text-2xl mb-1">🎮</div>
+        <div id="game-suggestion" class="text-xs text-white/60 leading-tight h-12 flex items-center">Нажми!</div>
+        <button onclick="suggestGame()" class="mini-btn mt-1 text-xs px-4 py-1.5 rounded-xl text-white/70 w-full">Во что поиграть?</button>
+      </div>
+
+    </div>
+
+    </div>
+    <!-- ═══════ END DASHBOARD ═══════ -->
+
+    <!-- ═══════ CODE TAB ═══════ -->
+    <div id="tab-code" class="tab-content">
+      <div class="glass rounded-3xl p-5 fade-in">
+        <div class="flex items-center gap-2 mb-3">
+          <span class="text-lg">💻</span>
+          <h2 class="text-xs font-medium uppercase tracking-widest text-white/40 flex-1">AI Учитель кода</h2>
+          <button onclick="clearChat()" class="chat-clear">🗑 Очистить</button>
+        </div>
+        <div class="chat-container">
+          <div id="chat-messages" class="chat-messages">
+            <div class="chat-msg system">Привет! Я AI учитель программирования. Задавай вопросы по коду, языкам, алгоритмам — объясню понятно и с примерами.</div>
+          </div>
+    <div class="chat-input-area">
+      <textarea id="chat-input" placeholder="Спроси про код..." rows="1" onkeydown="chatInputKeydown(event)"></textarea>
+      <button onclick="sendChat()">→</button>
+      <button onclick="requestTask()" style="background:transparent;border:1px solid var(--a-border);padding:10px;font-size:13px;color:var(--a-light)" title="Задача от AI">📝</button>
+      <button onclick="showKeyModal()" style="background:transparent;border:1px solid rgba(255,255,255,0.1);padding:10px;font-size:13px;" title="API ключ">🔑</button>
+    </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════ GIT TAB ═══════ -->
+    <div id="tab-git" class="tab-content">
+      <div class="glass rounded-3xl p-4 fade-in">
+        <div class="flex items-center gap-2 mb-3">
+          <span class="text-lg">📂</span>
+          <h2 class="text-xs font-medium uppercase tracking-widest text-white/40 flex-1">Git Репозитории</h2>
+        </div>
+        <div class="gh-token-bar">
+          <span class="gh-status" id="gh-status">⚙️ токен не установлен</span>
+          <button onclick="showGHTokenModal()">🔑</button>
+          <button onclick="loadRepos()" id="gh-refresh-btn" style="display:none">🔄</button>
+        </div>
+        <div class="gh-create">
+          <input id="gh-create-name" placeholder="Название репозитория..." onkeydown="if(event.key==='Enter')createRepo()">
+          <button onclick="createRepo()" id="gh-create-btn">➕ Создать</button>
+        </div>
+        <div id="gh-list" class="gh-list"><div class="gh-empty">🔄 Укажи токен и нажми загрузку</div></div>
+        <div id="gh-detail" class="gh-detail">
+          <div class="gh-detail-header">
+            <button class="back" onclick="closeRepoDetail()">←</button>
+            <h3 id="gh-detail-name"></h3>
+            <button onclick="loadRepoBranches()" style="background:transparent;border:1px solid rgba(255,255,255,0.1);border-radius:6px;padding:4px 10px;color:rgba(255,255,255,0.5);font-size:10px;cursor:pointer">🌿 Ветки</button>
+            <button onclick="deleteRepo()" style="background:transparent;border:1px solid rgba(255,80,80,0.3);border-radius:6px;padding:4px 10px;color:rgba(255,80,80,0.6);font-size:10px;cursor:pointer">🗑 Удалить</button>
+          </div>
+          <div id="gh-detail-info" class="text-xs text-white/40 mb-2"></div>
+          <div id="gh-branches" style="display:none;margin-bottom:8px">
+            <div style="font-size:11px;color:rgba(255,255,255,0.4);margin-bottom:4px">Ветки:</div>
+            <div id="gh-branch-list" style="display:flex;flex-wrap:wrap;gap:4px"></div>
+          </div>
+          <div style="display:flex;gap:6px;margin-bottom:8px">
+            <button onclick="loadRepoFiles()" style="flex:1;background:transparent;border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:6px;color:rgba(255,255,255,0.5);font-size:11px;cursor:pointer">📂 Файлы</button>
+            <button onclick="loadRepoCommits()" style="flex:1;background:var(--a);border:none;border-radius:8px;padding:6px;color:white;font-size:11px;cursor:pointer">📜 Коммиты</button>
+          </div>
+          <div class="gh-commits" id="gh-commits"></div>
+          <div id="gh-repo-files" style="display:none"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════ FILES TAB ═══════ -->
+    <div id="tab-files" class="tab-content">
+      <div class="glass rounded-3xl p-4 fade-in">
+        <div class="flex items-center gap-2 mb-3">
+          <span class="text-lg">🗄</span>
+          <h2 class="text-xs font-medium uppercase tracking-widest text-white/40 flex-1">Файлы</h2>
+        </div>
+        <div class="gh-token-bar">
+          <span class="gh-status" id="gh-fstatus">⚙️ токен не установлен</span>
+          <button onclick="showGHTokenModal()">🔑</button>
+        </div>
+        <div style="display:flex;gap:6px;margin-bottom:10px">
+          <input class="gh-search" id="gh-repo-path" placeholder="owner/repo" style="flex:1;margin:0" onkeydown="if(event.key==='Enter')loadFiles()">
+          <input class="gh-search" id="gh-branch" value="main" placeholder="branch" style="width:70px;flex-shrink:0;margin:0;text-align:center">
+        </div>
+        <div style="display:flex;gap:6px;margin-bottom:8px">
+          <button onclick="loadFiles()" style="flex:1;background:var(--a);border:none;border-radius:8px;padding:8px;color:white;font-size:12px;cursor:pointer">📂 Открыть</button>
+          <button onclick="showNewFileModal()" style="background:transparent;border:1px solid rgba(255,255,255,0.15);border-radius:8px;padding:8px;color:rgba(255,255,255,0.6);font-size:12px;cursor:pointer">➕ Новый файл</button>
+        </div>
+        <div class="gh-bread" id="gh-breadcrumbs"></div>
+        <label class="gh-upload-area" id="gh-upload-label">
+          📤 Загрузить файл
+          <input type="file" onchange="uploadFile(this)">
+        </label>
+        <div style="display:flex;gap:6px;margin-bottom:8px">
+          <input id="gh-text-upload" placeholder="Или вставь содержимое файла..." style="flex:1;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:8px 10px;color:white;font-size:11px;outline:none">
+          <input id="gh-text-filename" placeholder="file.js" style="width:80px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:8px 10px;color:white;font-size:11px;outline:none;text-align:center">
+          <button onclick="uploadTextFile()" style="background:var(--a);border:none;border-radius:8px;padding:8px 12px;color:white;font-size:11px;cursor:pointer">📝 Создать</button>
+        </div>
+        <div id="gh-files-list" class="gh-list"><div class="gh-empty">Введи owner/repo и нажми Enter</div></div>
+        <div id="gh-preview" class="gh-preview" style="display:none"></div>
+        <div id="gh-edit-area" style="display:none;margin-top:8px">
+          <div style="display:flex;gap:6px;margin-bottom:6px">
+            <input id="gh-commit-msg" placeholder="Commit message..." style="flex:1;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:8px 10px;color:white;font-size:11px;outline:none">
+            <button onclick="saveEditedFile()" style="background:var(--a);border:none;border-radius:8px;padding:8px 14px;color:white;font-size:11px;cursor:pointer">💾 Сохранить</button>
+            <button onclick="cancelEdit()" style="background:transparent;border:1px solid rgba(255,255,255,0.15);border-radius:8px;padding:8px 14px;color:rgba(255,255,255,0.5);font-size:11px;cursor:pointer">✕</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════ FOOTER ═══════ -->
+    <footer class="mt-8 text-center text-[10px] text-white/20 pb-4 fade-in">
+      🔥 Личный дашборд с оранжевым настроением
+    </footer>
+  </div>
+
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js');
+    }
+  </script>
+  <script>
+  (function() {
+    'use strict';
+
+    // ═══════ HELPERS ═══════
+    function $(id) { return document.getElementById(id); }
+    function esc(s) { var d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+
+    const LAT = 49.83528, LON = 28.79944;
+
+    // ═══════ THEME — orange shades by time ═══════
+    function updateTheme() {
+      var h = new Date().getHours();
+      var body = document.body;
+      body.classList.remove('morning', 'evening');
+      if (h >= 6 && h < 12) {
+        body.classList.add('morning');
+      } else if (h >= 12 && h < 18) {
+        // default (day) — no extra class
+      } else {
+        body.classList.add('evening');
+      }
+    }
+    updateTheme();
+    setInterval(updateTheme, 60000);
+
+    // ═══════ GREETING & CLOCK ═══════
+    function updateGreeting() {
+      var h = new Date().getHours();
+      var greet, icon;
+      if (h < 6) { greet = 'Доброй ночи'; icon = '🌙'; }
+      else if (h < 12) { greet = 'Доброе утро'; icon = '☀️'; }
+      else if (h < 18) { greet = 'Добрый день'; icon = '🔥'; }
+      else { greet = 'Добрый вечер'; icon = '🌅'; }
+      $('greeting').textContent = greet;
+      $('greeting-icon').textContent = icon;
+
+      var s = new Date(); s.setHours(0,0,0,0);
+      var e = new Date(); e.setHours(23,59,59,999);
+      $('day-progress').textContent = 'День на ' + ((Date.now()-s.getTime())/(e.getTime()-s.getTime())*100).toFixed(1) + '%';
+    }
+    function updateClock() {
+      var n = new Date();
+      $('time').textContent = n.toLocaleTimeString('ru-RU', {hour:'2-digit',minute:'2-digit',second:'2-digit'});
+      $('date').textContent = n.toLocaleDateString('ru-RU', {weekday:'long',day:'numeric',month:'long'});
+    }
+    updateGreeting(); updateClock();
+    setInterval(updateClock, 1000);
+    setInterval(updateGreeting, 10000);
+    $('device-name').textContent = (/android/i.test(navigator.userAgent)?'Android':/iphone|ipad|ipod/i.test(navigator.userAgent)?'iOS':'Компьютер');
+
+    // ═══════ WEATHER ═══════
+    function fetchWeather() {
+      fetch('https://api.open-meteo.com/v1/forecast?latitude='+LAT+'&longitude='+LON+'&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m,cloud_cover,pressure_msl&daily=weather_code,temperature_2m_max,temperature_2m_min&timezone=auto&forecast_days=3')
+        .then(function(r){return r.json()}).then(function(d){
+          var c = d.current; if(!c) return;
+          $('weather-temp').textContent = Math.round(c.temperature_2m)+'°C';
+          $('weather-feels').textContent = 'Ощущается: '+Math.round(c.apparent_temperature)+'°C';
+          $('weather-humidity').textContent = c.relative_humidity_2m+'%';
+          $('weather-wind').textContent = c.wind_speed_10m+' км/ч';
+          $('weather-clouds').textContent = c.cloud_cover+'%';
+          $('weather-pressure').textContent = Math.round(c.pressure_msl)+' гПа';
+          $('weather-icon').textContent = wmoEmoji(c.weather_code, c.is_day);
+          if(d.daily) {
+            var fc='';
+            for(var i=0;i<Math.min(3,d.daily.time.length);i++){
+              var dn=new Date(d.daily.time[i]+'T12:00:00').toLocaleDateString('ru-RU',{weekday:'short'});
+              fc+='<div class="flex items-center justify-between py-1.5 border-b border-white/5 last:border-0">'+
+                '<span class="text-xs text-white/50 w-10">'+dn+'</span>'+
+                '<span class="text-base">'+wmoEmoji(d.daily.weather_code[i],1)+'</span>'+
+                '<span class="text-xs text-white/70">'+Math.round(d.daily.temperature_2m_max[i])+'° / '+Math.round(d.daily.temperature_2m_min[i])+'°</span></div>';
+            }
+            $('forecast').innerHTML = fc;
+          }
+        }).catch(function(){ $('weather').innerHTML='<div class="text-white/40 text-xs">Ошибка</div>'; });
+    }
+    function wmoEmoji(c,d){return c===0?d?'☀️':'🌙':c<=3?d?'⛅':'☁️':c<=48?'🌫':c<=57?'🌦':c<=67?'🌧':c<=77?'🌨':c<=82?'🌦':c<=86?'🌧':'⛈';}
+    fetchWeather(); setInterval(fetchWeather, 600000);
+
+    // ═══════ TO-DO ═══════
+    var tasks = [];
+    function loadTasks(){ try{tasks=JSON.parse(localStorage.getItem('tasks'))||[]}catch(e){tasks=[]} }
+    function saveTasks(){ localStorage.setItem('tasks',JSON.stringify(tasks)); }
+    function renderTasks(){
+      var list=$('task-list'), total=tasks.length, done=tasks.filter(function(t){return t.done}).length;
+      $('task-count').textContent=done+' / '+total;
+      if(!total){list.innerHTML='<div class="text-white/20 text-sm text-center py-6">Нет задач. Добавьте новую!</div>';return;}
+      var h='';
+      for(var i=0;i<tasks.length;i++){
+        var t=tasks[i];
+        h+='<div class="task-enter flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-white/5 transition group">'+
+          '<input type="checkbox" '+(t.done?'checked':'')+' data-index="'+i+'">'+
+          '<span class="flex-1 text-sm '+(t.done?'line-through text-white/30':'text-white/70')+'">'+esc(t.text)+'</span>'+
+          '<button data-del="'+i+'" class="del-task text-white/10 hover:text-red-400/70 transition text-lg leading-none opacity-0 group-hover:opacity-100">&times;</button></div>';
+      }
+      list.innerHTML=h;
+      list.querySelectorAll('input[type="checkbox"]').forEach(function(cb){cb.addEventListener('change',function(){toggleTask(parseInt(this.dataset.index));});});
+      list.querySelectorAll('.del-task').forEach(function(btn){btn.addEventListener('click',function(){deleteTask(parseInt(this.dataset.del));});});
+    }
+    function addTask(){var v=$('task-input').value.trim();if(!v)return;tasks.push({text:v,done:false});saveTasks();renderTasks();$('task-input').value='';$('task-input').focus();}
+    function toggleTask(i){if(i>=0&&i<tasks.length){tasks[i].done=!tasks[i].done;saveTasks();renderTasks();}}
+    function deleteTask(i){if(i>=0&&i<tasks.length){tasks.splice(i,1);saveTasks();renderTasks();}}
+    window.clearDoneTasks=function(){tasks=tasks.filter(function(t){return!t.done});saveTasks();renderTasks();};
+    window.addSampleTasks=function(){var s=['Выучить JavaScript','Сделать зарядку','Почитать книгу','Написать код'];tasks=tasks.concat(s.map(function(x){return{text:x,done:false}}));saveTasks();renderTasks();};
+    $('task-add-btn').addEventListener('click',addTask);
+    $('task-input').addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();addTask()}});
+    loadTasks(); renderTasks();
+
+    // ═══════ SCREEN TIME ═══════
+    function initScreenTime(){var k='screenTime_'+new Date().toDateString();updateST(parseInt(localStorage.getItem(k))||0);}
+    function updateST(m){var p=Math.min(100,(m/360)*100);$('screen-time-display').textContent=Math.floor(m/60)+'ч '+m%60+'м';$('screen-progress').style.width=p+'%';}
+    window.resetScreenTime=function(){localStorage.setItem('screenTime_'+new Date().toDateString(),'0');updateST(0);};
+    initScreenTime();
+    setInterval(function(){var k='screenTime_'+new Date().toDateString(),m=parseInt(localStorage.getItem(k))||0;m+=1;localStorage.setItem(k,m);updateST(m);},60000);
+
+    // ═══════ SCHEDULE ═══════
+    var schedule=[
+      {time:'07:00',label:'Пробуждение',color:'bg-indigo-400'},{time:'08:00',label:'Завтрак',color:'bg-blue-400'},
+      {time:'09:00',label:'Кодинг',color:'bg-amber-500'},{time:'11:00',label:'Перерыв',color:'bg-blue-400'},
+      {time:'11:30',label:'Кодинг',color:'bg-amber-500'},{time:'13:00',label:'Обед',color:'bg-blue-400'},
+      {time:'14:00',label:'Учёба',color:'bg-orange-400'},{time:'16:00',label:'Прогулка',color:'bg-emerald-400'},
+      {time:'17:00',label:'Кодинг',color:'bg-amber-500'},{time:'19:00',label:'Ужин',color:'bg-blue-400'},
+      {time:'20:00',label:'Отдых',color:'bg-blue-400'},{time:'22:00',label:'Чтение',color:'bg-indigo-400'},
+      {time:'23:00',label:'Сон',color:'bg-indigo-400'}];
+    function renderSchedule(){
+      var list=$('schedule-list'),now=new Date(),cur=now.getHours()*60+now.getMinutes(),h='';
+      for(var i=0;i<schedule.length;i++){var s=schedule[i],p=s.time.split(':');var m=parseInt(p[0])*60+parseInt(p[1]),past=m<cur;
+        h+='<div class="flex items-center gap-3 px-2 py-1.5 rounded-xl transition '+(past?'opacity-40':'hover:bg-white/5')+'">'+
+          '<div class="schedule-dot '+s.color+'"></div><span class="text-xs text-white/40 w-10">'+s.time+'</span>'+
+          '<span class="text-sm text-white/70">'+s.label+'</span>'+(past?'<span class="ml-auto text-[9px] text-white/20">✔</span>':'')+'</div>';}
+      list.innerHTML=h;
+    }
+    renderSchedule(); setInterval(renderSchedule,60000);
+
+    // ═══════ POMODORO ═══════
+    var pomTime=25,pomRem=25*60,pomRun=false,pomInt=null,pomSess=parseInt(localStorage.getItem('pomSess_'+new Date().toDateString()))||0;
+    function updatePom(){var m=Math.floor(pomRem/60),s=pomRem%60;$('pomodoro-time').textContent=(m<10?'0':'')+m+':'+(s<10?'0':'')+s;$('pomodoro-ring').setAttribute('stroke-dashoffset',pomTime*60>0?263.89*(1-pomRem/(pomTime*60)):0);$('pomodoro-sessions').textContent='🍅 '+pomSess;}
+    function togglePom(){if(pomRun){clearInterval(pomInt);pomRun=false;$('pomodoro-start-btn').textContent='Старт';return;}if(pomRem<=0)resetPom();pomRun=true;$('pomodoro-start-btn').textContent='Пауза';pomInt=setInterval(function(){pomRem--;if(pomRem<=0){clearInterval(pomInt);pomRun=false;$('pomodoro-start-btn').textContent='Старт';pomSess++;localStorage.setItem('pomSess_'+new Date().toDateString(),pomSess);updatePom();try{new Notification('🍅 Помидорка!',{body:'Отдохни 5 минут.'})}catch(e){}if(Notification.permission==='default')Notification.requestPermission();return;}updatePom();},1000);}
+    function resetPom(){clearInterval(pomInt);pomRun=false;$('pomodoro-start-btn').textContent='Старт';pomTime=parseInt($('pomodoro-mode').value);pomRem=pomTime*60;updatePom();}
+    $('pomodoro-start-btn').addEventListener('click',togglePom);
+    $('pomodoro-reset-btn').addEventListener('click',resetPom);
+    $('pomodoro-mode').addEventListener('change',resetPom);
+    updatePom();
+
+    // ═══════ NOTES ═══════
+    var notes=[];
+    function loadNotes(){try{notes=JSON.parse(localStorage.getItem('notes'))||[]}catch(e){notes=[]}}
+    function saveNotes(){localStorage.setItem('notes',JSON.stringify(notes));}
+    function renderNotes(){var list=$('notes-list');$('notes-count').textContent=notes.length;if(!notes.length){list.innerHTML='<div class="text-white/20 text-sm text-center py-4">Нет заметок</div>';return;}var h='';for(var i=notes.length-1;i>=0;i--)h+='<div class="note-enter flex items-center gap-2 px-3 py-2 rounded-xl bg-white/[0.03] border border-white/5"><span class="flex-1 text-sm text-white/60">'+esc(notes[i])+'</span><button data-note="'+i+'" class="del-note text-white/10 hover:text-red-400/70 transition text-sm">&times;</button></div>';list.innerHTML=h;list.querySelectorAll('.del-note').forEach(function(b){b.addEventListener('click',function(){var i=parseInt(this.dataset.note);notes.splice(i,1);saveNotes();renderNotes();});});}
+    function addNote(){var v=$('note-input').value.trim();if(!v)return;notes.push(v);saveNotes();renderNotes();$('note-input').value='';}
+    $('note-add-btn').addEventListener('click',addNote);
+    $('note-input').addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();addNote()}});
+    loadNotes(); renderNotes();
+
+    // ═══════ CURRENCY ═══════
+    fetch('https://api.privatbank.ua/p24api/pubinfo?json&exchange&coursid=5').then(function(r){return r.json()}).then(function(d){for(var i=0;i<d.length;i++){if(d[i].ccy==='USD')$('usd-rate').textContent=parseFloat(d[i].buy).toFixed(2);if(d[i].ccy==='EUR')$('eur-rate').textContent=parseFloat(d[i].buy).toFixed(2);}}).catch(function(){});
+    fetch('https://api.coindesk.com/v1/bpi/currentprice/USD.json').then(function(r){return r.json()}).then(function(d){$('btc-rate').textContent='$'+parseFloat(d.bpi.USD.rate.replace(/,/g,'')).toLocaleString('ru-RU',{minimumFractionDigits:0})}).catch(function(){});
+
+    // ═══════ QUOTE ═══════
+    window.fetchQuote=function(){fetch('https://api.quotable.io/random?tags=technology|programming|inspirational').then(function(r){return r.json()}).then(function(d){$('quote-block').innerHTML='<div class="text-sm text-white/60 italic leading-relaxed">"'+esc(d.content)+'"</div><div class="text-xs text-white/30 mt-2">— '+esc(d.author)+'</div>';}).catch(function(){$('quote-block').innerHTML='<div class="text-sm text-white/60 italic">"Код — это поэзия."</div><div class="text-xs text-white/30 mt-2">— Программист</div>';});};
+    fetchQuote();
+
+    // ═══════ QUICK ACTIONS ═══════
+    window.openAction=function(t){var l={code:'https://vscode.dev/',editor:'https://github.dev/',files:'https://github.com/',chat:'https://opencode.ai/'};window.open(l[t]||l.code,'_blank');};
+
+    // ═══════ PERMISSION ═══════
+    if('Notification'in window&&Notification.permission==='default')setTimeout(function(){Notification.requestPermission()},30000);
+
+    // ═══════ 20 FUN WIDGETS ═══════
+
+    // 1. DICE
+    window.rollDice=function(){
+      var v=Math.floor(Math.random()*6)+1;
+      $('dice-display').textContent=['⚀','⚁','⚂','⚃','⚄','⚅'][v-1];
+      $('dice-value').textContent=v;
+      $('dice-display').classList.remove('shake');void $('dice-display').offsetWidth;$('dice-display').classList.add('shake');
+    };
+
+    // 2. MAGIC 8 BALL
+    var answers=['Да!','Нет.','Может быть','Конечно!','Никогда','Скорее да','Спроси позже','Точно нет!','Вероятно','Абсолютно!','Не знаю','Думаю, да'];
+    window.shakeBall=function(){
+      $('ball-answer').textContent=answers[Math.floor(Math.random()*answers.length)];
+      $('ball-display').classList.remove('shake');void $('ball-display').offsetWidth;$('ball-display').classList.add('shake');
+    };
+
+    // 3. RPS
+    var rpsIcons={rock:'✊',paper:'✋',scissors:'✌️'};
+    window.playRPS=function(player){
+      var choices=['rock','paper','scissors'];
+      var comp=choices[Math.floor(Math.random()*3)];
+      $('rps-player').textContent=rpsIcons[player]; $('rps-player').className='text-2xl pop-in';
+      $('rps-computer').textContent=rpsIcons[comp]; $('rps-computer').className='text-2xl pop-in';
+      var r;
+      if(player===comp)r='Ничья! 🤝';
+      else if((player==='rock'&&comp==='scissors')||(player==='paper'&&comp==='rock')||(player==='scissors'&&comp==='paper'))r='Ты выиграл! 🎉';
+      else r='Комп выиграл 🤖';
+      $('rps-result').textContent=r;
+    };
+
+    // 4. RIDDLE
+    var riddles=[
+      {q:'Что можно сломать, даже не прикасаясь?',a:'Обещание'},
+      {q:'Чем больше берёшь, тем больше остаётся?',a:'Деньги'},
+      {q:'Что идёт, но никогда не приходит?',a:'Вчера'},
+      {q:'Что имеет ключ, но не может открыть дверь?',a:'Музыка'},
+      {q:'Что падает, но никогда не разбивается?',a:'Ночь'},
+      {q:'Какой месяц самый короткий?',a:'Май (3 буквы)'},
+    ];
+    var riddleShown=false;
+    $('riddle-text').textContent=riddles[0].q;
+    window.showRiddleAnswer=function(){
+      var r=riddles[Math.floor(Math.random()*riddles.length)];
+      riddleShown=!riddleShown;
+      $('riddle-text').textContent=riddleShown?r.a:r.q;
+    };
+
+    // 5. RANDOM NUMBER
+    window.generateRandom=function(){
+      $('random-num').textContent=Math.floor(Math.random()*100)+1;
+      $('random-num').classList.remove('pop-in');void $('random-num').offsetWidth;$('random-num').classList.add('pop-in');
+    };
+
+    // 6. RANDOM COLOR
+    window.randomColor=function(){
+      var c='#'+Math.floor(Math.random()*16777215).toString(16).padStart(6,'0');
+      $('color-preview').style.background=c;
+      $('color-hex').textContent=c;
+    };
+
+    // 7. RANDOM EMOJI
+    var emojis=[
+      {e:'🦄',n:'Единорог'},{e:'🐱',n:'Котик'},{e:'🐶',n:'Собачка'},{e:'🐼',n:'Панда'},{e:'🦊',n:'Лисичка'},
+      {e:'🐸',n:'Лягушка'},{e:'🐧',n:'Пингвин'},{e:'🦋',n:'Бабочка'},{e:'🐉',n:'Дракон'},{e:'🌟',n:'Звезда'},
+      {e:'🌈',n:'Радуга'},{e:'🍕',n:'Пицца'},{e:'🎮',n:'Игры'},{e:'🚀',n:'Ракета'},{e:'🎸',n:'Гитара'},
+    ];
+    window.randomEmoji=function(){
+      var e=emojis[Math.floor(Math.random()*emojis.length)];
+      $('emoji-display').textContent=e.e;
+      $('emoji-name').textContent=e.n;
+    };
+
+    // 8. COMPLIMENT
+    var compliments=['Ты супер! 🌟','У тебя всё получится! 💪','Ты молодец! 🎉','Ты умница! 🧠','Ты классный! 😎','Сегодня твой день! ✨','Ты всё можешь! 🚀','Ты лучший! 🏆','Улыбнись! 😊','Ты талант! 🎨','Ты крутой! 🔥','Не сдавайся! 💪','Ты особенный! ⭐','Верь в себя! ❤️','Ты сияешь! 🌟'];
+    window.newCompliment=function(){$('compliment-text').textContent=compliments[Math.floor(Math.random()*compliments.length)];};
+    newCompliment();
+
+    // 9. IDEA
+    var ideas=['Почитать книгу 📚','Нарисовать что-то 🎨','Собрать Лего 🧱','Погулять на улице 🌳','Помочь маме 🏠','Выучить новое слово 📖','Послушать музыку 🎵','Написать код 💻','Поиграть в настолку 🎲','Сделать зарядку 🤸','Позвонить другу 📞','Посмотреть кино 🎬','Сделать поделку ✂️','Потанцевать 💃','Покормить птиц 🐦'];
+    window.newIdea=function(){$('idea-text').textContent=ideas[Math.floor(Math.random()*ideas.length)];};
+
+    // 10. MOOD
+    var currentMood=localStorage.getItem('mood_'+new Date().toDateString());
+    if(currentMood){$('mood-display').textContent='Сегодня: '+currentMood;
+      document.querySelectorAll('.mood-btn').forEach(function(b){if(b.dataset.mood===currentMood)b.classList.add('active');});}
+    window.setMood=function(m){
+      currentMood=m;
+      localStorage.setItem('mood_'+new Date().toDateString(),m);
+      $('mood-display').textContent='Сегодня: '+m;
+      document.querySelectorAll('.mood-btn').forEach(function(b){b.classList.toggle('active',b.dataset.mood===m);});
+    };
+
+    // 11. NEW YEAR
+    function updateNY(){var n=new Date(),y=n.getFullYear();$('ny-countdown').textContent=Math.ceil((new Date(y+1,0,1)-n)/86400000)+' дн.';}
+    updateNY(); setInterval(updateNY,3600000);
+
+    // 12. ANIMAL FACTS
+    var animalFacts=['Осьминог имеет 3 сердца ❤️','Слоны не умеют прыгать 🐘','Кошки спят 16 часов в день 😺','Дельфины спят с одним открытым глазом 🐬','Пингвины дарят камешек в знак любви 🐧','Ленивцы задерживают дыхание на 40 мин 🦥','Белки забывают, где спрятали орехи 🐿️','Собаки понимают до 250 слов 🐕','Коровы имеют лучших друзей 🐄','Муравьи никогда не спят 🐜','Хамелеоны смотрят в разные стороны 🦎','Фламинго розовые из-за еды 🦩'];
+    window.newAnimalFact=function(){$('animal-fact').textContent=animalFacts[Math.floor(Math.random()*animalFacts.length)];};
+    newAnimalFact();
+
+    // 13. XP
+    var xp=parseInt(localStorage.getItem('xp'))||0;
+    function updateXP(){var lv=Math.floor(xp/50)+1; $('xp-level').textContent='Ур. '+lv; $('xp-bar').style.width=(xp%50/50*100)+'%'; $('xp-text').textContent=xp+' / '+(lv*50)+' XP';}
+    window.addXP=function(){xp+=10;localStorage.setItem('xp',xp);updateXP();};
+    updateXP();
+
+    // 14. MUSIC
+    var musicSuggestions=['🎵 Поп-музыка','🎵 Рок','🎵 Классика','🎵 Электроника','🎵 Джаз','🎵 Рэп','🎵 Lo-fi','🎵 R&B','🎵 Кантри','🎵 Регги','🎵 Инди','🎵 Метал','🎵 Фолк','🎵 Блюз','🎵 Латина'];
+    window.suggestMusic=function(){$('music-text').textContent=musicSuggestions[Math.floor(Math.random()*musicSuggestions.length)];};
+
+    // 15. WISHES
+    var wishes=[];
+    try{wishes=JSON.parse(localStorage.getItem('wishes'))||[]}catch(e){}
+    function renderWishes(){var list=$('wish-list');if(!wishes.length){list.innerHTML='<span class="text-white/20">Пусто</span>';return;}list.innerHTML=wishes.map(function(w,i){return '<div class="flex items-center gap-1"><span class="flex-1">• '+esc(w)+'</span><button data-wish="'+i+'" class="del-wish text-white/20 hover:text-red-400/60 transition">&times;</button></div>';}).join('');list.querySelectorAll('.del-wish').forEach(function(b){b.addEventListener('click',function(){var i=parseInt(this.dataset.wish);wishes.splice(i,1);localStorage.setItem('wishes',JSON.stringify(wishes));renderWishes();});});}
+    window.addWish=function(){var v=$('wish-input').value.trim();if(!v)return;wishes.push(v);localStorage.setItem('wishes',JSON.stringify(wishes));renderWishes();$('wish-input').value='';};
+    $('wish-input').addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();window.addWish()}});
+    renderWishes();
+
+    // 16. CALCULATOR
+    var calc='0',calcOpPending=null,calcPrev=null;
+    function calcUpdate(){$('calc-display').textContent=calc;}
+    window.calcInput=function(n){if(calc==='0'&&n!=='.')calc=n;else calc+=n;calcUpdate();};
+    window.calcOp=function(op){calcPrev=parseFloat(calc);calcOpPending=op;calc='0';calcUpdate();};
+    window.calcResult=function(){if(calcOpPending===null)return;var cur=parseFloat(calc);switch(calcOpPending){case'+':calc=calcPrev+cur;break;case'-':calc=calcPrev-cur;break;case'*':calc=calcPrev*cur;break;case'/':calc=cur!==0?calcPrev/cur:'Error';break;}calcOpPending=null;calcPrev=null;calcUpdate();};
+    window.calcClear=function(){calc='0';calcOpPending=null;calcPrev=null;calcUpdate();};
+
+    // 17. RANDOM IMAGE
+    window.newImage=function(){$('random-img').src='https://picsum.photos/200/120?random='+Date.now();};
+
+    // 18. BIRTHDAY
+    var bMonth=parseInt(localStorage.getItem('bdayMonth'))||5;
+    var bDay=parseInt(localStorage.getItem('bdayDay'))||15;
+    $('bday-month').value=bMonth;
+    $('bday-day').value=bDay;
+    function calcBday(){var n=new Date(),y=n.getFullYear();var b=new Date(y,bMonth,bDay);if(b<n)b=new Date(y+1,bMonth,bDay);$('bday-countdown').textContent=Math.ceil((b-n)/86400000)+' дн.';}
+    window.updateBday=function(){bMonth=parseInt($('bday-month').value);bDay=parseInt($('bday-day').value);localStorage.setItem('bdayMonth',bMonth);localStorage.setItem('bdayDay',bDay);calcBday();};
+    calcBday();
+
+    // 19. SPACE
+    var spaceFacts=['Солнце — это звезда! ☀️','На Венере год короче дня 🪐','Луна отдаляется на 4 см в год 🌙','В космосе нет звука 🔇','МКС видна с Земли невооружённым глазом 🛰️','На Марсе есть самая высокая гора 🏔️','Сатурн мог бы плавать в воде 🪐','Звёзды мерцают из-за атмосферы ✨','В день падает 100 тонн метеоритов ☄️','Юпитер имеет 95 спутников 🪐','Млечный Путь — наша галактика 🌌','Самая холодная планета — Уран ❄️'];
+    window.newSpaceFact=function(){$('space-fact').textContent=spaceFacts[Math.floor(Math.random()*spaceFacts.length)];};
+    newSpaceFact();
+
+    // 20. GAME
+    var gameSuggestions=['Minecraft ⛏️','Roblox 🎮','Terraria 🗡️','Stardew Valley 🌾','Among Us 🕵️','Brawl Stars 🔫','Pokémon ⚡','Super Mario 🍄','Portal 🌀','Celeste 🏔️','Animal Crossing 🏡','Mario Kart 🏎️','Splatoon 🎨'];
+    window.suggestGame=function(){$('game-suggestion').textContent=gameSuggestions[Math.floor(Math.random()*gameSuggestions.length)];};
+
+    // ═══════ LINUX COMMITS ═══════
+    var knownCommits = [];
+
+    function timeAgo(dateStr) {
+      var now = new Date(), d = new Date(dateStr);
+      var diff = Math.floor((now - d) / 1000);
+      if (diff < 60) return 'только что';
+      if (diff < 3600) return Math.floor(diff / 60) + ' мин назад';
+      if (diff < 86400) return Math.floor(diff / 3600) + ' ч назад';
+      return Math.floor(diff / 86400) + ' дн назад';
+    }
+
+    function truncateMsg(msg) {
+      return msg.length > 80 ? msg.substring(0, 77) + '...' : msg;
+    }
+
+    function fetchCommits() {
+      fetch('https://api.github.com/repos/torvalds/linux/commits?per_page=10')
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+          if (!data || !data.length) return;
+          var list = $('commits-list');
+          var prevKnown = knownCommits.length ? knownCommits : [];
+          var newShas = [];
+          for (var i = 0; i < data.length; i++) {
+            newShas.push(data[i].sha);
+          }
+          // detect truly new (wasn't in previous fetch)
+          var isFirstLoad = knownCommits.length === 0;
+          var html = '';
+          var newCount = 0;
+
+          for (var i = 0; i < Math.min(data.length, 10); i++) {
+            var c = data[i];
+            var msg = c.commit ? c.commit.message.split('\n')[0] : 'no message';
+            var author = c.commit ? c.commit.author.name : 'unknown';
+            var date = c.commit ? c.commit.author.date : '';
+            var isNew = !isFirstLoad && prevKnown.indexOf(c.sha) === -1;
+            if (isNew) newCount++;
+
+            html += '<div class="flex items-start gap-3 px-3 py-2.5 rounded-xl bg-white/[0.02] hover:bg-white/[0.04] transition" style="' +
+              (isNew ? 'border:1px solid var(--a-border);animation:pulse 2s cubic-bezier(0.4,0,0.6,1) infinite;' : 'border:1px solid rgba(255,255,255,0.05)') + '">' +
+              '<div class="w-6 h-6 rounded-full flex items-center justify-center text-xs flex-shrink-0" style="background:var(--a-bg)">' +
+              (isNew ? '<span class="text-[10px]">🆕</span>' : '<span class="text-[10px]">🐧</span>') + '</div>' +
+              '<div class="flex-1 min-w-0">' +
+              '<div class="text-xs text-white/70 leading-snug translate-msg" data-msg="' + esc(msg) + '">' +
+              '<span class="text-white/40">⟳</span> ' + esc(truncateMsg(msg)) + '</div>' +
+              '<div class="flex items-center gap-2 mt-1">' +
+              '<span class="text-[10px] text-white/25">' + esc(author) + '</span>' +
+              '<span class="text-[10px] text-white/20">·</span>' +
+              '<span class="text-[10px] text-white/25">' + timeAgo(date) + '</span>' +
+              '<span class="text-[10px] text-white/20">·</span>' +
+              '<a href="https://github.com/torvalds/linux/commit/' + esc(c.sha) + '" target="_blank" class="text-[10px] text-white/30 hover:text-white/60 transition">открыть →</a>' +
+              '</div></div></div>';
+          }
+          list.innerHTML = html;
+
+          // Update status
+          if (newCount > 0) {
+            $('commits-status').textContent = '+' + newCount + ' новых!';
+            $('commits-status').className = 'ml-auto text-xs accent-text';
+          } else {
+            $('commits-status').textContent = 'обновлено ' + timeAgo(new Date().toISOString());
+            $('commits-status').className = 'ml-auto text-xs text-white/20';
+          }
+
+          knownCommits = newShas;
+
+          // Translate each message
+          var els = list.querySelectorAll('.translate-msg');
+          for (var i = 0; i < els.length; i++) {
+            (function(el) {
+              var msg = el.dataset.msg;
+              if (msg.length < 3) return;
+              var url = 'https://api.mymemory.translated.net/get?q=' + encodeURIComponent(msg) + '&langpair=en|ru';
+              fetch(url)
+                .then(function(r) { return r.json(); })
+                .then(function(td) {
+                  if (td && td.responseData && td.responseData.translatedText) {
+                    var translated = td.responseData.translatedText;
+                    if (translated && translated !== msg && translated.indexOf('MYMEMORY') === -1) {
+                      el.innerHTML = esc(translated);
+                    }
+                  }
+                })
+                .catch(function() {});
+            })(els[i]);
+          }
+        })
+        .catch(function() {
+          $('commits-list').innerHTML = '<div class="text-white/20 text-xs text-center py-4">Не удалось загрузить коммиты</div>';
+        });
+    }
+
+    fetchCommits();
+    setInterval(fetchCommits, 30000);
+
+    // ═══════ TABS ═══════
+    window.switchTab = function(name) {
+      document.querySelectorAll('.tab-content').forEach(function(el) { el.classList.remove('active'); });
+      document.querySelectorAll('.tab-btn').forEach(function(el) { el.classList.remove('active'); });
+      document.getElementById('tab-' + name).classList.add('active');
+      document.querySelector('.tab-btn[onclick*="' + name + '"]').classList.add('active');
+    };
+
+    // ═══════ AI CHAT ═══════
+    var chatHistory = [];
+    try { chatHistory = JSON.parse(localStorage.getItem('chatHistory')) || []; } catch(e) {}
+    var chatLoading = false;
+
+    function renderChat() {
+      var container = document.getElementById('chat-messages');
+      container.innerHTML = chatHistory.map(function(m) {
+        var cls = 'chat-msg ' + m.role;
+        var content = esc(m.content).replace(/\n/g, '<br>').replace(/```([\s\S]*?)```/g, '<div class="chat-code">$1</div>');
+        return '<div class="' + cls + '">' + content + '</div>';
+      }).join('');
+      container.scrollTop = container.scrollHeight;
+    }
+
+    function saveChat() {
+      localStorage.setItem('chatHistory', JSON.stringify(chatHistory));
+    }
+
+    window.clearChat = function() {
+      chatHistory = [];
+      saveChat();
+      renderChat();
+    };
+
+    window.sendChat = async function() {
+      var input = document.getElementById('chat-input');
+      var text = input.value.trim();
+      if (!text || chatLoading) return;
+
+      chatHistory.push({ role: 'user', content: text });
+      input.value = '';
+      renderChat();
+      autoResizeInput();
+
+      var container = document.getElementById('chat-messages');
+      var msgDiv = document.createElement('div');
+      msgDiv.className = 'chat-msg assistant';
+      container.appendChild(msgDiv);
+      container.scrollTop = container.scrollHeight;
+      chatLoading = true;
+
+      var apiKey = localStorage.getItem('openrouterKey');
+      if (!apiKey) { chatLoading = false; msgDiv.remove(); showKeyModal(); return; }
+
+      var systemMsg = 'Ты — опытный учитель программирования. Отвечаешь на русском языке, понятно, с примерами кода. Объясняешь сложные вещи простыми словами. Если нужно — показываешь примеры кода в блоках ```code```. Помогаешь с любыми языками программирования, алгоритмами, базами данных, веб-разработкой. Когда хочешь, чтобы ученик сам написал код, используй тег /editor в конце ответа. После /editor напиши код-заготовку (шаблон) для ученика. Закрой тегом /editor. Пример:\n\nПридумай функцию, которая проверяет, является ли число простым.\n\n/editor\ndef is_prime(n):\n    # Напиши код здесь\n    pass\n/editor\n\nКогда ученик отправит код через редактор, ты увидишь его решение и проверишь его.';
+      var messages = [{ role: 'system', content: systemMsg }].concat(chatHistory.slice(-10));
+
+      try {
+        var reply = await streamChat(messages, function(text) {
+          msgDiv.textContent = text;
+          container.scrollTop = container.scrollHeight;
+        });
+        addAssistantMsg(reply);
+        if (reply.indexOf('/editor') !== -1) openEditorFromReply(reply);
+      } catch (err) {
+        msgDiv.remove();
+        addAssistantMsg('❌ ' + esc(err.message));
+      }
+      chatLoading = false;
+    };
+
+    window.showKeyModal = function() {
+      if (document.querySelector('.key-modal')) return;
+      var cur = localStorage.getItem('openrouterKey') || '';
+      var div = document.createElement('div');
+      div.className = 'key-modal';
+      div.innerHTML = '<div class="key-modal-box">' +
+        '<h3>🔑 API ключ OpenRouter</h3>' +
+        '<p>Ключ сохраняется в браузере</p>' +
+        '<input type="text" id="key-input" placeholder="sk-or-..." value="' + esc(cur) + '">' +
+        '<button onclick="setupKey()">Сохранить</button>' +
+        '</div>';
+      document.body.appendChild(div);
+      document.getElementById('key-input').focus();
+    };
+
+    window.setupKey = function() {
+      var val = document.getElementById('key-input').value.trim();
+      if (val) localStorage.setItem('openrouterKey', val);
+      var modal = document.querySelector('.key-modal');
+      if (modal) modal.remove();
+    };
+
+    // ═══════ HELPERS: STREAMING ═══════
+    async function streamChat(messages, onChunk) {
+      var apiKey = localStorage.getItem('openrouterKey');
+      var resp = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + apiKey,
+          'HTTP-Referer': 'https://devdashboard891.github.io/dashboard/',
+          'X-Title': 'Dashboard AI'
+        },
+        body: JSON.stringify({ model: 'cohere/north-mini-code:free', messages: messages, stream: true })
+      });
+      if (!resp.ok) {
+        var errBody = await resp.json().catch(function(){ return {}; });
+        throw new Error((errBody.error && (errBody.error.message || errBody.error.code)) || 'Ошибка API (HTTP ' + resp.status + ')');
+      }
+      if (!resp.body) {
+        // Fallback: non-streaming
+        var data = await resp.json();
+        var full = (data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content) || '';
+        if (onChunk) onChunk(full);
+        return full;
+      }
+      var reader = resp.body.getReader();
+      var decoder = new TextDecoder();
+      var buf = '';
+      var reply = '';
+      while (true) {
+        var r = await reader.read();
+        if (r.done) break;
+        buf += decoder.decode(r.value, { stream: true });
+        var lines = buf.split('\n');
+        buf = lines.pop() || '';
+        for (var i = 0; i < lines.length; i++) {
+          var line = lines[i].trim();
+          if (!line || !line.startsWith('data: ')) continue;
+          var ds = line.slice(6);
+          if (ds === '[DONE]') continue;
+          try {
+            var p = JSON.parse(ds);
+            var d = p.choices && p.choices[0] && p.choices[0].delta;
+            if (d && d.content) {
+              reply += d.content;
+              if (onChunk) onChunk(reply);
+            }
+          } catch(e) {}
+        }
+      }
+      return reply;
+    }
+
+    function addAssistantMsg(reply) {
+      chatHistory.push({ role: 'assistant', content: reply });
+      saveChat();
+      renderChat();
+    }
+
+    // ═══════ CODE TASK ═══════
+    var currentTask = '';
+
+    window.requestTask = async function() {
+      var apiKey = localStorage.getItem('openrouterKey');
+      if (!apiKey) { showKeyModal(); return; }
+
+      chatHistory.push({ role: 'user', content: '📝 Дай мне задачу по программированию' });
+      renderChat();
+
+      var container = document.getElementById('chat-messages');
+      var msgDiv = document.createElement('div');
+      msgDiv.className = 'chat-msg assistant';
+      container.appendChild(msgDiv);
+      container.scrollTop = container.scrollHeight;
+
+      try {
+        var reply = await streamChat(
+          [
+            { role: 'system', content: 'Ты — учитель программирования. Придумай одну небольшую задачу по программированию для ученика. Задача должна быть понятной, с конкретным условием. Укажи язык программирования. Напиши задачу на русском. Не давай решение. В конце добавь подсказки. Если хочешь дать шаблон кода, используй тег /editor в конце, затем код-заготовку, затем закрой /editor. Пример:\n\nНапиши функцию, которая сортирует список.\n\n/editor\ndef sort_list(arr):\n    # Твой код\n    pass\n/editor' },
+            { role: 'user', content: 'Придумай задачу по программированию' }
+          ],
+          function(text) { msgDiv.textContent = text; container.scrollTop = container.scrollHeight; }
+        );
+        addAssistantMsg(reply);
+        currentTask = reply;
+        if (reply) openTaskEditor(); else throw new Error('AI вернул пустую задачу');
+      } catch (err) {
+        msgDiv.remove();
+        addAssistantMsg('❌ ' + esc(err.message));
+      }
+    };
+
+    window.openEditorFromReply = function(reply) {
+      var parts = reply.split('/editor');
+      if (parts.length < 2) return;
+      var desc = parts[0].trim();
+      var codePart = '';
+      if (parts.length >= 2) {
+        codePart = parts[1].trim();
+        if (codePart.endsWith('/editor')) codePart = codePart.slice(0, -7).trim();
+      }
+      currentTask = desc || 'Напиши код по заданию выше';
+      openTaskEditor(codePart);
+    };
+
+    window.openTaskEditor = function(prefilled) {
+      prefilled = prefilled || '';
+      var existing = document.querySelector('.task-modal');
+      if (existing) existing.remove();
+      setTimeout(function() {
+        var div = document.createElement('div');
+        div.className = 'task-modal';
+        div.innerHTML =
+          '<div class="task-modal-box">' +
+            '<h3>📝 Задача</h3>' +
+            '<div class="task-desc" id="task-desc">' + esc(currentTask).replace(/\n/g, '<br>') + '</div>' +
+            '<div class="task-editor-wrap">' +
+              '<textarea class="task-editor" id="task-editor" placeholder="// Напиши код здесь..." spellcheck="false" onkeydown="taskEditorKeydown(event)"></textarea>' +
+            '</div>' +
+            '<div class="task-actions">' +
+              '<button class="task-btn-submit" onclick="submitTask()">✅ Сдать</button>' +
+              '<button class="task-btn-close" onclick="closeTaskModal()">✕ Закрыть</button>' +
+            '</div>' +
+            '<div class="task-hint">Tab = 2 пробела · Ctrl+Enter = сдать</div>' +
+          '</div>';
+        document.body.appendChild(div);
+        var ed = document.getElementById('task-editor');
+        if (ed) { ed.value = prefilled; ed.focus(); }
+      }, 50);
+    };
+
+    window.taskEditorKeydown = function(e) {
+      if (e.key === 'Tab') {
+        e.preventDefault();
+        var editor = document.getElementById('task-editor');
+        if (!editor) return;
+        var start = editor.selectionStart;
+        var end = editor.selectionEnd;
+        editor.value = editor.value.substring(0, start) + '  ' + editor.value.substring(end);
+        editor.selectionStart = editor.selectionEnd = start + 2;
+      }
+      if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+        e.preventDefault();
+        submitTask();
+      }
+    };
+
+    window.submitTask = async function() {
+      var editor = document.getElementById('task-editor');
+      if (!editor) return;
+      var code = editor.value.trim();
+      if (!code) return;
+
+      closeTaskModal();
+
+      var apiKey = localStorage.getItem('openrouterKey');
+      if (!apiKey) { showKeyModal(); return; }
+
+      chatHistory.push({ role: 'user', content: '📝 Моё решение задачи:\n\n```\n' + code + '\n```\n\nПроверь код и дай обратную связь.' });
+      renderChat();
+
+      var container = document.getElementById('chat-messages');
+      var msgDiv = document.createElement('div');
+      msgDiv.className = 'chat-msg assistant';
+      container.appendChild(msgDiv);
+      container.scrollTop = container.scrollHeight;
+
+      try {
+        var reply = await streamChat(
+          [
+            { role: 'system', content: 'Ты — учитель программирования. Проверь решение задачи ученика. Укажи: правильно ли, что можно улучшить, какие ошибки. Будь конструктивным и доброжелательным. Отвечай на русском.' },
+            { role: 'user', content: 'Вот задача:\n' + currentTask + '\n\nВот решение ученика:\n' + code + '\n\nПроверь код и дай обратную связь.' }
+          ],
+          function(text) { msgDiv.textContent = text; container.scrollTop = container.scrollHeight; }
+        );
+        addAssistantMsg(reply);
+      } catch (err) {
+        msgDiv.remove();
+        addAssistantMsg('❌ ' + esc(err.message));
+      }
+    };
+
+    window.closeTaskModal = function() {
+      var modal = document.querySelector('.task-modal');
+      if (modal) modal.remove();
+    };
+
+    // ═══════ GITHUB API ═══════
+    function ghToken() { return localStorage.getItem('githubToken') || ''; }
+    function ghHeaders() { return { 'Authorization': 'Bearer ' + ghToken(), 'Accept': 'application/vnd.github.v3+json' }; }
+    function ghUpdateStatus() {
+      var t = ghToken();
+      ['gh-status','gh-fstatus'].forEach(function(id){
+        var el = document.getElementById(id);
+        if (el) el.textContent = t ? '🔑 токен есть' : '⚙️ токен не установлен';
+      });
+      document.getElementById('gh-refresh-btn').style.display = t ? '' : 'none';
+    }
+    window.showGHTokenModal = function() {
+      if (document.querySelector('.key-modal')) return;
+      var cur = ghToken();
+      var div = document.createElement('div');
+      div.className = 'key-modal';
+      div.innerHTML = '<div class="key-modal-box">' +
+        '<h3>🔑 GitHub Token</h3>' +
+        '<p>Personal Access Token (repo scope)</p>' +
+        '<input type="text" id="key-input" placeholder="ghp_..." value="' + esc(cur) + '">' +
+        '<button onclick="setupGHToken()">Сохранить</button></div>';
+      document.body.appendChild(div);
+      document.getElementById('key-input').focus();
+    };
+    window.setupGHToken = function() {
+      var val = document.getElementById('key-input').value.trim();
+      if (val) localStorage.setItem('githubToken', val);
+      var modal = document.querySelector('.key-modal');
+      if (modal) modal.remove();
+      ghUpdateStatus();
+      if (ghToken()) loadRepos();
+    };
+
+    // ── Repos ──
+    var ghDetailRepo = '';
+
+    window.loadRepos = async function() {
+      var t = ghToken();
+      if (!t) { showGHTokenModal(); return; }
+      var list = document.getElementById('gh-list');
+      list.innerHTML = '<div class="gh-empty">🔄 Загрузка...</div>';
+      try {
+        var r = await fetch('https://api.github.com/user/repos?per_page=50&sort=updated', { headers: ghHeaders() });
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        var repos = await r.json();
+        if (!repos.length) { list.innerHTML = '<div class="gh-empty">Нет репозиториев</div>'; return; }
+        list.innerHTML = repos.map(function(repo){
+          var lang = repo.language ? ' · ' + repo.language : '';
+          return '<div class="gh-item" onclick="openRepo(\'' + repo.full_name + '\')">' +
+            '<span class="gh-icon">' + (repo.private ? '🔒' : '📂') + '</span>' +
+            '<div class="gh-info"><div class="gh-name">' + esc(repo.name) + '</div>' +
+            '<div class="gh-meta">⭐ ' + repo.stargazers_count + ' · 🍴 ' + repo.forks_count + lang + '</div></div>' +
+            '</div>';
+        }).join('');
+      } catch(e) {
+        list.innerHTML = '<div class="gh-empty">❌ ' + esc(e.message) + '</div>';
+      }
+    };
+
+    window.openRepo = function(fullName) {
+      ghDetailRepo = fullName;
+      document.getElementById('gh-list').style.display = 'none';
+      document.getElementById('gh-create').style.display = 'none';
+      document.getElementById('gh-detail').classList.add('active');
+      document.getElementById('gh-detail-name').textContent = fullName;
+      document.getElementById('gh-branches').style.display = 'none';
+      loadRepoCommits();
+    };
+
+    window.loadRepoCommits = async function() {
+      document.getElementById('gh-repo-files').style.display = 'none';
+      document.getElementById('gh-commits').style.display = '';
+      document.getElementById('gh-detail-info').innerHTML = '🔄 Загрузка коммитов...';
+      try {
+        var r = await fetch('https://api.github.com/repos/' + ghDetailRepo + '/commits?per_page=20', { headers: ghHeaders() });
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        var commits = await r.json();
+        document.getElementById('gh-detail-info').textContent = 'Последние коммиты (' + commits.length + ')';
+        document.getElementById('gh-commits').innerHTML = commits.map(function(c){
+          var msg = esc(c.commit.message.split('\n')[0]);
+          var date = new Date(c.commit.author.date).toLocaleDateString('ru-RU');
+          var author = c.commit.author.name;
+          return '<div class="gh-commit"><div class="msg">' + msg + '</div><div class="meta">' + author + ' · ' + date + ' · ' + c.sha.slice(0,7) + '</div></div>';
+        }).join('');
+      } catch(e) {
+        document.getElementById('gh-detail-info').textContent = '❌ ' + e.message;
+      }
+    };
+
+    window.loadRepoBranches = async function() {
+      var branchDiv = document.getElementById('gh-branches');
+      if (branchDiv.style.display === 'block') { branchDiv.style.display = 'none'; return; }
+      branchDiv.style.display = 'block';
+      document.getElementById('gh-branch-list').innerHTML = '🔄';
+      try {
+        var r = await fetch('https://api.github.com/repos/' + ghDetailRepo + '/branches?per_page=30', { headers: ghHeaders() });
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        var branches = await r.json();
+        document.getElementById('gh-branch-list').innerHTML = branches.map(function(b){
+          return '<span onclick="ghSwitchBranch(\'' + b.name + '\')" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:6px;padding:4px 10px;font-size:11px;cursor:pointer;color:rgba(255,255,255,0.7)">🌿 ' + b.name + '</span>';
+        }).join('');
+      } catch(e) {
+        document.getElementById('gh-branch-list').textContent = '❌ ' + e.message;
+      }
+    };
+
+    window.ghSwitchBranch = function(name) {
+      document.getElementById('gh-branch').value = name;
+      document.getElementById('gh-branches').style.display = 'none';
+      if (document.getElementById('gh-repo-path').value.trim() === ghDetailRepo) {
+        fetchFiles('');
+      }
+    };
+
+    window.loadRepoFiles = async function() {
+      document.getElementById('gh-commits').style.display = 'none';
+      var filesDiv = document.getElementById('gh-repo-files');
+      filesDiv.style.display = 'block';
+      filesDiv.innerHTML = '🔄 Загрузка...';
+      try {
+        var r = await fetch('https://api.github.com/repos/' + ghDetailRepo + '/git/trees/main?recursive=1', { headers: ghHeaders() });
+        if (!r.ok) {
+          // try master
+          r = await fetch('https://api.github.com/repos/' + ghDetailRepo + '/git/trees/master?recursive=1', { headers: ghHeaders() });
+          if (!r.ok) throw new Error('HTTP ' + r.status);
+        }
+        var tree = await r.json();
+        filesDiv.innerHTML = tree.tree.filter(function(item){ return item.type === 'blob'; }).slice(0, 50).map(function(item){
+          return '<div class="gh-file-row" onclick="openFileFromGit(\'' + item.path + '\')"><span class="name">📄 ' + esc(item.path) + '</span></div>';
+        }).join('') + (tree.tree.length > 50 ? '<div class="gh-empty">...и ещё ' + (tree.tree.length - 50) + ' файлов</div>' : '');
+      } catch(e) {
+        filesDiv.textContent = '❌ ' + e.message;
+      }
+    };
+
+    window.openFileFromGit = function(path) {
+      document.getElementById('gh-repo-path').value = ghDetailRepo;
+      ghCurrentRepo = ghDetailRepo;
+      var dir = path.includes('/') ? path.substring(0, path.lastIndexOf('/')) : '';
+      closeRepoDetail();
+      switchTab('files');
+      ghCurrentPath = '';
+      setTimeout(function(){ fetchFiles(dir); }, 100);
+    };
+
+    window.closeRepoDetail = function() {
+      document.getElementById('gh-detail').classList.remove('active');
+      document.getElementById('gh-list').style.display = '';
+      document.getElementById('gh-create').style.display = '';
+      document.getElementById('gh-repo-files').style.display = 'none';
+      document.getElementById('gh-commits').style.display = '';
+      document.getElementById('gh-branches').style.display = 'none';
+    };
+
+    window.deleteRepo = async function() {
+      if (!confirm('Точно удалить репозиторий ' + ghDetailRepo + '?\nЭто действие необратимо!')) return;
+      if (!confirm('Ещё раз подтверди: удалить ' + ghDetailRepo + '?')) return;
+      try {
+        var r = await fetch('https://api.github.com/repos/' + ghDetailRepo, {
+          method: 'DELETE',
+          headers: ghHeaders()
+        });
+        if (!r.ok) { var er = await r.json(); throw new Error(er.message || 'HTTP ' + r.status); }
+        closeRepoDetail();
+        loadRepos();
+      } catch(e) { alert('❌ ' + e.message); }
+    };
+
+    window.createRepo = async function() {
+      var name = document.getElementById('gh-create-name').value.trim();
+      if (!name) return;
+      var btn = document.getElementById('gh-create-btn');
+      btn.disabled = true; btn.textContent = '⏳';
+      try {
+        var r = await fetch('https://api.github.com/user/repos', {
+          method: 'POST',
+          headers: Object.assign(ghHeaders(), {'Content-Type':'application/json'}),
+          body: JSON.stringify({ name: name, auto_init: true })
+        });
+        if (!r.ok) { var e = await r.json(); throw new Error(e.message || 'HTTP ' + r.status); }
+        document.getElementById('gh-create-name').value = '';
+        loadRepos();
+      } catch(e) { alert('❌ ' + e.message); }
+      btn.disabled = false; btn.textContent = '➕ Создать';
+    };
+
+    // ── Files ──
+    var ghCurrentPath = '';
+    var ghCurrentRepo = '';
+    var ghEditingFile = '';
+    var ghEditingSha = '';
+
+    function ghBranch() { return document.getElementById('gh-branch').value.trim() || 'main'; }
+
+    window.loadFiles = function() {
+      var rp = document.getElementById('gh-repo-path').value.trim();
+      if (!rp) return;
+      ghCurrentRepo = rp;
+      ghCurrentPath = '';
+      cancelEdit();
+      fetchFiles('');
+    };
+
+    async function fetchFiles(path) {
+      ghCurrentPath = path;
+      var list = document.getElementById('gh-files-list');
+      var prev = document.getElementById('gh-preview');
+      var edit = document.getElementById('gh-edit-area');
+      prev.style.display = 'none'; edit.style.display = 'none';
+      list.innerHTML = '<div class="gh-empty">🔄 Загрузка...</div>';
+      var br = ghBranch();
+
+      var bread = document.getElementById('gh-breadcrumbs');
+      if (path) {
+        var parts = path.split('/').filter(Boolean);
+        bread.innerHTML = '<span onclick="fetchFiles(\'\')">' + ghCurrentRepo + ' (' + br + ')</span>' +
+          parts.map(function(p, i){
+            var pth = parts.slice(0, i+1).join('/');
+            return '<span class="sep">/</span><span onclick="fetchFiles(\'' + pth + '\')">' + p + '</span>';
+          }).join('');
+      } else {
+        bread.innerHTML = '<span>' + ghCurrentRepo + ' (' + br + ')</span>';
+      }
+
+      try {
+        var r = await fetch('https://api.github.com/repos/' + ghCurrentRepo + '/contents/' + encodeURI(path) + '?ref=' + br, { headers: ghHeaders() });
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        var items = await r.json();
+        if (!items.length) { list.innerHTML = '<div class="gh-empty">пусто</div>'; return; }
+        var isSingle = !Array.isArray(items);
+        if (isSingle) items = [items];
+        list.innerHTML = items.sort(function(a,b){ return a.type === 'dir' ? -1 : 1; }).map(function(item){
+          var icon = item.type === 'dir' ? '📁' : '📄';
+          var size = item.size ? ' · ' + (item.size > 1024 ? (item.size/1024).toFixed(1) + 'KB' : item.size + 'B') : '';
+          return '<div class="gh-file-row">' +
+            '<span>' + icon + '</span>' +
+            '<span class="name" onclick="' + (item.type === 'dir' ? 'fetchFiles(\'' + item.path + '\')' : 'previewFile(\'' + item.path + '\',\'' + item.download_url + '\',\'' + (item.sha||'') + '\')') + '">' + esc(item.name) + '</span>' +
+            '<span class="size">' + size + '</span>' +
+            '<button class="del" onclick="deleteFile(\'' + item.path + '\')">🗑</button>' +
+            '</div>';
+        }).join('');
+      } catch(e) {
+        list.innerHTML = '<div class="gh-empty">❌ ' + esc(e.message) + '</div>';
+      }
+    }
+
+    window.previewFile = async function(path, url, sha) {
+      var prev = document.getElementById('gh-preview');
+      var edit = document.getElementById('gh-edit-area');
+      edit.style.display = 'none';
+      prev.style.display = 'block';
+      prev.textContent = '🔄 Загрузка...';
+      ghEditingFile = path;
+      ghEditingSha = sha;
+      try {
+        var r = await fetch(url);
+        var text = await r.text();
+        var ext = path.split('.').pop().toLowerCase();
+        var isText = ['txt','md','js','ts','py','html','css','json','xml','yml','yaml','sh','bat','cpp','c','h','java','rb','php','go','rs','sql','ini','cfg','conf','log','csv','env','gitignore','dockerfile'].indexOf(ext) !== -1 || !ext;
+        if (isText) {
+          prev.innerHTML = esc(text) +
+            '<div style="margin-top:10px;display:flex;gap:6px">' +
+            '<button onclick="enableEdit()" style="background:var(--a);border:none;border-radius:8px;padding:6px 14px;color:white;font-size:11px;cursor:pointer">✏️ Редактировать</button>' +
+            '</div>';
+          ghEditingContent = text;
+        } else {
+          prev.textContent = '📎 ' + path + ' (' + (text.length) + ' bytes) — не поддерживает просмотр';
+          ghEditingContent = '';
+        }
+      } catch(e) {
+        prev.textContent = '❌ ' + e.message;
+      }
+    };
+
+    var ghEditingContent = '';
+
+    window.enableEdit = function() {
+      var prev = document.getElementById('gh-preview');
+      prev.innerHTML = '<textarea style="width:100%;min-height:150px;background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:10px;color:white;font-size:12px;font-family:monospace;outline:none;resize:vertical;box-sizing:border-box" id="gh-edit-text">' + esc(ghEditingContent) + '</textarea>';
+      document.getElementById('gh-edit-area').style.display = 'flex';
+    };
+
+    window.saveEditedFile = async function() {
+      var msg = document.getElementById('gh-commit-msg').value.trim() || 'Update ' + ghEditingFile;
+      var content = document.getElementById('gh-edit-text').value;
+      var base64 = btoa(unescape(encodeURIComponent(content)));
+      var br = ghBranch();
+      try {
+        var r = await fetch('https://api.github.com/repos/' + ghCurrentRepo + '/contents/' + encodeURI(ghEditingFile), {
+          method: 'PUT',
+          headers: Object.assign(ghHeaders(), {'Content-Type':'application/json'}),
+          body: JSON.stringify({ message: msg, content: base64, sha: ghEditingSha, branch: br })
+        });
+        if (!r.ok) { var er = await r.json(); throw new Error(er.message || 'HTTP ' + r.status); }
+        cancelEdit();
+        fetchFiles(ghCurrentPath);
+        document.getElementById('gh-commit-msg').value = '';
+      } catch(e) { alert('❌ ' + e.message); }
+    };
+
+    window.cancelEdit = function() {
+      document.getElementById('gh-edit-area').style.display = 'none';
+      ghEditingFile = '';
+      ghEditingSha = '';
+      ghEditingContent = '';
+    };
+
+    window.uploadFile = async function(input) {
+      var file = input.files[0];
+      if (!file) return;
+      var path = ghCurrentPath ? ghCurrentPath + '/' + file.name : file.name;
+      var br = ghBranch();
+      var reader = new FileReader();
+      reader.onload = async function(e) {
+        var base64 = e.target.result.split(',')[1];
+        try {
+          var r = await fetch('https://api.github.com/repos/' + ghCurrentRepo + '/contents/' + encodeURI(path), {
+            method: 'PUT',
+            headers: Object.assign(ghHeaders(), {'Content-Type':'application/json'}),
+            body: JSON.stringify({ message: 'Upload ' + file.name, content: base64, branch: br })
+          });
+          if (!r.ok) { var er = await r.json(); throw new Error(er.message || 'HTTP ' + r.status); }
+          fetchFiles(ghCurrentPath);
+        } catch(err) { alert('❌ ' + err.message); }
+      };
+      reader.readAsDataURL(file);
+      input.value = '';
+    };
+
+    window.deleteFile = async function(path) {
+      if (!confirm('Удалить ' + path + '?')) return;
+      var br = ghBranch();
+      try {
+        var r = await fetch('https://api.github.com/repos/' + ghCurrentRepo + '/contents/' + encodeURI(path) + '?ref=' + br, { headers: ghHeaders() });
+        var data = await r.json();
+        var r2 = await fetch('https://api.github.com/repos/' + ghCurrentRepo + '/contents/' + encodeURI(path), {
+          method: 'DELETE',
+          headers: Object.assign(ghHeaders(), {'Content-Type':'application/json'}),
+          body: JSON.stringify({ message: 'Delete ' + path, sha: data.sha, branch: br })
+        });
+        if (!r2.ok) { var er = await r2.json(); throw new Error(er.message || 'HTTP ' + r2.status); }
+        fetchFiles(ghCurrentPath);
+      } catch(e) { alert('❌ ' + e.message); }
+    };
+
+    window.uploadTextFile = async function() {
+      var content = document.getElementById('gh-text-upload').value;
+      var fname = document.getElementById('gh-text-filename').value.trim() || 'file.txt';
+      if (!content) return;
+      var path = ghCurrentPath ? ghCurrentPath + '/' + fname : fname;
+      var br = ghBranch();
+      var base64 = btoa(unescape(encodeURIComponent(content)));
+      try {
+        var r = await fetch('https://api.github.com/repos/' + ghCurrentRepo + '/contents/' + encodeURI(path), {
+          method: 'PUT',
+          headers: Object.assign(ghHeaders(), {'Content-Type':'application/json'}),
+          body: JSON.stringify({ message: 'Create ' + fname, content: base64, branch: br })
+        });
+        if (!r.ok) { var er = await r.json(); throw new Error(er.message || 'HTTP ' + r.status); }
+        document.getElementById('gh-text-upload').value = '';
+        document.getElementById('gh-text-filename').value = '';
+        fetchFiles(ghCurrentPath);
+      } catch(e) { alert('❌ ' + e.message); }
+    };
+
+    window.showNewFileModal = function() {
+      if (document.querySelector('.key-modal')) return;
+      var div = document.createElement('div');
+      div.className = 'key-modal';
+      div.innerHTML = '<div class="key-modal-box">' +
+        '<h3>➕ Новый файл</h3>' +
+        '<input type="text" id="nf-path" placeholder="путь/к/файлу.js" style="width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:10px;color:white;font-size:13px;outline:none;box-sizing:border-box;margin-bottom:8px">' +
+        '<textarea id="nf-content" placeholder="Содержимое файла..." style="width:100%;min-height:120px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:10px;color:white;font-size:12px;font-family:monospace;outline:none;resize:vertical;box-sizing:border-box;margin-bottom:8px"></textarea>' +
+        '<input id="nf-msg" placeholder="Commit message..." style="width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:10px;color:white;font-size:13px;outline:none;box-sizing:border-box;margin-bottom:12px">' +
+        '<button onclick="createNewFile()" style="width:100%;background:var(--a);border:none;border-radius:10px;padding:10px;color:white;font-size:13px;cursor:pointer">✅ Создать</button></div>';
+      document.body.appendChild(div);
+      document.getElementById('nf-path').focus();
+    };
+
+    window.createNewFile = async function() {
+      var path = document.getElementById('nf-path').value.trim();
+      var content = document.getElementById('nf-content').value;
+      var msg = document.getElementById('nf-msg').value.trim() || 'Create ' + path;
+      if (!path) { alert('Укажи путь к файлу'); return; }
+      var fullPath = ghCurrentPath ? ghCurrentPath + '/' + path : path;
+      var base64 = btoa(unescape(encodeURIComponent(content)));
+      var br = ghBranch();
+      try {
+        var r = await fetch('https://api.github.com/repos/' + ghCurrentRepo + '/contents/' + encodeURI(fullPath), {
+          method: 'PUT',
+          headers: Object.assign(ghHeaders(), {'Content-Type':'application/json'}),
+          body: JSON.stringify({ message: msg, content: base64, branch: br })
+        });
+        if (!r.ok) { var er = await r.json(); throw new Error(er.message || 'HTTP ' + r.status); }
+        var modal = document.querySelector('.key-modal');
+        if (modal) modal.remove();
+        fetchFiles(ghCurrentPath);
+      } catch(e) { alert('❌ ' + e.message); }
+    };
+
+    ghUpdateStatus();
+
+    window.chatInputKeydown = function(e) {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        sendChat();
+      }
+    };
+
+    function autoResizeInput() {
+      var el = document.getElementById('chat-input');
+      el.style.height = 'auto';
+      el.style.height = Math.min(el.scrollHeight, 80) + 'px';
+    }
+    document.getElementById('chat-input').addEventListener('input', autoResizeInput);
+
+    renderChat();
+
+    if (!localStorage.getItem('openrouterKey')) showKeyModal();
+
+  })();
+  </script>
+</body>
+</html>

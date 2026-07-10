@@ -10,7 +10,7 @@ doNotCompress:
 - assets
 sdkInfo:
   minSdkVersion: 21
-  targetSdkVersion: 33
+  targetSdkVersion: 34
 packageInfo:
   forcedPackageId: 127
   renameManifestPackage: null
