@@ -796,8 +796,22 @@
         </div>
         <div class="mt-3">
           <button class="mini-btn text-xs px-3 py-1.5 rounded-xl text-white/50 hover:text-white/80 transition" onclick="scanNetwork()">🔍 Сканировать</button>
+          <button class="mini-btn text-xs px-3 py-1.5 rounded-xl text-white/50 hover:text-white/80 transition" onclick="showSSHConnectForm()">➕ Подключиться</button>
           <button class="mini-btn text-xs px-3 py-1.5 rounded-xl text-white/50 hover:text-white/80 transition" onclick="loadSSHSessions()">🔄 Обновить SSH</button>
           <button class="mini-btn text-xs px-3 py-1.5 rounded-xl text-white/50 hover:text-white/80 transition" onclick="clearTerminal()">Очистить</button>
+        </div>
+        <div id="ssh-connect-form" style="display:none" class="bg-white/5 rounded-xl p-3 mt-2">
+          <div class="text-xs text-white/50 mb-2">🔐 Ручное подключение</div>
+          <div class="flex gap-2 mb-2">
+            <input id="ssh-user" placeholder="user" value="root" class="flex-1 bg-white/5 border border-white/10 rounded-lg px-2 py-1.5 text-xs text-white/70 outline-none">
+            <input id="ssh-host" placeholder="host" class="flex-1 bg-white/5 border border-white/10 rounded-lg px-2 py-1.5 text-xs text-white/70 outline-none">
+            <input id="ssh-port" placeholder="port" value="22" class="w-14 bg-white/5 border border-white/10 rounded-lg px-2 py-1.5 text-xs text-white/70 outline-none">
+          </div>
+          <div class="flex gap-2">
+            <button onclick="connectSSH()" class="flex-1 bg-green-600/20 border border-green-600/30 rounded-lg py-1.5 text-xs text-green-400 cursor-pointer">🚀 Подключиться</button>
+            <button onclick="hideSSHForm()" class="bg-white/5 border border-white/10 rounded-lg px-3 py-1.5 text-xs text-white/40 cursor-pointer">✕</button>
+          </div>
+        </div>
         </div>
       </div>
     </div>
@@ -1782,6 +1796,32 @@
       try { sshSessions = JSON.parse(localStorage.getItem('sshSessions') || '[]'); }
       catch(e) { sshSessions = []; }
     }
+
+    window.showSSHConnectForm = function() {
+      var f = document.getElementById('ssh-connect-form');
+      f.style.display = f.style.display === 'none' ? 'block' : 'none';
+    };
+    window.hideSSHForm = function() { document.getElementById('ssh-connect-form').style.display = 'none'; };
+    window.connectSSH = function() {
+      var user = document.getElementById('ssh-user').value.trim() || 'root';
+      var host = document.getElementById('ssh-host').value.trim();
+      var port = document.getElementById('ssh-port').value.trim() || '22';
+      if (!host) { alert('Введите host (IP или домен)'); return; }
+      var cmd = 'ssh ' + user + '@' + host + ' -p ' + port;
+      var session = { user: user, host: host + ':' + port, time: new Date().toLocaleString('ru-RU') };
+      try {
+        var saved = JSON.parse(localStorage.getItem('sshSessions') || '[]');
+        saved.unshift(session);
+        localStorage.setItem('sshSessions', JSON.stringify(saved.slice(0,20)));
+      } catch(e) {}
+      var container = $('terminal-container');
+      hideSSHForm();
+      container.innerHTML = '<div class="text-green-400 text-xs mb-2">🚀 Подключение к ' + user + '@' + host + ':' + port + '...</div>' +
+        '<div class="text-white/20 text-xs mb-2">Выполни эту команду в Termux:</div>' +
+        '<div class="bg-black/40 rounded-lg p-3 font-mono text-xs text-white/70 select-all mb-2" style="word-break:break-all">' + esc(cmd) + '</div>' +
+        '<div class="text-white/20 text-[10px]">👆 Нажми и удерживай чтобы скопировать</div>';
+      loadSSHSessionsFromLocal();
+    };
 
     window.scanNetwork = function() {
       var container = $('terminal-container');
