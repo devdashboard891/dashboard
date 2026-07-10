@@ -155,12 +155,14 @@
     .chat-input-area textarea:focus { border-color:var(--a-border); background:rgba(255,255,255,0.08); }
     .chat-input-area button { background:var(--a); color:white; border:none; border-radius:12px; padding:10px 16px; font-size:13px; cursor:pointer; transition:all 0.2s; white-space:nowrap; }
     .chat-input-area button:hover { opacity:0.85; }
+    .mini-btn { background:transparent !important; padding:6px 10px !important; }
     .chat-loading { align-self:center; color:rgba(255,255,255,0.3); font-size:12px; display:flex; align-items:center; gap:6px; }
     .chat-loading::after { content:''; width:12px; height:12px; border:2px solid var(--a-border); border-top-color:var(--a); border-radius:50%; animation:spin 0.6s linear infinite; }
     @keyframes spin { to { transform:rotate(360deg); } }
     .chat-clear { background:transparent; border:1px solid rgba(255,255,255,0.1); color:rgba(255,255,255,0.3); border-radius:8px; padding:4px 10px; font-size:10px; cursor:pointer; transition:all 0.2s; }
     .chat-clear:hover { border-color:rgba(255,255,255,0.3); color:rgba(255,255,255,0.6); }
     .chat-code { background:rgba(0,0,0,0.3); border-radius:8px; padding:8px 12px; margin:4px 0; font-family:'Cascadia Code','Fira Code',monospace; font-size:12px; white-space:pre-wrap; border-left:2px solid var(--a); }
+    .chat-img { max-width:240px; max-height:240px; border-radius:10px; margin:4px 0; cursor:pointer; border:1px solid rgba(255,255,255,0.1); }
     .gh-token-bar { display:flex; gap:8px; align-items:center; margin-bottom:10px; }
     .gh-token-bar .gh-status { font-size:11px; color:rgba(255,255,255,0.4); flex:1; }
     .gh-token-bar button { background:transparent; border:1px solid rgba(255,255,255,0.1); border-radius:8px; padding:6px 12px; color:rgba(255,255,255,0.5); font-size:11px; cursor:pointer; white-space:nowrap; }
@@ -700,7 +702,14 @@
           </div>
           <div class="chat-input-area">
             <textarea id="chat-input" rows="1" placeholder="Спроси о чём угодно..." onkeydown="chatInputKeydown(event)"></textarea>
+            <button class="mini-btn text-lg px-2 py-1 rounded-xl" onclick="document.getElementById('chat-image-input').click()" title="Прикрепить изображение">🖼</button>
             <button onclick="sendChat()">→</button>
+          </div>
+          <input type="file" id="chat-image-input" accept="image/*" onchange="attachImage(this)" style="display:none">
+          <div id="chat-image-preview" style="display:none" class="flex items-center gap-2 px-3 py-1.5 bg-white/5 rounded-lg mt-1">
+            <span class="text-xs text-white/50">🖼</span>
+            <span id="chat-image-name" class="text-xs text-white/60 flex-1"></span>
+            <button class="text-white/30 hover:text-white/60 text-xs" onclick="removeImage()">✕</button>
           </div>
         </div>
       </div>
@@ -1266,6 +1275,25 @@
     var chatHistory = [];
     try { chatHistory = JSON.parse(localStorage.getItem('chatHistory')) || []; } catch(e) {}
     var chatLoading = false;
+    var attachedImage = null;
+
+    window.attachImage = function(input) {
+      var file = input.files[0];
+      if (!file) return;
+      var reader = new FileReader();
+      reader.onload = function(e) {
+        attachedImage = { name: file.name, data: e.target.result, type: file.type };
+        document.getElementById('chat-image-preview').style.display = 'flex';
+        document.getElementById('chat-image-name').textContent = file.name;
+      };
+      reader.readAsDataURL(file);
+      input.value = '';
+    };
+    window.removeImage = function() {
+      attachedImage = null;
+      document.getElementById('chat-image-preview').style.display = 'none';
+      document.getElementById('chat-image-name').textContent = '';
+    };
 
     // ─── API Keys (base64 encoded to bypass scanner) ───
     var API_KEYS = JSON.parse(atob('eyJvcGVucm91dGVyIjogInNrLW9yLXYxLTQ0NDhmZTY5MTVkNzg3MjU5MzVkMDk5NzVkNGFkZGIyMzQxZDcwMDYxNjEwZjJiZWNmYjQ5Njc0MmRmN2MyZmYiLCAiZ3JvcSI6ICJnc2tfNG5yUUlqTlB1Q3k3RllJazc5RG5XR2R5YjNGWWRkeFJNNGc0NzYwb0xPbGlWNHpKSzBmOSIsICJnZW1pbmkiOiAiQVEuQWI4Uk42S3dZQ1VWQ3lrUjhGRVhOR2s4aE1fUkhMb2dSV1Q5NTdwUWVqV3ZlRHZ2MXciLCAibWlzdHJhbCI6ICIyZ3BrenZiRXVueXc2WDhza1Brc1NwRmhsbzZFWGtmOSIsICJjZXJlYnJhcyI6ICJjc2stNGV3amZkMzJ0Y2pwd2Q4cnJjdjZuNmUyM2t3dGVtM3dlM2RyanA0ZG10cDg4ZHQ1IiwgIm52aWRpYSI6ICJudmFwaS0yTm1xbFBWTXg5QnRReV9BVHNxRTBOblI0VDhITUphTWNndU1DRUY4VDVnTEJvek1UVXNPbVlNazNWcHhWaURjIn0='));
@@ -1346,14 +1374,32 @@
       var container = document.getElementById('chat-messages');
       container.innerHTML = chatHistory.map(function(m) {
         var cls = 'chat-msg ' + m.role;
-        var content = esc(m.content).replace(/\n/g, '<br>').replace(/```([\s\S]*?)```/g, '<div class="chat-code">$1</div>');
+        var text = '';
+        if (typeof m.content === 'string') {
+          text = esc(m.content);
+        } else if (Array.isArray(m.content)) {
+          text = m.content.map(function(part) {
+            if (part.type === 'text') return esc(part.text);
+            if (part.type === 'image_url') return '<img src="' + part.image_url.url + '" class="chat-img" onclick="window.open(this.src)">';
+            return '';
+          }).join('');
+        }
+        var content = text.replace(/\n/g, '<br>').replace(/```([\s\S]*?)```/g, '<div class="chat-code">$1</div>');
         return '<div class="' + cls + '">' + content + '</div>';
       }).join('');
       container.scrollTop = container.scrollHeight;
     }
 
     function saveChat() {
-      localStorage.setItem('chatHistory', JSON.stringify(chatHistory));
+      var stripped = chatHistory.map(function(m) {
+        if (typeof m.content === 'string') return m;
+        if (Array.isArray(m.content)) {
+          var texts = m.content.filter(function(p) { return p.type === 'text'; }).map(function(p) { return p.text; });
+          return { role: m.role, content: texts.join('\n') || '🖼' };
+        }
+        return m;
+      });
+      try { localStorage.setItem('chatHistory', JSON.stringify(stripped)); } catch(e) {}
     }
 
     window.clearChat = function() {
@@ -1411,7 +1457,14 @@
       var text = input.value.trim();
       if (!text || chatLoading) return;
 
-      chatHistory.push({ role: 'user', content: text });
+      var userMsg = { role: 'user', content: text };
+      if (attachedImage) {
+        userMsg.content = [{ type: 'text', text: text }];
+        userMsg.content.push({ type: 'image_url', image_url: { url: attachedImage.data } });
+        removeImage();
+      }
+
+      chatHistory.push(userMsg);
       input.value = '';
       renderChat();
       if (window.autoResizeInput) autoResizeInput();
