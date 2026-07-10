@@ -1393,12 +1393,15 @@
       chatLoading = true;
 
       var container = document.getElementById('chat-messages');
-      var weatherInfo = $('weather-desc') ? $('weather-desc').textContent : '—';
-      var tempInfo = $('weather-temp') ? $('weather-temp').textContent : '—';
+      var weatherEmoji = $('weather-icon') ? $('weather-icon').textContent : '—';
+      var weatherTemp = $('weather-temp') ? $('weather-temp').textContent : '—';
+      var weatherFeels = $('weather-feels') ? $('weather-feels').textContent : '—';
+      var weatherHum = $('weather-humidity') ? $('weather-humidity').textContent : '—';
+      var weatherWind = $('weather-wind') ? $('weather-wind').textContent : '—';
       var btcRate = $('btc-rate') ? $('btc-rate').textContent : '—';
       var systemMsg = 'Ты — ИИ помощник личного дашборда. Отвечаешь на русском языке. '
         + 'У тебя есть доступ к функциям дашборда: погода, время, список задач, курсы валют/крипты, быстрые действия (VS Code, GitHub, файлы). '
-        + 'Текущие данные дашборда: погода=' + weatherInfo + ', температура=' + tempInfo + ', BTC=' + btcRate + '. '
+        + 'Текущие данные дашборда: погода=' + weatherEmoji + ', температура=' + weatherTemp + ', ' + weatherFeels + ', влажность=' + weatherHum + ', ветер=' + weatherWind + ', BTC=' + btcRate + '. '
         + 'Ты можешь отвечать на вопросы по программированию, помогать с кодом, давать советы, анализировать данные. '
         + 'Показывай примеры кода в блоках ```code```. Будь полезным и понятным.';
       var msgs = [{ role: 'system', content: systemMsg }].concat(chatHistory.slice(-15));
