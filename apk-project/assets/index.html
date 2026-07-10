@@ -689,6 +689,7 @@
             <option value="gemini">Gemini</option>
             <option value="mistral">Mistral</option>
             <option value="cerebras">Cerebras</option>
+            <option value="nvidia">NVIDIA NIM</option>
             <option value="auto">🌐 Авто</option>
           </select>
           <button onclick="clearChat()" class="chat-clear">🗑 Очистить</button>
@@ -1312,10 +1313,19 @@
         body: function(msgs) { return { model: this.model, messages: msgs, max_tokens: 2000 }; },
         parser: function(json) { return json.choices && json.choices[0] && json.choices[0].message ? json.choices[0].message.content : null; },
         errorCheck: function(json, status) { return json.error ? (json.error.message || 'Cerebras error') : null; }
+      },
+      nvidia: {
+        name: 'NVIDIA NIM',
+        endpoint: 'https://integrate.api.nvidia.com/v1/chat/completions',
+        model: 'meta/llama-3.3-70b-instruct',
+        headers: function() { return { 'Authorization': 'Bearer ' + API_KEYS.nvidia }; },
+        body: function(msgs) { return { model: this.model, messages: msgs, max_tokens: 2000 }; },
+        parser: function(json) { return json.choices && json.choices[0] && json.choices[0].message ? json.choices[0].message.content : null; },
+        errorCheck: function(json, status) { return json.error ? (json.error.message || 'NVIDIA error') : null; }
       }
     };
 
-    var PROVIDER_ORDER = ['openrouter', 'groq', 'gemini', 'mistral', 'cerebras'];
+    var PROVIDER_ORDER = ['openrouter', 'groq', 'gemini', 'mistral', 'cerebras', 'nvidia'];
 
     function renderChat() {
       var container = document.getElementById('chat-messages');
