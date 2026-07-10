@@ -795,6 +795,7 @@
           <button onclick="runTerminalCmd()" class="px-4 py-2 accent-bg-strong rounded-xl text-xs text-white/80 transition">Выполнить</button>
         </div>
         <div class="mt-3">
+          <button class="mini-btn text-xs px-3 py-1.5 rounded-xl text-white/50 hover:text-white/80 transition" onclick="scanNetwork()">🔍 Сканировать</button>
           <button class="mini-btn text-xs px-3 py-1.5 rounded-xl text-white/50 hover:text-white/80 transition" onclick="loadSSHSessions()">🔄 Обновить SSH</button>
           <button class="mini-btn text-xs px-3 py-1.5 rounded-xl text-white/50 hover:text-white/80 transition" onclick="clearTerminal()">Очистить</button>
         </div>
@@ -1761,36 +1762,61 @@
     // ═══════ TERMINAL ═══════
     var sshSessions = [];
     var terminalHistory = [];
+    var scanAbort = null;
 
     window.loadSSHSessions = function() {
       var container = $('terminal-container');
-      var output = '';
+      loadSSHSessionsFromLocal();
+      container.innerHTML = sshSessions.length
+        ? '<div class="text-white/60 mb-2">Сохранённые SSH сессии:</div>' + sshSessions.map(function(s){
+            return '<div class="flex items-start gap-2 p-2 bg-white/5 rounded mb-1">' +
+              '<span class="text-xs text-green-400">✓</span>' +
+              '<div class="flex-1"><div class="text-xs text-white/70">' + esc(s.host || 'unknown') + '</div>' +
+              '<div class="text-[10px] text-white/40">' + esc(s.user || 'user') + '@' + (s.host || 'host') + ' · ' + (s.time || 'now') + '</div></div></div>';
+          }).join('')
+        : '<div class="text-white/40">SSH сессий не найдено</div>' +
+          '<div class="text-white/20 text-xs mt-2">Нажми 🔍 Сканировать для поиска SSH серверов в сети</div>';
+    };
 
-      // Try to load SSH sessions from localStorage (set by KtoAI)
-      try {
-        var savedSessions = localStorage.getItem('sshSessions') || '[]';
-        sshSessions = JSON.parse(savedSessions);
-      } catch(e) {
-        sshSessions = [];
-      }
+    function loadSSHSessionsFromLocal() {
+      try { sshSessions = JSON.parse(localStorage.getItem('sshSessions') || '[]'); }
+      catch(e) { sshSessions = []; }
+    }
 
-      if (sshSessions.length === 0) {
-        output = '<div class="text-white/40">SSH сессий не найдено</div>';
-        output += '<div class="text-white/20 text-xs mt-2">Подключись к терминалу: <code>ssh user@host</code></div>';
-      } else {
-        output = '<div class="text-white/60 mb-2">Активные SSH сессии:</div>';
-        for (var i = 0; i < sshSessions.length; i++) {
-          var s = sshSessions[i];
-          output += '<div class="flex items-start gap-2 p-2 bg-white/5 rounded mb-1">';
-          output += '<span class="text-xs text-green-400">✓</span>';
-          output += '<div class="flex-1">';
-          output += '<div class="text-xs text-white/70">' + esc(s.host || 'unknown') + '</div>';
-          output += '<div class="text-[10px] text-white/40">' + esc(s.user || 'user') + '@' + (s.host || 'host') + ' · ' + (s.time || 'now') + '</div>';
-          output += '</div></div>';
+    window.scanNetwork = function() {
+      var container = $('terminal-container');
+      if (scanAbort) { scanAbort.abort(); scanAbort = null; }
+      container.innerHTML = '<div class="text-white/40">🔍 Сканирование сети...</div>';
+      var subs = ['192.168.0.', '192.168.1.', '192.168.2.', '10.0.0.', '172.16.0.'];
+      var found = [];
+      var done = 0; var total = 0;
+      subs.forEach(function(s){ for(var i=1;i<=254;i++) total++; });
+      subs.forEach(function(subnet){
+        for (var i = 1; i <= 254; i++) {
+          var ip = subnet + i;
+          (function(ip){
+            var ctrl = new AbortController();
+            if (!scanAbort) scanAbort = ctrl;
+            var t = setTimeout(function(){ ctrl.abort(); checkDone(); }, 500);
+            fetch('http://' + ip + ':22/', { mode: 'no-cors', signal: ctrl.signal })
+              .then(function(){ clearTimeout(t); found.push(ip); checkDone(); })
+              .catch(function(){ clearTimeout(t); checkDone(); });
+            function checkDone() {
+              done++;
+              if (done >= total) {
+                container.innerHTML = found.length
+                  ? '<div class="text-white/60 mb-2">🔍 Найдено SSH (' + found.length + '):</div>' +
+                    found.map(function(f){ return '<div class="flex items-start gap-2 p-2 bg-white/5 rounded mb-1">' +
+                      '<span class="text-xs text-green-400">✓</span><div class="flex-1"><div class="text-xs text-white/70">' + f + ':22</div>' +
+                      '<div class="text-[10px] text-white/40">Попробуй: <code>ssh user@' + f + '</code></div></div></div>'; }).join('')
+                  : '<div class="text-white/40">🔍 Серверов SSH не найдено в локальной сети</div>' +
+                    '<div class="text-white/20 text-xs mt-2">Убедись что устройства в одной сети и SSH включён</div>';
+                scanAbort = null;
+              }
+            }
+          })(ip);
         }
-      }
-
-      container.innerHTML = output;
+      });
     };
 
     window.runTerminalCmd = function() {
